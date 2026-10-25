@@ -1,5 +1,5 @@
 // Workout catalog with MET values (metabolic equivalents) used to estimate calories burned.
-const WORKOUT_TYPES = [
+export const WORKOUT_TYPES = [
   { name: 'Running', icon: '🏃', met: 9.8 },
   { name: 'Walking', icon: '🚶', met: 3.5 },
   { name: 'Cycling', icon: '🚴', met: 7.5 },
@@ -17,31 +17,32 @@ const WORKOUT_TYPES = [
 ];
 
 // Intensity scales both the calorie estimate and the points earned per minute.
-const INTENSITY = {
-  light: { met: 0.75, points: 1 },
-  moderate: { met: 1, points: 1.5 },
-  hard: { met: 1.3, points: 2 },
+export const INTENSITY = {
+  light: { met: 0.75, points: 1, label: '🙂 Light' },
+  moderate: { met: 1, points: 1.5, label: '😤 Moderate' },
+  hard: { met: 1.3, points: 2, label: '🥵 Hard' },
 };
 
-function workoutCalories(type, intensity, minutes, weightKg) {
-  const met = WORKOUT_TYPES.find((t) => t.name === type).met * INTENSITY[intensity].met;
+export function workoutCalories(type, intensity, minutes, weightKg) {
+  const met = (WORKOUT_TYPES.find((t) => t.name === type)?.met ?? 5) * INTENSITY[intensity].met;
   return Math.round(met * weightKg * (minutes / 60));
 }
 
-function workoutPoints(intensity, minutes) {
+export function workoutPoints(intensity, minutes) {
   return Math.round(Math.min(minutes, 300) * INTENSITY[intensity].points);
 }
 
 // Logging food earns 5 points; finishing the day between 70% and 105% of the goal earns 25.
-function goalDayPoints(total, goal) {
+export const GOAL_DAY_POINTS = 25;
+export function goalDayPoints(total, goal) {
   if (total <= 0) return 0;
-  return total >= goal * 0.7 && total <= goal * 1.05 ? 25 : 5;
+  return total >= goal * 0.7 && total <= goal * 1.05 ? GOAL_DAY_POINTS : 5;
 }
 
 const LEVELS = ['Couch Potato', 'Rookie', 'Mover', 'Sweater', 'Athlete', 'Machine', 'Beast', 'Titan', 'Legend', 'Olympian'];
 
 // Level L starts at 50 * L * (L - 1) XP: 0, 100, 300, 600, 1000, ...
-function levelFor(xp) {
+export function levelFor(xp) {
   let level = 1;
   while (50 * (level + 1) * level <= xp) level++;
   const floor = 50 * level * (level - 1);
@@ -66,8 +67,6 @@ const BADGES = [
   { id: 'burn', icon: '🌋', name: 'Furnace', desc: 'Burn 10,000 calories total', test: (s) => s.calories >= 10000 },
 ];
 
-function badgesFor(stats) {
+export function badgesFor(stats) {
   return BADGES.map(({ test, ...b }) => ({ ...b, earned: test(stats) }));
 }
-
-module.exports = { WORKOUT_TYPES, INTENSITY, workoutCalories, workoutPoints, goalDayPoints, levelFor, badgesFor };

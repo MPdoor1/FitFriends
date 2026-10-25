@@ -1,4 +1,5 @@
-'use strict';
+import * as store from './store.js';
+import { WORKOUT_TYPES, INTENSITY } from './scoring.js';
 
 // ---------- tiny utilities ----------
 
@@ -33,22 +34,6 @@ function prettyDate(dateStr) {
   return new Date(`${dateStr}T12:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 }
 
-async function api(path, options = {}) {
-  const res = await fetch(path, {
-    method: options.method || 'GET',
-    headers: options.body ? { 'Content-Type': 'application/json' } : {},
-    body: options.body ? JSON.stringify(options.body) : undefined,
-    credentials: 'same-origin',
-  });
-  const data = await res.json().catch(() => ({}));
-  if (res.status === 401 && !path.startsWith('/api/login')) {
-    state.user = null;
-    if (location.hash !== '#/login') location.hash = '#/login';
-  }
-  if (!res.ok) throw new Error(data.error || 'Something went wrong.');
-  return data;
-}
-
 let toastTimer;
 function toast(msg, kind = 'ok') {
   const el = $('#toast');
@@ -74,7 +59,7 @@ function burst(emoji = '🎉') {
 
 // ---------- state & data ----------
 
-const state = { user: null, config: null };
+const state = { user: null };
 
 const COMMON_FOODS = [
   ['🍳', 'Eggs (2 large)', 140, 12], ['🥣', 'Oatmeal (1 cup)', 160, 6], ['🍌', 'Banana', 105, 1],
@@ -91,15 +76,15 @@ const COMMON_FOODS = [
 const MEALS = [['breakfast', '🌅 Breakfast'], ['lunch', '☀️ Lunch'], ['dinner', '🌙 Dinner'], ['snack', '🍿 Snacks']];
 const AVATARS = ['🏃', '🚴', '🏋️', '🧘', '🏊', '⛹️', '🤸', '🥊', '🦁', '🐯', '🦊', '🐻', '🐼', '🦄', '🐸', '🐙', '🦖', '🚀', '⚡', '🔥', '🌟', '🤖', '👑', '🥑'];
 const COLORS = ['#6366f1', '#ef4444', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#84cc16', '#f97316', '#14b8a6'];
-const typeIcon = (name) => state.config?.workoutTypes.find((t) => t.name === name)?.icon || '💪';
-const typeMet = (name) => state.config?.workoutTypes.find((t) => t.name === name)?.met || 5;
-const INTENSITY = { light: { met: 0.75, pts: 1, label: '🙂 Light' }, moderate: { met: 1, pts: 1.5, label: '😤 Moderate' }, hard: { met: 1.3, pts: 2, label: '🥵 Hard' } };
+const typeIcon = (name) => WORKOUT_TYPES.find((t) => t.name === name)?.icon || '💪';
+const typeMet = (name) => WORKOUT_TYPES.find((t) => t.name === name)?.met || 5;
 
 // ---------- router ----------
 
 const routes = { login: viewLogin, home: viewHome, workouts: viewWorkouts, food: viewFood, arena: viewArena, profile: viewProfile };
 
 async function render() {
+  if (!store.isReady) { viewSetup(); return; }
   const name = (location.hash.replace(/^#\//, '').split('?')[0]) || 'home';
   if (!state.user && name !== 'login') { location.hash = '#/login'; return; }
   if (state.user && name === 'login') { location.hash = '#/home'; return; }
@@ -116,6 +101,11 @@ async function render() {
   window.scrollTo(0, 0);
 }
 window.addEventListener('hashchange', render);
+
+function viewSetup() {
+  app.innerHTML = `<section class="auth"><div class="card"><h2>Almost there</h2>
+    <p>Paste the Firebase web app config into <code>src/firebase-config.js</code> and push. See the README.</p></div></section>`;
+}
 
 // ---------- login / register ----------
 
@@ -137,8 +127,8 @@ async function viewLogin() {
           <form id="auth-form" class="stack">
             <label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="30" autocapitalize="none"></label>
             ${mode === 'register' ? '<label>Display name<input name="displayName" maxlength="40" placeholder="What friends see"></label>' : ''}
-            <label>Password<input name="password" type="password" autocomplete="${mode === 'login' ? 'current-password' : 'new-password'}" required minlength="4"></label>
-            ${mode === 'register' && state.config.inviteRequired ? '<label>Invite code<input name="inviteCode" required placeholder="Ask the group"></label>' : ''}
+            <label>Password<input name="password" type="password" autocomplete="${mode === 'login' ? 'current-password' : 'new-password'}" required minlength="6"></label>
+            ${mode === 'register' ? '<label>Invite code<input name="inviteCode" placeholder="Ask the group" autocapitalize="none"></label>' : ''}
             <p class="form-error" id="auth-error"></p>
             <button class="btn primary big" type="submit">${mode === 'login' ? 'Sign in' : 'Join the crew'}</button>
           </form>
@@ -149,8 +139,12 @@ async function viewLogin() {
       e.preventDefault();
       const body = Object.fromEntries(new FormData(e.target));
       try {
-        const { user } = await api(mode === 'login' ? '/api/login' : '/api/register', { method: 'POST', body });
-        state.user = user;
+        const btn = e.target.querySelector('button[type=submit]');
+        btn.disabled = true;
+        state.authBusy = true;
+        try {
+          state.user = await (mode === 'login' ? store.signIn(body) : store.signUp(body));
+        } finally { btn.disabled = false; state.authBusy = false; }
         if (mode === 'register') burst('💪');
         location.hash = '#/home';
       } catch (err) {
@@ -184,8 +178,14 @@ function calorieRing(eaten, goal, burned) {
 
 async function viewHome() {
   const today = localDate();
-  const s = await api(`/api/summary?today=${today}&from=${weekStart(today)}`);
-  const me = s.me;
+  const [{ board, meId }, day, todaysWorkouts] = await Promise.all([
+    store.leaderboard({ from: weekStart(today), today }),
+    store.getDay(today),
+    store.workoutsOn(today),
+  ]);
+  const me = board.find((p) => p.id === meId);
+  state.user = { ...state.user, ...me };
+  const s = { eaten: day.foodCalories, burned: day.wCalories, goal: me.calorieGoal, todaysWorkouts, rank: board.indexOf(me) + 1, players: board.length };
   const lvl = me.level;
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
@@ -241,19 +241,19 @@ function workoutItem(w, withDelete = false) {
       <span class="item-ico">${typeIcon(w.type)}</span>
       <div class="item-main">
         <strong>${esc(w.type)}</strong>
-        <span class="muted small">${w.duration_min} min · ${esc(w.intensity)}${w.distance_km ? ` · ${w.distance_km} km` : ''} · ${fmt(w.calories)} cal</span>
+        <span class="muted small">${w.durationMin} min · ${esc(w.intensity)}${w.distanceKm ? ` · ${w.distanceKm} km` : ''} · ${fmt(w.calories)} cal</span>
         ${w.notes ? `<span class="note">${esc(w.notes)}</span>` : ''}
       </div>
       <span class="pts">+${w.points}</span>
-      ${withDelete ? `<button class="icon-btn" data-del="${w.id}" aria-label="Delete">✕</button>` : ''}
+      ${withDelete ? `<button class="icon-btn" data-del="${esc(w.id)}" aria-label="Delete">✕</button>` : ''}
     </li>`;
 }
 
 // ---------- workouts ----------
 
 async function viewWorkouts() {
-  const { workouts } = await api('/api/workouts');
-  const types = state.config.workoutTypes;
+  const workouts = await store.listWorkouts();
+  const types = WORKOUT_TYPES;
   const form = { type: types[0].name, intensity: 'moderate' };
 
   const grouped = {};
@@ -292,7 +292,7 @@ async function viewWorkouts() {
   const preview = () => {
     const mins = Math.min(Number(f.durationMin.value) || 0, 600);
     const cal = Math.round(typeMet(form.type) * INTENSITY[form.intensity].met * state.user.weightKg * (mins / 60));
-    const pts = Math.round(Math.min(mins, 300) * INTENSITY[form.intensity].pts);
+    const pts = Math.round(Math.min(mins, 300) * INTENSITY[form.intensity].points);
     $('#w-preview').innerHTML = `<span>🔥 ~${fmt(cal)} cal</span><span>⭐ +${fmt(pts)} pts</span>`;
   };
   $$('.type-btn').forEach((b) => b.addEventListener('click', () => {
@@ -312,7 +312,7 @@ async function viewWorkouts() {
     e.preventDefault();
     const body = { ...Object.fromEntries(new FormData(f)), type: form.type, intensity: form.intensity };
     try {
-      const { workout } = await api('/api/workouts', { method: 'POST', body });
+      const workout = await store.addWorkout(state.user, body);
       burst(typeIcon(workout.type));
       toast(`Nice! +${workout.points} points`);
       viewWorkouts();
@@ -320,7 +320,7 @@ async function viewWorkouts() {
   });
   $$('[data-del]').forEach((b) => b.addEventListener('click', async () => {
     if (!confirm('Delete this workout?')) return;
-    await api(`/api/workouts/${b.dataset.del}`, { method: 'DELETE' });
+    await store.deleteWorkout(workouts.find((w) => w.id === b.dataset.del));
     viewWorkouts();
   }));
 }
@@ -331,12 +331,11 @@ let foodDate = null;
 
 async function viewFood() {
   foodDate ||= localDate();
-  const [{ foods, burned, goal }, { recent }] = await Promise.all([
-    api(`/api/foods?date=${foodDate}`),
-    api('/api/foods/recent'),
-  ]);
+  const [foods, day, recent] = await Promise.all([store.foodsOn(foodDate), store.getDay(foodDate), store.recentFoods()]);
+  const burned = day.wCalories;
+  const goal = state.user.calorieGoal;
   const eaten = foods.reduce((s, f) => s + f.calories, 0);
-  const protein = foods.reduce((s, f) => s + (f.protein_g || 0), 0);
+  const protein = foods.reduce((s, f) => s + (f.proteinG || 0), 0);
   const budget = goal + burned;
   const pct = Math.min((eaten / budget) * 100, 100);
   const hour = new Date().getHours();
@@ -373,7 +372,7 @@ async function viewFood() {
         <datalist id="food-suggest">${COMMON_FOODS.map(([, n]) => `<option value="${esc(n)}">`).join('')}</datalist>
         <button class="btn primary big" type="submit">Add</button>
       </form>
-      ${recent.length ? `<h3 class="sub">Your recent</h3><div class="chips">${recent.map((r) => `<button class="chip" data-quick='${esc(JSON.stringify([r.name, r.calories, r.protein_g]))}'>${esc(r.name)} <em>${r.calories}</em></button>`).join('')}</div>` : ''}
+      ${recent.length ? `<h3 class="sub">Your recent</h3><div class="chips">${recent.map((r) => `<button class="chip" data-quick='${esc(JSON.stringify([r.name, r.calories, r.proteinG]))}'>${esc(r.name)} <em>${r.calories}</em></button>`).join('')}</div>` : ''}
       <h3 class="sub">Quick add</h3>
       <div class="chips">${COMMON_FOODS.map(([i, n, c, p]) => `<button class="chip" data-quick='${esc(JSON.stringify([n, c, p]))}'>${i} ${esc(n)} <em>${c}</em></button>`).join('')}</div>
     </section>
@@ -385,9 +384,9 @@ async function viewFood() {
         return `<h3 class="day-head">${label} <span class="muted small">${fmt(items.reduce((s, f) => s + f.calories, 0))} cal</span></h3>
           <ul class="list">${items.map((f) => `
             <li class="item">
-              <div class="item-main"><strong>${esc(f.name)}</strong>${f.protein_g ? `<span class="muted small">${f.protein_g}g protein</span>` : ''}</div>
+              <div class="item-main"><strong>${esc(f.name)}</strong>${f.proteinG ? `<span class="muted small">${f.proteinG}g protein</span>` : ''}</div>
               <span class="pts cal">${fmt(f.calories)}</span>
-              <button class="icon-btn" data-del="${f.id}" aria-label="Delete">✕</button>
+              <button class="icon-btn" data-del="${esc(f.id)}" aria-label="Delete">✕</button>
             </li>`).join('')}</ul>`;
       }).join('') || '<p class="empty">Nothing logged for this day yet.</p>'}
     </section>`;
@@ -395,7 +394,7 @@ async function viewFood() {
   const f = $('#f-form');
   const add = async (body) => {
     try {
-      await api('/api/foods', { method: 'POST', body: { ...body, date: foodDate } });
+      await store.addFood(state.user, { ...body, date: foodDate });
       toast(`Added ${body.name}`);
       viewFood();
     } catch (err) { toast(err.message, 'bad'); }
@@ -410,7 +409,7 @@ async function viewFood() {
     add({ name, calories, proteinG: proteinG ?? '', meal: f.meal.value });
   }));
   $$('[data-del]').forEach((b) => b.addEventListener('click', async () => {
-    await api(`/api/foods/${b.dataset.del}`, { method: 'DELETE' });
+    await store.deleteFood(state.user, foods.find((f) => f.id === b.dataset.del));
     viewFood();
   }));
   $('#prev-day').addEventListener('click', () => { foodDate = shiftDate(foodDate, -1); viewFood(); });
@@ -423,8 +422,8 @@ let arenaPeriod = 'week';
 
 async function viewArena() {
   const today = localDate();
-  const from = arenaPeriod === 'week' ? weekStart(today) : arenaPeriod === 'month' ? monthStart(today) : '0000-01-01';
-  const { board, meId } = await api(`/api/leaderboard?today=${today}&from=${from}&to=${today}`);
+  const from = arenaPeriod === 'week' ? weekStart(today) : arenaPeriod === 'month' ? monthStart(today) : null;
+  const { board, meId } = await store.leaderboard({ from, today });
   const leader = Math.max(...board.map((p) => p.points), 1);
   const podium = [board[1], board[0], board[2]];
   const periodLabel = { week: 'this week', month: 'this month', all: 'all time' }[arenaPeriod];
@@ -544,7 +543,7 @@ async function viewArena() {
 
 async function viewProfile() {
   const today = localDate();
-  const { board, meId } = await api(`/api/leaderboard?today=${today}`);
+  const { board, meId } = await store.leaderboard({ from: null, today });
   const me = board.find((p) => p.id === meId);
   const u = state.user;
   app.innerHTML = `
@@ -578,7 +577,7 @@ async function viewProfile() {
       <form id="pw-form" class="stack">
         <div class="row gap wrap">
           <label class="grow">Current<input name="currentPassword" type="password" required autocomplete="current-password"></label>
-          <label class="grow">New<input name="newPassword" type="password" required minlength="4" autocomplete="new-password"></label>
+          <label class="grow">New<input name="newPassword" type="password" required minlength="6" autocomplete="new-password"></label>
         </div>
         <button class="btn" type="submit">Update password</button>
       </form>
@@ -601,7 +600,7 @@ async function viewProfile() {
   $('#p-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
-      const { user } = await api('/api/profile', { method: 'PUT', body: { ...Object.fromEntries(new FormData(e.target)), ...pick } });
+      const user = await store.updateProfile(state.user, { ...Object.fromEntries(new FormData(e.target)), ...pick });
       state.user = user;
       $('#nav-avatar').textContent = user.avatar;
       toast('Profile saved');
@@ -610,13 +609,14 @@ async function viewProfile() {
   $('#pw-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
-      await api('/api/password', { method: 'PUT', body: Object.fromEntries(new FormData(e.target)) });
+      const { currentPassword, newPassword } = Object.fromEntries(new FormData(e.target));
+      await store.changePassword(currentPassword, newPassword);
       e.target.reset();
       toast('Password updated');
     } catch (err) { toast(err.message, 'bad'); }
   });
   $('#logout').addEventListener('click', async () => {
-    await api('/api/logout', { method: 'POST' });
+    await store.signOut();
     state.user = null;
     location.hash = '#/login';
   });
@@ -624,10 +624,13 @@ async function viewProfile() {
 
 // ---------- boot ----------
 
-(async function boot() {
-  state.config = await api('/api/config');
-  try {
-    state.user = (await api('/api/me')).user;
-  } catch { state.user = null; }
+if (store.isReady) {
+  // Fires once on load with the saved sign-in (or null), then on every sign-in/out.
+  store.onUser((user) => {
+    if (state.authBusy) return; // the sign-in form handles its own result
+    state.user = user;
+    render();
+  });
+} else {
   render();
-})();
+}

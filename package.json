@@ -2,16 +2,14 @@
   "name": "fitfriends",
   "version": "1.0.0",
   "private": true,
-  "description": "A small health and fitness tracker for a group of friends: workouts, calories and a competitive arena.",
-  "main": "server.js",
+  "description": "A small health and fitness tracker for a group of friends: workouts, calories and a competitive arena. Hosted on GitHub Pages with Firebase.",
   "scripts": {
-    "start": "node --disable-warning=ExperimentalWarning server.js",
-    "dev": "node --watch --disable-warning=ExperimentalWarning server.js"
+    "build": "node build.mjs",
+    "serve": "npx --yes serve@14.2.4 dist -l 5173"
   },
-  "engines": {
-    "node": ">=22.13"
+  "devDependencies": {
+    "esbuild": "^0.25.10",
+    "firebase": "^12.19.0"
   },
-  "dependencies": {
-    "express": "^5.1.0"
-  }
+  "type": "module"
 }

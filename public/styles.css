@@ -256,7 +256,8 @@ input:focus, select:focus { outline: none; border-color: var(--primary); backgro
 .crown { position: absolute; top: -16px; left: 10px; font-size: 1.1rem; animation: shine 1.6s ease-in-out infinite; }
 @keyframes shine { 50% { transform: translateY(-3px) rotate(8deg); } }
 @media (max-width: 520px) {
-  .race.go .runner { left: calc(var(--pos) * 0.62); }
+  .race.go .runner { left: calc(var(--pos) * 0.5); }
+  .finish { font-size: 1rem; }
   .runner-tag { font-size: 0.7rem; }
 }
 

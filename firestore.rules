@@ -1,0 +1,48 @@
+rules_version = '2';
+
+// FitFriends security rules. Paste into Firebase console → Firestore Database → Rules → Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    // A member is a signed-in user who finished sign-up (has a profile).
+    function member() {
+      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+    }
+    // If config/private exists, new profiles must carry its inviteCode.
+    function inviteOk() {
+      let cfg = /databases/$(database)/documents/config/private;
+      return !exists(cfg) || request.resource.data.invite == get(cfg).data.inviteCode;
+    }
+
+    // Holds the invite code. Only the rules can read it; edit it in the Firebase console.
+    match /config/{doc} {
+      allow read, write: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if member();
+      allow create: if signedIn() && request.auth.uid == uid && inviteOk();
+      allow update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.username == resource.data.username
+        && request.resource.data.invite == resource.data.invite;
+      allow delete: if false;
+
+      // Workouts and food: friends can see them, only the owner can change them.
+      match /{sub}/{id} {
+        allow read: if member();
+        allow write: if signedIn() && request.auth.uid == uid;
+      }
+    }
+
+    // Daily totals used by the Arena. Document id is "<uid>_<date>".
+    match /days/{id} {
+      allow read: if member();
+      allow create, update: if signedIn()
+        && request.resource.data.uid == request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.date;
+      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+    }
+  }
+}
