@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>FitFriends</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💪</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar" id="topbar" hidden>
+    <a class="brand" href="#/home"><span>💪</span> FitFriends</a>
+    <nav class="nav" id="nav">
+      <a href="#/home" data-route="home"><span class="ico">🏠</span><span>Home</span></a>
+      <a href="#/workouts" data-route="workouts"><span class="ico">🏋️</span><span>Workouts</span></a>
+      <a href="#/food" data-route="food"><span class="ico">🍎</span><span>Food</span></a>
+      <a href="#/arena" data-route="arena"><span class="ico">🏆</span><span>Arena</span></a>
+      <a href="#/profile" data-route="profile"><span class="ico" id="nav-avatar">🙂</span><span>Me</span></a>
+    </nav>
+  </header>
+  <main id="app" class="container"></main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="/app.js"></script>
+</body>
+</html>

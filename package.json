@@ -1,0 +1,17 @@
+{
+  "name": "fitfriends",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small health and fitness tracker for a group of friends: workouts, calories and a competitive arena.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "dev": "node --watch --disable-warning=ExperimentalWarning server.js"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

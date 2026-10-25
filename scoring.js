@@ -1,0 +1,73 @@
+// Workout catalog with MET values (metabolic equivalents) used to estimate calories burned.
+const WORKOUT_TYPES = [
+  { name: 'Running', icon: '🏃', met: 9.8 },
+  { name: 'Walking', icon: '🚶', met: 3.5 },
+  { name: 'Cycling', icon: '🚴', met: 7.5 },
+  { name: 'Swimming', icon: '🏊', met: 7.0 },
+  { name: 'Weightlifting', icon: '🏋️', met: 5.0 },
+  { name: 'HIIT', icon: '⚡', met: 8.0 },
+  { name: 'Yoga', icon: '🧘', met: 2.8 },
+  { name: 'Hiking', icon: '🥾', met: 6.0 },
+  { name: 'Sports', icon: '⚽', met: 7.0 },
+  { name: 'Dance', icon: '💃', met: 5.5 },
+  { name: 'Rowing', icon: '🚣', met: 7.0 },
+  { name: 'Climbing', icon: '🧗', met: 8.0 },
+  { name: 'Stretching', icon: '🤸', met: 2.3 },
+  { name: 'Other', icon: '💪', met: 5.0 },
+];
+
+// Intensity scales both the calorie estimate and the points earned per minute.
+const INTENSITY = {
+  light: { met: 0.75, points: 1 },
+  moderate: { met: 1, points: 1.5 },
+  hard: { met: 1.3, points: 2 },
+};
+
+function workoutCalories(type, intensity, minutes, weightKg) {
+  const met = WORKOUT_TYPES.find((t) => t.name === type).met * INTENSITY[intensity].met;
+  return Math.round(met * weightKg * (minutes / 60));
+}
+
+function workoutPoints(intensity, minutes) {
+  return Math.round(Math.min(minutes, 300) * INTENSITY[intensity].points);
+}
+
+// Logging food earns 5 points; finishing the day between 70% and 105% of the goal earns 25.
+function goalDayPoints(total, goal) {
+  if (total <= 0) return 0;
+  return total >= goal * 0.7 && total <= goal * 1.05 ? 25 : 5;
+}
+
+const LEVELS = ['Couch Potato', 'Rookie', 'Mover', 'Sweater', 'Athlete', 'Machine', 'Beast', 'Titan', 'Legend', 'Olympian'];
+
+// Level L starts at 50 * L * (L - 1) XP: 0, 100, 300, 600, 1000, ...
+function levelFor(xp) {
+  let level = 1;
+  while (50 * (level + 1) * level <= xp) level++;
+  const floor = 50 * level * (level - 1);
+  const next = 50 * (level + 1) * level;
+  return {
+    number: level,
+    title: LEVELS[Math.min(level - 1, LEVELS.length - 1)],
+    progress: (xp - floor) / (next - floor),
+    toNext: next - xp,
+  };
+}
+
+const BADGES = [
+  { id: 'first', icon: '🎉', name: 'First Sweat', desc: 'Log your first workout', test: (s) => s.workouts >= 1 },
+  { id: 'ten', icon: '🔟', name: 'Double Digits', desc: 'Log 10 workouts', test: (s) => s.workouts >= 10 },
+  { id: 'fifty', icon: '🏅', name: 'Half Century', desc: 'Log 50 workouts', test: (s) => s.workouts >= 50 },
+  { id: 'streak3', icon: '🔥', name: 'Heating Up', desc: '3-day workout streak', test: (s) => s.bestStreak >= 3 },
+  { id: 'streak7', icon: '☄️', name: 'Unstoppable', desc: '7-day workout streak', test: (s) => s.bestStreak >= 7 },
+  { id: 'min1000', icon: '⏱️', name: '1000 Club', desc: '1,000 total workout minutes', test: (s) => s.minutes >= 1000 },
+  { id: 'fuel', icon: '🥗', name: 'Fuel Master', desc: 'Hit your calorie target 10 days', test: (s) => s.goalDays >= 10 },
+  { id: 'variety', icon: '🎨', name: 'Mix It Up', desc: 'Try 5 different workout types', test: (s) => s.types >= 5 },
+  { id: 'burn', icon: '🌋', name: 'Furnace', desc: 'Burn 10,000 calories total', test: (s) => s.calories >= 10000 },
+];
+
+function badgesFor(stats) {
+  return BADGES.map(({ test, ...b }) => ({ ...b, earned: test(stats) }));
+}
+
+module.exports = { WORKOUT_TYPES, INTENSITY, workoutCalories, workoutPoints, goalDayPoints, levelFor, badgesFor };
