@@ -7,6 +7,8 @@ on:
 
 jobs:
   deploy:
+    # Skipped until the AZURE_WEBAPP_NAME repo variable is set (see README).
+    if: vars.AZURE_WEBAPP_NAME != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
