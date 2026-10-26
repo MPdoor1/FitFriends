@@ -30,7 +30,7 @@ import {
 export const configured = !firebaseConfig.apiKey.startsWith('PASTE');
 const useEmulator = ['localhost', '127.0.0.1'].includes(location.hostname) && new URLSearchParams(location.search).has('emulator');
 
-const fbApp = initializeApp(useEmulator ? { ...firebaseConfig, apiKey: 'emulator' } : firebaseConfig);
+export const fbApp = initializeApp(useEmulator ? { ...firebaseConfig, apiKey: 'emulator' } : firebaseConfig);
 const auth = getAuth(fbApp);
 const db = getFirestore(fbApp);
 if (useEmulator) {
@@ -81,6 +81,8 @@ function profileFrom(snap) {
     fatGoal: d.fatGoal ?? null,
     waterGoal: d.waterGoal ?? 8,
     onboarded: Boolean(d.onboarded),
+    tz: d.tz || null,
+    notify: { workout: true, meals: true, water: true, arena: true, weekly: true, friends: true, ...(d.notify || {}) },
     bestStreak: d.bestStreak || 0,
     stats: { xp: 0, workouts: 0, minutes: 0, calories: 0, goalDays: 0, types: {}, ...d.stats },
   };
@@ -226,6 +228,7 @@ export async function getProfile(id = pid()) {
 }
 
 const ACTIVITIES = ['sedentary', 'light', 'moderate', 'very', 'athlete'];
+export const NOTIFY_KEYS = ['workout', 'meals', 'water', 'arena', 'weekly', 'friends'];
 const inRange = (v, lo, hi) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
 
 // Saves only the fields given; each is checked so bad input never reaches the database.
@@ -245,6 +248,10 @@ export async function updateProfile(changes) {
   if ('sex' in c) patch.sex = ['male', 'female'].includes(c.sex) ? c.sex : null;
   if ('activity' in c && ACTIVITIES.includes(c.activity)) patch.activity = c.activity;
   if ('onboarded' in c) patch.onboarded = Boolean(c.onboarded);
+  if ('tz' in c && /^[A-Za-z_+\-/0-9]{1,64}$/.test(c.tz)) patch.tz = c.tz;
+  if ('notify' in c) {
+    patch.notify = Object.fromEntries(NOTIFY_KEYS.map((k) => [k, c.notify[k] !== false]));
+  }
   num('calorieGoal', 800, 6000);
   num('weightKg', 25, 300, 2);
   num('goalWeightKg', 25, 300, 2);
@@ -688,4 +695,17 @@ export async function issueReset(member) {
   if (!login.exists()) batch.set(doc(db, 'logins', member.username), { profileId: member.id, email: emailFor(member.username) });
   await batch.commit();
   return `${code.slice(0, 4)}-${code.slice(4)}`;
+}
+
+// ---------- push notification devices ----------
+
+// One document per phone/browser, keyed by a hash of its push token. Read by the notifier.
+export async function saveDevice(token, label) {
+  const id = await sha256Hex(token);
+  await setDoc(doc(db, 'users', pid(), 'devices', id.slice(0, 40)), { token, label: String(label || '').slice(0, 60), updatedAt: serverTimestamp() });
+  return id.slice(0, 40);
+}
+
+export async function removeDevice(id) {
+  await deleteDoc(doc(db, 'users', pid(), 'devices', id));
 }

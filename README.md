@@ -7,6 +7,7 @@ A small health app for a group of friends: log workouts, count calories, and com
 - **Accounts:** a username and password. No email or verification.
 - **Admin:** admins can set the invite code, promote other admins, reset a member's password, and remove members (Me → Admin panel).
 - **Password resets:** the admin taps the key next to a member to get a one-time code (valid 24 hours). The member taps **Forgot password?** on the sign-in screen and enters it with a new password. Firebase can't change another person's password without a paid server, so the reset makes a fresh login and moves the member's profile onto it. All their data stays.
+- **Notifications:** workout, meal and water reminders, Arena alerts, weekly results and friend activity. Turn them on under **Me → Notifications** (on iPhone, install to the Home Screen first). Each type can be switched off, and nothing is sent between 10pm and 8am in the member's time zone.
 - **Installable:** add it to your phone's home screen from the Install tab. It opens full screen like a normal app.
 - **Setup guide:** after sign-up, five quick steps (units, about you, activity, goal) produce a daily calorie target (Mifflin-St Jeor) plus protein, carbs and fat targets.
 - **Units:** pounds and miles by default; switch to kg and km in your profile. Everything is stored metric.
@@ -58,3 +59,10 @@ To test without touching real data, run the Firebase emulators (`npx firebase-to
 | `logins/{username}` | Which login a username currently uses (anyone can look up one username; nobody can list them) |
 | `resets/{uid}` | Pending password reset: only a SHA-256 hash of the code plus its expiry. Admins only |
 | `aliases/{loginUid}` | Links a login created by a reset to the member's profile |
+
+## Notifications
+`.github/workflows/notify.yml` runs `scripts/notify.mjs` every 15 minutes (GitHub may start scheduled runs a few minutes late). The script reads Firestore and sends web push through Firebase Cloud Messaging. It needs one repository secret, `GOOGLE_KEY`, holding a Firebase service account JSON key. Phones register under `users/{uid}/devices/`, and the script keeps its own bookkeeping in `notifyState/`, which no client can read.
+
+Test the decisions without sending anything: run `DRY_RUN=1 GOOGLE_KEY="$(cat key.json)" node scripts/notify.mjs`. Add `NOW=2026-10-26T17:30:00Z` to pretend it's a different time.
+
+GitHub turns scheduled workflows off after 60 days with no commits to the repo. If notifications stop, re-enable **Send notifications** in the Actions tab.

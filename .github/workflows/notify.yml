@@ -1,0 +1,33 @@
+name: Send notifications
+
+# Every 15 minutes GitHub runs scripts/notify.mjs, which sends reminders and Arena alerts.
+# GitHub may start scheduled runs a few minutes late. Needs the GOOGLE_KEY repository secret.
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['scripts/notify.mjs', '.github/workflows/notify.yml']
+
+concurrency:
+  group: notify
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: npm
+      - run: npm ci
+      - name: Send notifications
+        env:
+          GOOGLE_KEY: ${{ secrets.GOOGLE_KEY }}
+        run: |
+          if [ -z "$GOOGLE_KEY" ]; then echo "GOOGLE_KEY secret is not set; skipping."; exit 0; fi
+          node scripts/notify.mjs

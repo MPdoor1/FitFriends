@@ -9,6 +9,7 @@ import { viewFuel } from './pages/fuel.js';
 import { viewBody } from './pages/body.js';
 import { viewMe } from './pages/me.js';
 import { viewSetup } from './pages/setup.js';
+import { refreshPush } from './notify.js';
 
 const app = $('#app');
 
@@ -448,6 +449,7 @@ if (store.isReady) {
     if (state.authBusy) return; // the sign-in form handles its own result
     state.user = user;
     render();
+    if (user) refreshPush(user);
   });
 } else {
   render();
