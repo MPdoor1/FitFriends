@@ -179,6 +179,9 @@ for (const u of users) {
 
 // ---------- send ----------
 
+// Plain HTTPS instead of HTTP/2: works through proxies and is plenty fast for a small group.
+const messaging = getMessaging();
+messaging.enableLegacyHttpTransport();
 let delivered = 0;
 for (const { user, devices, m } of outbox) {
   const tokens = devices.map((d) => d.data().token);
@@ -186,7 +189,7 @@ for (const { user, devices, m } of outbox) {
     console.log(`[${DRY ? 'dry' : 'emulator'}] ${user.displayName} (${tokens.length} device): ${m.title} | ${m.body}`);
     continue;
   }
-  const res = await getMessaging().sendEachForMulticast({
+  const res = await messaging.sendEachForMulticast({
     tokens,
     data: { title: m.title, body: m.body, url: m.url, tag: m.tag },
     webpush: { headers: { Urgency: 'high', TTL: '3600' } },
