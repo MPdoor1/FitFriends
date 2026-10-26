@@ -1,26 +1,40 @@
 rules_version = '2';
 
 // FitFriends security rules (Firebase console → Firestore Database → Rules).
+//
+// Data is keyed by profile id (pid): the uid of a member's first login. An admin password reset makes
+// a new login, recorded in aliases/{newUid} -> { profileId }, and moves users/{pid}.authUid to it.
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() {
       return request.auth != null;
     }
-    function profilePath(uid) {
-      return /databases/$(database)/documents/users/$(uid);
+    function profilePath(id) {
+      return /databases/$(database)/documents/users/$(id);
     }
-    function banned(uid) {
-      return exists(/databases/$(database)/documents/banned/$(uid));
+    function aliasPath() {
+      return /databases/$(database)/documents/aliases/$(request.auth.uid);
     }
-    // A member is a signed-in user who finished sign-up (has a profile) and was not removed.
+    function resetPath(id) {
+      return /databases/$(database)/documents/resets/$(id);
+    }
+    function banned(id) {
+      return exists(/databases/$(database)/documents/banned/$(id));
+    }
+    // The profile this login acts as.
+    function pid() {
+      return exists(aliasPath()) ? get(aliasPath()).data.profileId : request.auth.uid;
+    }
+    // A member is signed in with the current login of an existing, non-removed profile.
     function member() {
-      return signedIn() && exists(profilePath(request.auth.uid)) && !banned(request.auth.uid);
+      return signedIn() && exists(profilePath(pid())) && !banned(pid())
+        && get(profilePath(pid())).data.get('authUid', pid()) == request.auth.uid;
     }
     function admin() {
-      return member() && get(profilePath(request.auth.uid)).data.get('role', 'member') == 'admin';
+      return member() && get(profilePath(pid())).data.get('role', 'member') == 'admin';
     }
-    function isOwner(uid) {
-      return signedIn() && request.auth.uid == uid;
+    function isOwner(id) {
+      return member() && pid() == id;
     }
     // If config/private exists, new profiles must carry its inviteCode.
     function inviteOk() {
@@ -30,40 +44,77 @@ service cloud.firestore {
     function unchanged(field) {
       return request.resource.data.get(field, null) == resource.data.get(field, null);
     }
+    // The reset ticket for profile id exists, has not expired, and matches the code.
+    function validTicket(id, code) {
+      let ticket = get(resetPath(id)).data;
+      return code is string && exists(resetPath(id)) && ticket.expires > request.time
+        && hashing.sha256(code).toHexString().lower() == ticket.codeHash.lower();
+    }
+    // This batch completes a reset of profile id: it creates this login's alias and consumes the ticket.
+    function resetting(id) {
+      return signedIn() && !exists(aliasPath()) && existsAfter(aliasPath())
+        && getAfter(aliasPath()).data.profileId == id
+        && exists(resetPath(id)) && !existsAfter(resetPath(id));
+    }
 
-    // Invite code. Only admins can see or change it.
     match /config/{doc} {
       allow read, write: if admin();
     }
 
-    // Members removed by an admin.
-    match /banned/{uid} {
+    match /banned/{id} {
       allow read, write: if admin();
     }
 
-    match /users/{uid} {
+    match /resets/{id} {
+      allow read, create, update: if admin();
+      allow delete: if admin() || resetting(id);
+    }
+
+    match /aliases/{authUid} {
+      allow read: if (signedIn() && request.auth.uid == authUid) || admin();
+      allow create: if signedIn() && request.auth.uid == authUid
+        && validTicket(request.resource.data.profileId, request.resource.data.code)
+        && !existsAfter(resetPath(request.resource.data.profileId));
+      allow delete: if admin();
+    }
+
+    // username -> current login email. Anyone may look up one username; nobody can list them.
+    match /logins/{username} {
+      allow get: if true;
+      allow create: if (signedIn() && request.resource.data.profileId == request.auth.uid
+          && getAfter(profilePath(request.auth.uid)).data.username == username)
+        || admin();
+      allow update: if admin()
+        || (resetting(resource.data.profileId) && request.resource.data.profileId == resource.data.profileId);
+      allow delete: if admin();
+    }
+
+    match /users/{id} {
       allow read: if member();
       // New accounts can never give themselves a role.
-      allow create: if isOwner(uid) && !banned(uid) && inviteOk() && !('role' in request.resource.data);
-      allow update: if (isOwner(uid) && !banned(uid) && unchanged('username') && unchanged('invite') && unchanged('role'))
-        || (admin() && unchanged('username'));
+      allow create: if signedIn() && request.auth.uid == id && !exists(aliasPath()) && !banned(id) && inviteOk()
+        && !('role' in request.resource.data) && !('authUid' in request.resource.data);
+      allow update: if (isOwner(id) && unchanged('username') && unchanged('invite') && unchanged('role') && unchanged('authUid'))
+        || (admin() && unchanged('username') && unchanged('authUid'))
+        || (resetting(id) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['authUid'])
+            && request.resource.data.authUid == request.auth.uid);
       allow delete: if admin();
 
       // Workouts and food: friends can see them, only the owner can change them.
-      match /{sub}/{id} {
+      match /{sub}/{doc} {
         allow read: if member();
-        allow write: if isOwner(uid) && member();
+        allow write: if isOwner(id);
         allow delete: if admin();
       }
     }
 
-    // Daily totals used by the Arena. Document id is "<uid>_<date>".
+    // Daily totals used by the Arena. Document id is "<pid>_<date>".
     match /days/{id} {
       allow read: if member();
       allow create, update: if member()
-        && request.resource.data.uid == request.auth.uid
-        && id == request.auth.uid + '_' + request.resource.data.date;
-      allow delete: if (signedIn() && resource.data.uid == request.auth.uid) || admin();
+        && request.resource.data.uid == pid()
+        && id == pid() + '_' + request.resource.data.date;
+      allow delete: if (member() && resource.data.uid == pid()) || admin();
     }
   }
 }

@@ -100,6 +100,8 @@ const routes = {
 };
 const PUBLIC_ROUTES = ['login', 'install'];
 const currentRoute = () => location.hash.replace(/^#\//, '').split('?')[0] || 'home';
+// True when the user has moved on while a page was loading, so the late result must not be drawn.
+const stale = (route) => currentRoute() !== route;
 
 function buildNav() {
   const items = [['home', 'home', 'Today'], ['train', 'train', 'Train'], ['fuel', 'fuel', 'Fuel'], ['arena', 'arena', 'Arena'], ['me', 'user', 'Me']];
@@ -147,17 +149,23 @@ async function viewLogin() {
           <p>Train. Eat right. Beat your friends.</p>
         </div>
         <div class="card">
+          ${mode === 'reset' ? `
+          <button type="button" class="back" data-mode="login">${icon('left', 18)} Back to sign in</button>
+          <h2 class="card-title">Reset your password</h2>
+          <p class="muted small">Ask the group admin for a reset code, then choose a new password.</p>` : `
           <div class="seg">
             <button type="button" data-mode="login" class="${mode === 'login' ? 'on' : ''}">Sign in</button>
             <button type="button" data-mode="register" class="${mode === 'register' ? 'on' : ''}">Create account</button>
-          </div>
+          </div>`}
           <form id="auth-form" class="stack">
             <label>Username<input name="username" autocomplete="username" required minlength="3" maxlength="30" autocapitalize="none" autocorrect="off" spellcheck="false"></label>
             ${mode === 'register' ? '<label>Display name<input name="displayName" maxlength="40" placeholder="What friends see" autocomplete="nickname"></label>' : ''}
-            <label>Password<input name="password" type="password" autocomplete="${mode === 'login' ? 'current-password' : 'new-password'}" required minlength="6"></label>
+            ${mode === 'reset' ? '<label>Reset code<input name="code" required placeholder="XXXX-XXXX" autocapitalize="characters" autocorrect="off" spellcheck="false" autocomplete="one-time-code"></label>' : ''}
+            <label>${mode === 'reset' ? 'New password' : 'Password'}<input name="password" type="password" autocomplete="${mode === 'login' ? 'current-password' : 'new-password'}" required minlength="6"></label>
             ${mode === 'register' ? '<label>Invite code<input name="inviteCode" placeholder="Ask the group admin" autocapitalize="none" autocorrect="off"></label>' : ''}
             <p class="form-error" id="auth-error" role="alert"></p>
-            <button class="btn primary big" type="submit">${mode === 'login' ? 'Sign in' : 'Create account'}</button>
+            <button class="btn primary big" type="submit">${{ login: 'Sign in', register: 'Create account', reset: 'Set new password' }[mode]}</button>
+            ${mode === 'login' ? '<button type="button" class="text-btn" data-mode="reset">Forgot password?</button>' : ''}
           </form>
         </div>
         ${install.standalone ? '' : `<a class="install-link" href="#/install">${icon('download', 18)}<span>Install the app on your phone</span>${icon('right', 18)}</a>`}
@@ -170,7 +178,8 @@ async function viewLogin() {
       btn.disabled = true;
       state.authBusy = true;
       try {
-        state.user = await (mode === 'login' ? store.signIn(body) : store.signUp(body));
+        state.user = await { login: store.signIn, register: store.signUp, reset: store.completeReset }[mode](body);
+        if (mode === 'reset') toast('Password changed. You are signed in.');
         location.hash = '#/home';
       } catch (err) {
         $('#auth-error').textContent = err.message;
@@ -264,6 +273,7 @@ async function viewHome() {
     store.getDay(today),
     store.workoutsOn(today),
   ]);
+  if (stale('home')) return;
   const me = board.find((p) => p.id === meId);
   const rank = board.indexOf(me) + 1;
   const lvl = me.level;
@@ -334,6 +344,7 @@ function workoutItem(w, withDelete = false) {
 
 async function viewTrain() {
   const workouts = await store.listWorkouts();
+  if (stale('train')) return;
   const form = { type: WORKOUT_TYPES[0].name, intensity: 'moderate' };
   const grouped = {};
   for (const w of workouts) (grouped[w.date] ||= []).push(w);
@@ -415,6 +426,7 @@ let foodDate = null;
 async function viewFuel() {
   foodDate ||= localDate();
   const [foods, day, recent] = await Promise.all([store.foodsOn(foodDate), store.getDay(foodDate), store.recentFoods()]);
+  if (stale('fuel')) return;
   const goal = state.user.calorieGoal;
   const eaten = foods.reduce((s, f) => s + f.calories, 0);
   const protein = foods.reduce((s, f) => s + (f.proteinG || 0), 0);
@@ -510,6 +522,7 @@ async function viewArena() {
   const today = localDate();
   const from = arenaPeriod === 'week' ? weekStart(today) : arenaPeriod === 'month' ? monthStart(today) : null;
   const { board, meId } = await store.leaderboard({ from, today });
+  if (stale('arena')) return;
   const leader = Math.max(...board.map((p) => p.points), 1);
   const periodLabel = { week: 'This week', month: 'This month', all: 'All time' }[arenaPeriod];
   const podium = [[board[1], 2], [board[0], 1], [board[2], 3]];
@@ -629,6 +642,7 @@ async function viewArena() {
 
 async function viewMe() {
   const { board, meId } = await store.leaderboard({ from: null, today: localDate() });
+  if (stale('me')) return;
   const me = board.find((p) => p.id === meId);
   const u = state.user;
   app.innerHTML = `
@@ -712,6 +726,7 @@ async function viewMe() {
 
 async function viewAdmin() {
   const [members, invite] = await Promise.all([store.listMembers(), store.getInviteCode()]);
+  if (stale('admin')) return;
   const appUrl = location.origin + location.pathname;
   app.innerHTML = `
     <a class="back" href="#/me">${icon('left', 18)} Profile</a>
@@ -750,11 +765,13 @@ async function viewAdmin() {
             ${m.id === state.user.id ? '<span class="muted small">You</span>' : `
               <div class="member-actions">
                 <button class="btn small-btn" data-role="${m.isAdmin ? 'member' : 'admin'}" data-id="${esc(m.id)}">${m.isAdmin ? 'Remove admin' : 'Make admin'}</button>
+                <button class="icon-btn" data-reset="${esc(m.id)}" aria-label="Reset password for ${esc(m.displayName)}" title="Reset password">${icon('key', 18)}</button>
                 <button class="icon-btn danger" data-remove="${esc(m.id)}" data-name="${esc(m.displayName)}" aria-label="Remove ${esc(m.displayName)}">${icon('trash', 18)}</button>
               </div>`}
           </li>`).join('')}
       </ul>
-      <p class="muted small">Removing someone locks their account and deletes their workouts and food log. Members can't reset a forgotten password themselves. Remove the account and have them sign up again.</p>
+      <div id="reset-panel"></div>
+      <p class="muted small">The key button makes a one-time reset code for someone who forgot their password. Removing someone locks their account and deletes their workouts and food log.</p>
     </section>`;
 
   $('#invite-form').addEventListener('submit', async (e) => {
@@ -784,6 +801,27 @@ async function viewAdmin() {
       await store.setRole(b.dataset.id, b.dataset.role);
       toast(b.dataset.role === 'admin' ? 'Now an admin' : 'Admin removed');
       viewAdmin();
+    } catch (err) { toast(err.message, 'bad'); }
+  }));
+  $$('[data-reset]').forEach((b) => b.addEventListener('click', async () => {
+    const m = members.find((x) => x.id === b.dataset.reset);
+    if (!confirm(`Make a password reset code for ${m.displayName}?`)) return;
+    try {
+      const code = await store.issueReset(m);
+      $('#reset-panel').innerHTML = `
+        <div class="reset-code">
+          ${label(`Reset code for ${esc(m.displayName)}`)}
+          <div class="row between gap">
+            <strong class="num code">${code}</strong>
+            <button class="btn small-btn" id="copy-code">${icon('copy', 16)} Copy</button>
+          </div>
+          <p class="muted small">Send this to ${esc(m.displayName.split(' ')[0])}. On the sign-in screen they tap <b>Forgot password?</b>, enter <b>${esc(m.username)}</b>, this code and a new password. It works once and expires in ${store.RESET_HOURS} hours. Making a new code replaces this one.</p>
+        </div>`;
+      $('#reset-panel').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      $('#copy-code').addEventListener('click', async () => {
+        await navigator.clipboard.writeText(code).catch(() => {});
+        toast('Code copied');
+      });
     } catch (err) { toast(err.message, 'bad'); }
   }));
   $$('[data-remove]').forEach((b) => b.addEventListener('click', async () => {

@@ -5,7 +5,8 @@ A small health app for a group of friends: log workouts, count calories, and com
 **Live site:** https://mpdoor1.github.io/FitFriends/
 
 - **Accounts:** a username and password. No email or verification.
-- **Admin:** admins can set the invite code, promote other admins, and remove members (Me → Admin panel).
+- **Admin:** admins can set the invite code, promote other admins, reset a member's password, and remove members (Me → Admin panel).
+- **Password resets:** the admin taps the key next to a member to get a one-time code (valid 24 hours). The member taps **Forgot password?** on the sign-in screen and enters it with a new password. Firebase can't change another person's password without a paid server, so the reset makes a fresh login and moves the member's profile onto it. All their data stays.
 - **Installable:** add it to your phone's home screen from the Install tab. It opens full screen like a normal app.
 - **Workouts:** type, minutes, intensity, optional distance and notes. Calories burned are estimated from MET values and your weight.
 - **Calories:** a daily log by meal with quick-add foods, your recent foods, a daily goal, and protein tracking.
@@ -50,3 +51,6 @@ To test without touching real data, run the Firebase emulators (`npx firebase-to
 | `days/{uid}_{date}` | Daily totals per person. The Arena reads these, which keeps reads well inside the free quota |
 | `config/private` | Optional `inviteCode`. Only admins can read or change it |
 | `banned/{uid}` | Members removed by an admin |
+| `logins/{username}` | Which login a username currently uses (anyone can look up one username; nobody can list them) |
+| `resets/{uid}` | Pending password reset: only a SHA-256 hash of the code plus its expiry. Admins only |
+| `aliases/{loginUid}` | Links a login created by a reset to the member's profile |
