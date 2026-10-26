@@ -69,6 +69,18 @@ function profileFrom(snap) {
     joined: d.createdAt?.toDate?.() || null,
     calorieGoal: d.calorieGoal,
     weightKg: d.weightKg,
+    units: d.units || 'imperial',
+    sex: d.sex || null,
+    birthYear: d.birthYear || null,
+    heightCm: d.heightCm || null,
+    activity: d.activity || 'moderate',
+    goalPace: d.goalPace ?? 0,
+    goalWeightKg: d.goalWeightKg ?? null,
+    proteinGoal: d.proteinGoal ?? null,
+    carbsGoal: d.carbsGoal ?? null,
+    fatGoal: d.fatGoal ?? null,
+    waterGoal: d.waterGoal ?? 8,
+    onboarded: Boolean(d.onboarded),
     bestStreak: d.bestStreak || 0,
     stats: { xp: 0, workouts: 0, minutes: 0, calories: 0, goalDays: 0, types: {}, ...d.stats },
   };
@@ -121,6 +133,8 @@ export async function signUp({ username, password, displayName, inviteCode }) {
       color: COLORS[i],
       calorieGoal: 2000,
       weightKg: 70,
+      units: 'imperial',
+      onboarded: false,
       invite: String(inviteCode || '').trim(),
       bestStreak: 0,
       stats: { xp: 0, workouts: 0, minutes: 0, calories: 0, goalDays: 0, types: {} },
@@ -211,46 +225,191 @@ export async function getProfile(id = pid()) {
   return profileFrom(snap);
 }
 
-export async function updateProfile(me, changes) {
-  const goal = Math.round(Number(changes.calorieGoal));
-  const weight = Number(changes.weightKg);
-  await updateDoc(userRef(), {
-    displayName: String(changes.displayName || '').trim().slice(0, 40) || me.displayName,
-    color: /^#[0-9a-f]{6}$/i.test(changes.color) ? changes.color : me.color,
-    calorieGoal: goal >= 800 && goal <= 6000 ? goal : me.calorieGoal,
-    weightKg: weight >= 25 && weight <= 300 ? weight : me.weightKg,
-  });
+const ACTIVITIES = ['sedentary', 'light', 'moderate', 'very', 'athlete'];
+const inRange = (v, lo, hi) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
+
+// Saves only the fields given; each is checked so bad input never reaches the database.
+export async function updateProfile(changes) {
+  const c = changes;
+  const patch = {};
+  const num = (k, lo, hi, digits = 0) => {
+    if (!(k in c)) return;
+    if (c[k] === null || c[k] === '') { patch[k] = null; return; }
+    const v = Number(c[k]);
+    if (!inRange(v, lo, hi)) throw new Error(`${k} looks off.`);
+    patch[k] = Math.round(v * 10 ** digits) / 10 ** digits;
+  };
+  if ('displayName' in c) patch.displayName = String(c.displayName || '').trim().slice(0, 40) || 'Friend';
+  if ('color' in c && /^#[0-9a-f]{6}$/i.test(c.color)) patch.color = c.color;
+  if ('units' in c) patch.units = c.units === 'metric' ? 'metric' : 'imperial';
+  if ('sex' in c) patch.sex = ['male', 'female'].includes(c.sex) ? c.sex : null;
+  if ('activity' in c && ACTIVITIES.includes(c.activity)) patch.activity = c.activity;
+  if ('onboarded' in c) patch.onboarded = Boolean(c.onboarded);
+  num('calorieGoal', 800, 6000);
+  num('weightKg', 25, 300, 2);
+  num('goalWeightKg', 25, 300, 2);
+  num('heightCm', 90, 250, 1);
+  num('birthYear', 1920, new Date().getFullYear() - 8);
+  num('goalPace', -2, 2, 2);
+  num('proteinGoal', 0, 600);
+  num('carbsGoal', 0, 1200);
+  num('fatGoal', 0, 400);
+  num('waterGoal', 0, 30);
+  await updateDoc(userRef(), patch);
   return getProfile();
 }
 
-// ---------- workouts ----------
+// ---------- body weight ----------
+
+export async function listWeights() {
+  const snap = await getDocs(query(collection(db, 'users', pid(), 'weights'), orderBy('date')));
+  return snap.docs.map((d) => d.data());
+}
+
+// One weigh-in per day; logging again on the same day replaces it. The latest one drives burn estimates.
+export async function addWeight(date, kg) {
+  if (!isDate(date)) throw new Error('Pick a date.');
+  if (!inRange(kg, 25, 300)) throw new Error('That weight looks off.');
+  kg = Math.round(kg * 100) / 100;
+  await setDoc(doc(db, 'users', pid(), 'weights', date), { date, kg, createdAt: serverTimestamp() });
+  await syncCurrentWeight();
+}
+
+export async function deleteWeight(date) {
+  await deleteDoc(doc(db, 'users', pid(), 'weights', date));
+  await syncCurrentWeight();
+}
+
+async function syncCurrentWeight() {
+  const snap = await getDocs(query(collection(db, 'users', pid(), 'weights'), orderBy('date', 'desc'), limit(1)));
+  if (!snap.empty) await updateDoc(userRef(), { weightKg: snap.docs[0].data().kg });
+}
+
+// ---------- days ----------
 
 const isDate = (s) => /^\d{4}-\d{2}-\d{2}$/.test(s);
 
-export async function addWorkout(me, input) {
-  const duration = Math.round(Number(input.durationMin));
-  const distance = input.distanceKm === '' || input.distanceKm == null ? null : Number(input.distanceKm);
-  if (!isDate(input.date)) throw new Error('Pick a date.');
-  if (!(duration >= 1 && duration <= 600)) throw new Error('Duration must be 1-600 minutes.');
-  if (distance !== null && !(distance >= 0 && distance <= 1000)) throw new Error('Distance looks off.');
+function emptyDay(date) {
+  return { uid: pid(), date, wPoints: 0, wMinutes: 0, wCalories: 0, wCount: 0, types: {}, foodCalories: 0, foodCount: 0, foodPoints: 0, water: 0 };
+}
+const dayData = (snap, date) => ({ ...emptyDay(date), ...(snap.exists() ? snap.data() : {}) });
 
-  const workout = {
+export async function getDay(date) {
+  return dayData(await getDoc(dayRef(date)), date);
+}
+
+// Own daily totals between two dates (inclusive), keyed by date.
+export async function myDays(from, to) {
+  const snap = await getDocs(query(collection(db, 'days'), where('date', '>=', from), where('date', '<=', to)));
+  const out = {};
+  for (const d of snap.docs) if (d.data().uid === pid()) out[d.data().date] = d.data();
+  return out;
+}
+
+export async function setWater(date, glasses) {
+  await runTransaction(db, async (tx) => {
+    const ref = dayRef(date);
+    const d = dayData(await tx.get(ref), date);
+    tx.set(ref, { ...d, water: Math.max(0, Math.min(30, glasses)) });
+  });
+}
+
+// Pure helpers: how a workout or a food change moves a day's totals.
+function dayWithWorkout(d, w, sign) {
+  return {
+    ...d,
+    wPoints: d.wPoints + sign * w.points,
+    wMinutes: d.wMinutes + sign * w.durationMin,
+    wCalories: d.wCalories + sign * w.calories,
+    wCount: d.wCount + sign,
+    types: { ...d.types, [w.type]: (d.types?.[w.type] || 0) + sign },
+  };
+}
+function dayWithFood(d, deltaCalories, deltaCount, goal) {
+  const foodCalories = Math.max(0, d.foodCalories + deltaCalories);
+  const foodCount = Math.max(0, d.foodCount + deltaCount);
+  const foodPoints = foodCount > 0 ? goalDayPoints(Math.max(foodCalories, 1), goal) : 0;
+  return { ...d, foodCalories, foodCount, foodPoints };
+}
+const hit = (p) => (p >= GOAL_DAY_POINTS ? 1 : 0);
+
+// Adds up user stat increments; several changes to the same counter are merged into one.
+function statsUpdate(changes) {
+  const sum = {};
+  for (const [k, v] of changes) if (v) sum[k] = (sum[k] || 0) + v;
+  return Object.fromEntries(Object.entries(sum).filter(([, v]) => v).map(([k, v]) => [k, increment(v)]));
+}
+const workoutStats = (w, sign) => [
+  ['stats.xp', sign * w.points], ['stats.workouts', sign], ['stats.minutes', sign * w.durationMin],
+  ['stats.calories', sign * w.calories], [`stats.types.${w.type}`, sign],
+];
+
+// ---------- workouts ----------
+
+function cleanWorkout(me, input) {
+  const duration = Math.round(Number(input.durationMin));
+  const distance = input.distanceKm === '' || input.distanceKm == null ? null : Math.round(Number(input.distanceKm) * 1000) / 1000;
+  const avgHr = input.avgHr === '' || input.avgHr == null ? null : Math.round(Number(input.avgHr));
+  if (!isDate(input.date)) throw new Error('Pick a date.');
+  if (!(duration >= 1 && duration <= 600)) throw new Error('Duration must be 1–600 minutes.');
+  if (distance !== null && !(distance >= 0 && distance <= 1000)) throw new Error('Distance looks off.');
+  if (avgHr !== null && !(avgHr >= 40 && avgHr <= 230)) throw new Error('Heart rate should be 40–230 bpm.');
+  const exercises = (input.exercises || [])
+    .map((ex) => ({
+      name: String(ex.name || '').trim().slice(0, 60),
+      sets: (ex.sets || [])
+        .map((s) => ({ reps: Math.round(Number(s.reps) || 0), weightKg: Math.round((Number(s.weightKg) || 0) * 100) / 100 }))
+        .filter((s) => s.reps > 0 && s.reps <= 1000 && s.weightKg >= 0 && s.weightKg <= 700)
+        .slice(0, 30),
+    }))
+    .filter((ex) => ex.name && ex.sets.length)
+    .slice(0, 30);
+  return {
     date: input.date,
     type: input.type,
     intensity: input.intensity,
     durationMin: duration,
     distanceKm: distance,
+    avgHr,
+    exercises,
     notes: String(input.notes || '').trim().slice(0, 500),
     calories: workoutCalories(input.type, input.intensity, duration, me.weightKg),
     points: workoutPoints(input.intensity, duration),
   };
+}
+
+export async function addWorkout(me, input) {
+  const workout = cleanWorkout(me, input);
   const ref = doc(collection(db, 'users', pid(), 'workouts'));
   await runTransaction(db, async (tx) => {
     const day = await tx.get(dayRef(workout.date));
     tx.set(ref, { ...workout, createdAt: serverTimestamp() });
-    applyWorkoutToDay(tx, day, workout, 1);
+    tx.set(day.ref, dayWithWorkout(dayData(day, workout.date), workout, 1));
+    tx.update(userRef(), statsUpdate(workoutStats(workout, 1)));
   });
   return { id: ref.id, ...workout };
+}
+
+export async function updateWorkout(me, old, input) {
+  const next = cleanWorkout(me, input);
+  await runTransaction(db, async (tx) => {
+    const ref = doc(db, 'users', pid(), 'workouts', old.id);
+    const snap = await tx.get(ref);
+    if (!snap.exists()) throw new Error('That workout was deleted.');
+    const prev = snap.data();
+    const oldDay = await tx.get(dayRef(prev.date));
+    const newDay = prev.date === next.date ? oldDay : await tx.get(dayRef(next.date));
+    if (prev.date === next.date) {
+      tx.set(oldDay.ref, dayWithWorkout(dayWithWorkout(dayData(oldDay, prev.date), prev, -1), next, 1));
+    } else {
+      tx.set(oldDay.ref, dayWithWorkout(dayData(oldDay, prev.date), prev, -1));
+      tx.set(newDay.ref, dayWithWorkout(dayData(newDay, next.date), next, 1));
+    }
+    tx.update(ref, next);
+    const update = statsUpdate([...workoutStats(prev, -1), ...workoutStats(next, 1)]);
+    if (Object.keys(update).length) tx.update(userRef(), update);
+  });
+  return { id: old.id, ...next };
 }
 
 export async function deleteWorkout(w) {
@@ -259,35 +418,13 @@ export async function deleteWorkout(w) {
     const [snap, day] = [await tx.get(ref), await tx.get(dayRef(w.date))];
     if (!snap.exists()) return;
     tx.delete(ref);
-    applyWorkoutToDay(tx, day, snap.data(), -1);
+    tx.set(day.ref, dayWithWorkout(dayData(day, w.date), snap.data(), -1));
+    tx.update(userRef(), statsUpdate(workoutStats(snap.data(), -1)));
   });
 }
 
-function applyWorkoutToDay(tx, daySnap, w, sign) {
-  const d = daySnap.exists() ? daySnap.data() : emptyDay(w.date);
-  tx.set(daySnap.ref, {
-    ...d,
-    wPoints: d.wPoints + sign * w.points,
-    wMinutes: d.wMinutes + sign * w.durationMin,
-    wCalories: d.wCalories + sign * w.calories,
-    wCount: d.wCount + sign,
-    types: { ...d.types, [w.type]: (d.types?.[w.type] || 0) + sign },
-  });
-  tx.update(userRef(), {
-    'stats.xp': increment(sign * w.points),
-    'stats.workouts': increment(sign),
-    'stats.minutes': increment(sign * w.durationMin),
-    'stats.calories': increment(sign * w.calories),
-    [`stats.types.${w.type}`]: increment(sign),
-  });
-}
-
-function emptyDay(date) {
-  return { uid: pid(), date, wPoints: 0, wMinutes: 0, wCalories: 0, wCount: 0, types: {}, foodCalories: 0, foodCount: 0, foodPoints: 0 };
-}
-
-export async function listWorkouts() {
-  const snap = await getDocs(query(collection(db, 'users', pid(), 'workouts'), orderBy('date', 'desc'), limit(150)));
+export async function listWorkouts(max = 400) {
+  const snap = await getDocs(query(collection(db, 'users', pid(), 'workouts'), orderBy('date', 'desc'), limit(max)));
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
@@ -298,51 +435,82 @@ export async function workoutsOn(date) {
 
 // ---------- food ----------
 
-export async function addFood(me, input) {
-  const calories = Math.round(Number(input.calories));
-  const protein = input.proteinG === '' || input.proteinG == null ? null : Number(input.proteinG);
+const MEAL_KEYS = ['breakfast', 'lunch', 'dinner', 'snack'];
+const r1 = (n) => Math.round(n * 10) / 10;
+
+// A food entry stores the per-serving values and the totals for the servings eaten.
+function cleanFood(input) {
   const name = String(input.name || '').trim().slice(0, 80);
+  const servings = Number(input.servings ?? 1);
+  const per = {
+    calories: Math.round(Number(input.per?.calories ?? input.calories)),
+    proteinG: r1(Number(input.per?.proteinG ?? input.proteinG) || 0),
+    carbsG: r1(Number(input.per?.carbsG ?? input.carbsG) || 0),
+    fatG: r1(Number(input.per?.fatG ?? input.fatG) || 0),
+  };
   if (!isDate(input.date)) throw new Error('Pick a date.');
   if (!name) throw new Error('What did you eat?');
-  if (!(calories >= 0 && calories <= 5000)) throw new Error('Calories must be 0-5000.');
-  if (protein !== null && !(protein >= 0 && protein <= 500)) throw new Error('Protein looks off.');
-  const food = {
+  if (!(servings > 0 && servings <= 20)) throw new Error('Servings must be between 0 and 20.');
+  if (!(per.calories >= 0 && per.calories <= 5000)) throw new Error('Calories must be 0–5,000.');
+  if ([per.proteinG, per.carbsG, per.fatG].some((g) => g < 0 || g > 500)) throw new Error('Macros look off.');
+  return {
     date: input.date,
-    meal: ['breakfast', 'lunch', 'dinner', 'snack'].includes(input.meal) ? input.meal : 'snack',
+    meal: MEAL_KEYS.includes(input.meal) ? input.meal : 'snack',
     name,
-    calories,
-    proteinG: protein,
+    serving: String(input.serving || '').trim().slice(0, 40),
+    servings: Math.round(servings * 100) / 100,
+    per,
+    calories: Math.round(per.calories * servings),
+    proteinG: r1(per.proteinG * servings),
+    carbsG: r1(per.carbsG * servings),
+    fatG: r1(per.fatG * servings),
   };
+}
+
+export async function addFood(me, input) {
+  const food = cleanFood(input);
   const ref = doc(collection(db, 'users', pid(), 'foods'));
   await runTransaction(db, async (tx) => {
-    const day = await tx.get(dayRef(food.date));
+    const daySnap = await tx.get(dayRef(food.date));
+    const d = dayData(daySnap, food.date);
+    const nd = dayWithFood(d, food.calories, 1, me.calorieGoal);
     tx.set(ref, { ...food, createdAt: serverTimestamp() });
-    applyFoodToDay(tx, day, food.calories, 1, me.calorieGoal);
+    tx.set(daySnap.ref, nd);
+    const update = statsUpdate([['stats.xp', nd.foodPoints - d.foodPoints], ['stats.goalDays', hit(nd.foodPoints) - hit(d.foodPoints)]]);
+    if (Object.keys(update).length) tx.update(userRef(), update);
   });
   return { id: ref.id, ...food };
+}
+
+// Change servings or meal of an entry.
+export async function updateFood(me, old, changes) {
+  await runTransaction(db, async (tx) => {
+    const ref = doc(db, 'users', pid(), 'foods', old.id);
+    const snap = await tx.get(ref);
+    if (!snap.exists()) throw new Error('That entry was deleted.');
+    const prev = snap.data();
+    const next = cleanFood({ ...prev, per: prev.per || { calories: prev.calories, proteinG: prev.proteinG, carbsG: prev.carbsG, fatG: prev.fatG }, servings: prev.servings || 1, ...changes });
+    const daySnap = await tx.get(dayRef(prev.date));
+    const d = dayData(daySnap, prev.date);
+    const nd = dayWithFood(d, next.calories - prev.calories, 0, me.calorieGoal);
+    tx.update(ref, next);
+    tx.set(daySnap.ref, nd);
+    const update = statsUpdate([['stats.xp', nd.foodPoints - d.foodPoints], ['stats.goalDays', hit(nd.foodPoints) - hit(d.foodPoints)]]);
+    if (Object.keys(update).length) tx.update(userRef(), update);
+  });
 }
 
 export async function deleteFood(me, f) {
   await runTransaction(db, async (tx) => {
     const ref = doc(db, 'users', pid(), 'foods', f.id);
-    const [snap, day] = [await tx.get(ref), await tx.get(dayRef(f.date))];
+    const [snap, daySnap] = [await tx.get(ref), await tx.get(dayRef(f.date))];
     if (!snap.exists()) return;
+    const d = dayData(daySnap, f.date);
+    const nd = dayWithFood(d, -snap.data().calories, -1, me.calorieGoal);
     tx.delete(ref);
-    applyFoodToDay(tx, day, snap.data().calories, -1, me.calorieGoal);
-  });
-}
-
-// Recomputes the day's food points against the current goal and moves the user's XP by the difference.
-function applyFoodToDay(tx, daySnap, calories, sign, goal) {
-  const d = daySnap.exists() ? daySnap.data() : emptyDay(daySnap.id.split('_').pop());
-  const foodCalories = d.foodCalories + sign * calories;
-  const foodCount = d.foodCount + sign;
-  const foodPoints = foodCount > 0 ? goalDayPoints(Math.max(foodCalories, 1), goal) : 0;
-  const hit = (p) => (p >= GOAL_DAY_POINTS ? 1 : 0);
-  tx.set(daySnap.ref, { ...d, foodCalories, foodCount, foodPoints });
-  tx.update(userRef(), {
-    'stats.xp': increment(foodPoints - d.foodPoints),
-    'stats.goalDays': increment(hit(foodPoints) - hit(d.foodPoints)),
+    tx.set(daySnap.ref, nd);
+    const update = statsUpdate([['stats.xp', nd.foodPoints - d.foodPoints], ['stats.goalDays', hit(nd.foodPoints) - hit(d.foodPoints)]]);
+    if (Object.keys(update).length) tx.update(userRef(), update);
   });
 }
 
@@ -351,20 +519,25 @@ export async function foodsOn(date) {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0));
 }
 
+// Copies every entry of one meal to another day.
+export async function copyMeal(me, fromDate, meal, toDate) {
+  const items = (await foodsOn(fromDate)).filter((f) => f.meal === meal);
+  for (const f of items) await addFood(me, { ...f, date: toDate });
+  return items.length;
+}
+
+// Foods this member logged before, newest first, one per name, with per-serving values.
 export async function recentFoods() {
-  const snap = await getDocs(query(collection(db, 'users', pid(), 'foods'), orderBy('createdAt', 'desc'), limit(60)));
+  const snap = await getDocs(query(collection(db, 'users', pid(), 'foods'), orderBy('createdAt', 'desc'), limit(80)));
   const seen = new Map();
   for (const d of snap.docs) {
     const f = d.data();
-    const key = `${f.name}|${f.calories}`;
-    if (!seen.has(key)) seen.set(key, f);
+    const key = f.name.toLowerCase();
+    if (seen.has(key)) continue;
+    const per = f.per || { calories: f.calories, proteinG: f.proteinG || 0, carbsG: f.carbsG || 0, fatG: f.fatG || 0 };
+    seen.set(key, { name: f.name, serving: f.serving || '1 serving', ...per });
   }
-  return [...seen.values()].slice(0, 12);
-}
-
-export async function getDay(date) {
-  const snap = await getDoc(dayRef(date));
-  return snap.exists() ? snap.data() : emptyDay(date);
+  return [...seen.values()].slice(0, 20);
 }
 
 // ---------- competition ----------

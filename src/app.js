@@ -1,58 +1,16 @@
 import * as store from './store.js';
-import { WORKOUT_TYPES, INTENSITY } from './scoring.js';
-import { icon } from './icons.js';
+import { state } from './state.js';
+import {
+  $, $$, esc, fmt, icon, label, avatar, localDate, shiftDate, weekStart, monthStart, dayLetter, toast,
+} from './ui.js';
+import { viewToday } from './pages/today.js';
+import { viewTrain } from './pages/train.js';
+import { viewFuel } from './pages/fuel.js';
+import { viewBody } from './pages/body.js';
+import { viewMe } from './pages/me.js';
+import { viewSetup } from './pages/setup.js';
 
-// ---------- utilities ----------
-
-const $ = (sel, root = document) => root.querySelector(sel);
-const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const app = $('#app');
-
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const fmt = (n) => Math.round(n).toLocaleString();
-
-function localDate(d = new Date()) {
-  const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-  return z.toISOString().slice(0, 10);
-}
-function shiftDate(dateStr, days) {
-  const d = new Date(`${dateStr}T12:00:00`);
-  d.setDate(d.getDate() + days);
-  return localDate(d);
-}
-function weekStart(dateStr = localDate()) {
-  const d = new Date(`${dateStr}T12:00:00`);
-  return shiftDate(dateStr, -((d.getDay() + 6) % 7)); // Monday
-}
-const monthStart = (dateStr = localDate()) => `${dateStr.slice(0, 8)}01`;
-function prettyDate(dateStr) {
-  const today = localDate();
-  if (dateStr === today) return 'Today';
-  if (dateStr === shiftDate(today, -1)) return 'Yesterday';
-  return new Date(`${dateStr}T12:00:00`).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
-}
-
-let toastTimer;
-function toast(msg, kind = 'ok') {
-  const el = $('#toast');
-  el.textContent = msg;
-  el.className = `toast show ${kind}`;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { el.className = 'toast'; }, 2600);
-}
-
-// Big "+90" that floats up when points are earned.
-function pointsPop(points) {
-  const el = document.createElement('div');
-  el.className = 'pop';
-  el.textContent = `+${points}`;
-  document.body.appendChild(el);
-  setTimeout(() => el.remove(), 1300);
-}
-
-const initials = (name) => String(name || '?').trim().split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
-const avatar = (p, cls = '') => `<span class="ava ${cls}" style="--c:${esc(p.color)}">${esc(initials(p.displayName))}</span>`;
-const label = (text) => `<span class="eyebrow">${text}</span>`;
 
 // ---------- install / standalone detection ----------
 
@@ -76,27 +34,19 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 }
 
-// ---------- state & data ----------
-
-const state = { user: null, authBusy: false };
-
-const COMMON_FOODS = [
-  ['Eggs (2 large)', 140, 12], ['Oatmeal (1 cup)', 160, 6], ['Banana', 105, 1], ['Apple', 95, 0],
-  ['Greek yogurt', 130, 17], ['Toast with butter', 170, 4], ['Latte (16 oz)', 190, 12], ['Protein shake', 160, 30],
-  ['Turkey sandwich', 350, 24], ['Chicken salad', 400, 35], ['Chicken breast (6 oz)', 280, 52], ['Rice (1 cup)', 205, 4],
-  ['Pasta (2 cups)', 440, 16], ['Pizza slice', 285, 12], ['Burger', 550, 30], ['Burrito', 700, 30],
-  ['Sushi roll', 350, 12], ['Steak (8 oz)', 540, 60], ['Peanut butter (2 tbsp)', 190, 7], ['Cheese (1 oz)', 110, 7],
-  ['Chocolate bar', 230, 3], ['Cookie', 150, 2], ['Beer', 150, 2], ['Glass of wine', 125, 0],
-  ['Avocado (half)', 120, 1], ['Fries (medium)', 365, 4], ['Chips (1 oz)', 155, 2],
-];
-const MEALS = [['breakfast', 'Breakfast'], ['lunch', 'Lunch'], ['dinner', 'Dinner'], ['snack', 'Snacks']];
-const typeMet = (name) => WORKOUT_TYPES.find((t) => t.name === name)?.met || 5;
-
 // ---------- router & nav ----------
 
 const routes = {
-  login: viewLogin, install: viewInstall, home: viewHome, train: viewTrain, fuel: viewFuel,
-  arena: viewArena, me: viewMe, admin: viewAdmin,
+  login: viewLogin,
+  install: viewInstall,
+  setup: () => viewSetup(app),
+  home: () => viewToday(app, () => stale('home')),
+  train: () => viewTrain(app, () => stale('train')),
+  fuel: () => viewFuel(app, () => stale('fuel')),
+  body: () => viewBody(app, () => stale('body')),
+  arena: viewArena,
+  me: () => viewMe(app, () => stale('me'), install),
+  admin: viewAdmin,
 };
 const PUBLIC_ROUTES = ['login', 'install'];
 const currentRoute = () => location.hash.replace(/^#\//, '').split('?')[0] || 'home';
@@ -110,12 +60,14 @@ function buildNav() {
   $('#nav').style.setProperty('--n', items.length);
   highlightNav();
 }
+const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me' };
 function highlightNav() {
   const name = currentRoute();
-  $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === name || (name === 'admin' && a.dataset.route === 'me')));
+  $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === (NAV_PARENT[name] || name)));
 }
 
-async function render() {
+// soft: redraw the current page in place (after a save) without the spinner or jumping to the top.
+async function render({ soft = false } = {}) {
   if (!store.isReady) { app.innerHTML = '<div class="card">Firebase is not configured.</div>'; return; }
   let name = currentRoute();
   if (!routes[name]) name = 'home';
@@ -123,18 +75,21 @@ async function render() {
   if (state.user && name === 'login') { location.hash = '#/home'; return; }
   if (name === 'admin' && !state.user?.isAdmin) { location.hash = '#/me'; return; }
   document.body.classList.toggle('signed-in', Boolean(state.user));
-  $('#topbar').hidden = !state.user;
+  $('#topbar').hidden = !state.user || name === 'setup';
+  document.body.classList.toggle('no-nav', name === 'setup');
   highlightNav();
-  app.innerHTML = '<div class="loading"><span></span></div>';
+  const y = window.scrollY;
+  if (!soft) app.innerHTML = '<div class="loading"><span></span></div>';
   try {
     await routes[name]();
   } catch (e) {
     console.error(e);
     app.innerHTML = `<div class="card error">${esc(e.message)}</div>`;
   }
-  window.scrollTo(0, 0);
+  window.scrollTo(0, soft ? y : 0);
 }
-window.addEventListener('hashchange', render);
+window.addEventListener('hashchange', () => render());
+state.rerender = () => render({ soft: true });
 
 // ---------- login / register ----------
 
@@ -180,7 +135,7 @@ async function viewLogin() {
       try {
         state.user = await { login: store.signIn, register: store.signUp, reset: store.completeReset }[mode](body);
         if (mode === 'reset') toast('Password changed. You are signed in.');
-        location.hash = '#/home';
+        location.hash = mode === 'register' ? '#/setup' : '#/home';
       } catch (err) {
         $('#auth-error').textContent = err.message;
       } finally {
@@ -246,272 +201,6 @@ async function viewInstall() {
     if (outcome === 'accepted') toast('Installing…');
     render();
   });
-}
-
-// ---------- home ----------
-
-function calorieRing(eaten, goal, burned) {
-  const budget = goal + burned;
-  const pct = Math.min(eaten / budget, 1);
-  const over = eaten > budget;
-  const r = 70;
-  const c = 2 * Math.PI * r;
-  return `
-    <div class="ring-wrap">
-      <svg viewBox="0 0 180 180" class="ring">
-        <circle cx="90" cy="90" r="${r}" class="ring-bg"/>
-        <circle cx="90" cy="90" r="${r}" class="ring-fg ${over ? 'over' : ''}" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - pct)}"/>
-      </svg>
-      <div class="ring-label"><strong class="num">${fmt(Math.abs(budget - eaten))}</strong><span>${over ? 'kcal over' : 'kcal left'}</span></div>
-    </div>`;
-}
-
-async function viewHome() {
-  const today = localDate();
-  const [{ board, meId }, day, todaysWorkouts] = await Promise.all([
-    store.leaderboard({ from: weekStart(today), today }),
-    store.getDay(today),
-    store.workoutsOn(today),
-  ]);
-  if (stale('home')) return;
-  const me = board.find((p) => p.id === meId);
-  const rank = board.indexOf(me) + 1;
-  const lvl = me.level;
-  const hour = new Date().getHours();
-  const greet = hour < 12 ? 'Morning' : hour < 18 ? 'Afternoon' : 'Evening';
-  const dateLine = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
-
-  app.innerHTML = `
-    <section class="hello">
-      <div>
-        ${label(esc(dateLine))}
-        <h1>${greet}, ${esc(me.displayName.split(' ')[0])}</h1>
-      </div>
-      ${avatar(me, 'lg')}
-    </section>
-
-    <section class="card level">
-      <div class="row between">
-        <div class="level-name"><span class="lvl">LV ${lvl.number}</span>${esc(lvl.title)}</div>
-        <span class="num muted">${fmt(me.totalXp)} XP</span>
-      </div>
-      <div class="bar"><div style="width:${Math.round(lvl.progress * 100)}%"></div></div>
-      <p class="muted small">${fmt(lvl.toNext)} XP to level ${lvl.number + 1}</p>
-    </section>
-
-    <section class="stats">
-      <a class="stat" href="#/arena">${icon('arena', 18)}<strong class="num">${rank}<small>/${board.length}</small></strong><span>Weekly rank</span></a>
-      <div class="stat">${icon('flame', 18)}<strong class="num">${me.streak}</strong><span>Day streak</span></div>
-      <div class="stat">${icon('zap', 18)}<strong class="num">${fmt(me.points)}</strong><span>Points this week</span></div>
-      <div class="stat">${icon('timer', 18)}<strong class="num">${fmt(me.minutes)}</strong><span>Minutes this week</span></div>
-    </section>
-
-    <section class="grid2">
-      <div class="card">
-        <div class="row between head">${label('Calories today')}<a href="#/fuel" class="link">Log food ${icon('right', 16)}</a></div>
-        <div class="ring-row">
-          ${calorieRing(day.foodCalories, me.calorieGoal, day.wCalories)}
-          <dl class="kv">
-            <div><dt>Goal</dt><dd class="num">${fmt(me.calorieGoal)}</dd></div>
-            <div><dt>Eaten</dt><dd class="num">${fmt(day.foodCalories)}</dd></div>
-            <div><dt>Burned</dt><dd class="num">+${fmt(day.wCalories)}</dd></div>
-          </dl>
-        </div>
-      </div>
-      <div class="card">
-        <div class="row between head">${label('Training today')}<a href="#/train" class="link">Add ${icon('plus', 16)}</a></div>
-        ${todaysWorkouts.length ? `<ul class="list">${todaysWorkouts.map((w) => workoutItem(w)).join('')}</ul>`
-          : `<div class="empty"><p>Nothing logged yet today.</p><a class="btn primary" href="#/train">${icon('plus', 18)} Log a workout</a></div>`}
-      </div>
-    </section>`;
-}
-
-function workoutItem(w, withDelete = false) {
-  return `
-    <li class="item">
-      <span class="item-ico">${icon(w.type, 20)}</span>
-      <div class="item-main">
-        <strong>${esc(w.type)}</strong>
-        <span class="muted small">${w.durationMin} min · ${esc(INTENSITY[w.intensity]?.label || w.intensity)}${w.distanceKm ? ` · ${w.distanceKm} km` : ''} · ${fmt(w.calories)} kcal</span>
-        ${w.notes ? `<span class="note">${esc(w.notes)}</span>` : ''}
-      </div>
-      <span class="pts num">+${w.points}</span>
-      ${withDelete ? `<button class="icon-btn" data-del="${esc(w.id)}" aria-label="Delete workout">${icon('x', 18)}</button>` : ''}
-    </li>`;
-}
-
-// ---------- train ----------
-
-async function viewTrain() {
-  const workouts = await store.listWorkouts();
-  if (stale('train')) return;
-  const form = { type: WORKOUT_TYPES[0].name, intensity: 'moderate' };
-  const grouped = {};
-  for (const w of workouts) (grouped[w.date] ||= []).push(w);
-
-  app.innerHTML = `
-    ${label('Train')}
-    <h1 class="page-title">Log a workout</h1>
-    <section class="card">
-      <form id="w-form" class="stack">
-        <div class="type-grid" role="radiogroup" aria-label="Workout type">
-          ${WORKOUT_TYPES.map((t) => `<button type="button" role="radio" aria-checked="${t.name === form.type}" class="type-btn ${t.name === form.type ? 'on' : ''}" data-type="${esc(t.name)}">${icon(t.name, 22)}<span>${esc(t.name)}</span></button>`).join('')}
-        </div>
-        <div class="seg" role="radiogroup" aria-label="Intensity">
-          ${Object.entries(INTENSITY).map(([k, v]) => `<button type="button" data-int="${k}" class="${k === form.intensity ? 'on' : ''}">${v.label}</button>`).join('')}
-        </div>
-        <div class="fields">
-          <label>Minutes<input name="durationMin" type="number" min="1" max="600" value="30" required inputmode="numeric"></label>
-          <label>Distance (km)<input name="distanceKm" type="number" min="0" step="0.1" inputmode="decimal" placeholder="Optional"></label>
-          <label class="span2">Date<input name="date" type="date" value="${localDate()}" max="${localDate()}" required></label>
-        </div>
-        <label>Notes<input name="notes" maxlength="500" placeholder="5x5 squats, easy 5k, etc."></label>
-        <div class="preview" id="w-preview"></div>
-        <button class="btn primary big" type="submit">Save workout</button>
-      </form>
-    </section>
-    <section class="card">
-      ${label('History')}
-      ${workouts.length ? Object.entries(grouped).map(([date, ws]) => `
-        <h3 class="day-head">${prettyDate(date)} <span class="num muted">${ws.reduce((s, w) => s + w.points, 0)} pts</span></h3>
-        <ul class="list">${ws.map((w) => workoutItem(w, true)).join('')}</ul>`).join('')
-        : '<p class="empty">Your workouts will show up here.</p>'}
-    </section>`;
-
-  const f = $('#w-form');
-  const preview = () => {
-    const mins = Math.min(Number(f.durationMin.value) || 0, 600);
-    const cal = Math.round(typeMet(form.type) * INTENSITY[form.intensity].met * state.user.weightKg * (mins / 60));
-    const pts = Math.round(Math.min(mins, 300) * INTENSITY[form.intensity].points);
-    $('#w-preview').innerHTML = `<span>${icon('flame', 16)} <b class="num">~${fmt(cal)}</b> kcal</span><span>${icon('zap', 16)} <b class="num">+${fmt(pts)}</b> pts</span>`;
-  };
-  $$('.type-btn').forEach((b) => b.addEventListener('click', () => {
-    form.type = b.dataset.type;
-    $$('.type-btn').forEach((x) => { x.classList.toggle('on', x === b); x.setAttribute('aria-checked', x === b); });
-    preview();
-  }));
-  $$('[data-int]').forEach((b) => b.addEventListener('click', () => {
-    form.intensity = b.dataset.int;
-    $$('[data-int]').forEach((x) => x.classList.toggle('on', x === b));
-    preview();
-  }));
-  f.durationMin.addEventListener('input', preview);
-  preview();
-
-  f.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = f.querySelector('button[type=submit]');
-    btn.disabled = true;
-    try {
-      const workout = await store.addWorkout(state.user, { ...Object.fromEntries(new FormData(f)), type: form.type, intensity: form.intensity });
-      pointsPop(workout.points);
-      toast(`${workout.type} saved`);
-      viewTrain();
-    } catch (err) {
-      toast(err.message, 'bad');
-      btn.disabled = false;
-    }
-  });
-  $$('[data-del]').forEach((b) => b.addEventListener('click', async () => {
-    if (!confirm('Delete this workout?')) return;
-    await store.deleteWorkout(workouts.find((w) => w.id === b.dataset.del));
-    viewTrain();
-  }));
-}
-
-// ---------- fuel ----------
-
-let foodDate = null;
-
-async function viewFuel() {
-  foodDate ||= localDate();
-  const [foods, day, recent] = await Promise.all([store.foodsOn(foodDate), store.getDay(foodDate), store.recentFoods()]);
-  if (stale('fuel')) return;
-  const goal = state.user.calorieGoal;
-  const eaten = foods.reduce((s, f) => s + f.calories, 0);
-  const protein = foods.reduce((s, f) => s + (f.proteinG || 0), 0);
-  const budget = goal + day.wCalories;
-  const over = eaten > budget;
-  const hour = new Date().getHours();
-  const defaultMeal = hour < 11 ? 'breakfast' : hour < 15 ? 'lunch' : hour < 21 ? 'dinner' : 'snack';
-  const chip = (name, cal, protein) => `<button type="button" class="chip" data-quick="${esc(JSON.stringify([name, cal, protein ?? '']))}">${esc(name)}<em class="num">${cal}</em></button>`;
-
-  app.innerHTML = `
-    ${label('Fuel')}
-    <h1 class="page-title">Calories</h1>
-    <section class="card">
-      <div class="date-nav">
-        <button class="icon-btn" id="prev-day" aria-label="Previous day">${icon('left', 20)}</button>
-        <strong>${prettyDate(foodDate)}</strong>
-        <button class="icon-btn" id="next-day" aria-label="Next day" ${foodDate >= localDate() ? 'disabled' : ''}>${icon('right', 20)}</button>
-      </div>
-      <div class="meter"><div class="${over ? 'over' : ''}" style="width:${Math.min((eaten / budget) * 100, 100)}%"></div></div>
-      <div class="cal-stats">
-        <div><strong class="num">${fmt(eaten)}</strong><span>Eaten</span></div>
-        <div><strong class="num">${fmt(goal)}</strong><span>Goal</span></div>
-        <div><strong class="num">+${fmt(day.wCalories)}</strong><span>Burned</span></div>
-        <div class="${over ? 'bad' : 'good'}"><strong class="num">${fmt(Math.abs(budget - eaten))}</strong><span>${over ? 'Over' : 'Left'}</span></div>
-        <div><strong class="num">${fmt(protein)}g</strong><span>Protein</span></div>
-      </div>
-      <p class="muted small">Finish the day at 70–105% of your goal for <b>+25 pts</b>. Logging anything earns +5.</p>
-    </section>
-
-    <section class="card">
-      ${label('Add food')}
-      <form id="f-form" class="stack">
-        <label>Food<input name="name" required maxlength="80" placeholder="Chicken burrito" list="food-suggest" autocomplete="off"></label>
-        <div class="fields three">
-          <label>Calories<input name="calories" type="number" min="0" max="5000" required inputmode="numeric"></label>
-          <label>Protein (g)<input name="proteinG" type="number" min="0" max="500" step="0.1" inputmode="decimal"></label>
-          <label>Meal<select name="meal">${MEALS.map(([k, l]) => `<option value="${k}" ${k === defaultMeal ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-        </div>
-        <datalist id="food-suggest">${COMMON_FOODS.map(([n]) => `<option value="${esc(n)}">`).join('')}</datalist>
-        <button class="btn primary big" type="submit">Add food</button>
-      </form>
-      ${recent.length ? `<h3 class="sub">Recent</h3><div class="chips">${recent.map((r) => chip(r.name, r.calories, r.proteinG)).join('')}</div>` : ''}
-      <h3 class="sub">Quick add</h3>
-      <div class="chips">${COMMON_FOODS.map(([n, c, p]) => chip(n, c, p)).join('')}</div>
-    </section>
-
-    <section class="card">
-      ${label(`Logged · ${prettyDate(foodDate)}`)}
-      ${MEALS.map(([k, name]) => {
-        const items = foods.filter((f) => f.meal === k);
-        if (!items.length) return '';
-        return `<h3 class="day-head">${name} <span class="num muted">${fmt(items.reduce((s, f) => s + f.calories, 0))} kcal</span></h3>
-          <ul class="list">${items.map((f) => `
-            <li class="item">
-              <div class="item-main"><strong>${esc(f.name)}</strong>${f.proteinG ? `<span class="muted small">${f.proteinG}g protein</span>` : ''}</div>
-              <span class="num cal">${fmt(f.calories)}</span>
-              <button class="icon-btn" data-del="${esc(f.id)}" aria-label="Delete food">${icon('x', 18)}</button>
-            </li>`).join('')}</ul>`;
-      }).join('') || '<p class="empty">Nothing logged for this day yet.</p>'}
-    </section>`;
-
-  const f = $('#f-form');
-  const add = async (body) => {
-    try {
-      await store.addFood(state.user, { ...body, date: foodDate });
-      toast(`Added ${body.name}`);
-      viewFuel();
-    } catch (err) { toast(err.message, 'bad'); }
-  };
-  f.addEventListener('submit', (e) => { e.preventDefault(); add(Object.fromEntries(new FormData(f))); });
-  f.name.addEventListener('change', () => {
-    const match = COMMON_FOODS.find(([n]) => n === f.name.value);
-    if (match) { f.calories.value = match[1]; f.proteinG.value = match[2]; }
-  });
-  $$('[data-quick]').forEach((b) => b.addEventListener('click', () => {
-    const [name, calories, proteinG] = JSON.parse(b.dataset.quick);
-    b.disabled = true;
-    add({ name, calories, proteinG, meal: f.meal.value });
-  }));
-  $$('[data-del]').forEach((b) => b.addEventListener('click', async () => {
-    await store.deleteFood(state.user, foods.find((x) => x.id === b.dataset.del));
-    viewFuel();
-  }));
-  $('#prev-day').addEventListener('click', () => { foodDate = shiftDate(foodDate, -1); viewFuel(); });
-  $('#next-day').addEventListener('click', () => { foodDate = shiftDate(foodDate, 1); viewFuel(); });
 }
 
 // ---------- arena ----------
@@ -636,90 +325,6 @@ async function viewArena() {
 
   $$('[data-period]').forEach((b) => b.addEventListener('click', () => { arenaPeriod = b.dataset.period; viewArena(); }));
   requestAnimationFrame(() => requestAnimationFrame(() => $$('.race, .cmp').forEach((el) => el.classList.add('go'))));
-}
-
-// ---------- me ----------
-
-async function viewMe() {
-  const { board, meId } = await store.leaderboard({ from: null, today: localDate() });
-  if (stale('me')) return;
-  const me = board.find((p) => p.id === meId);
-  const u = state.user;
-  app.innerHTML = `
-    ${label('Profile')}
-    <section class="me-head">
-      ${avatar(u, 'xl')}
-      <div>
-        <h1>${esc(u.displayName)}</h1>
-        <span class="muted">@${esc(u.username)}${u.isAdmin ? ' · <span class="tag">Admin</span>' : ''}</span>
-      </div>
-    </section>
-
-    ${u.isAdmin ? `<a class="card link-card" href="#/admin">${icon('shield', 22)}<div><strong>Admin panel</strong><span class="muted small">Members, roles and the invite code</span></div>${icon('right', 20)}</a>` : ''}
-    ${install.standalone ? '' : `<a class="card link-card" href="#/install">${icon('download', 22)}<div><strong>Install the app</strong><span class="muted small">Add FitFriends to your home screen</span></div>${icon('right', 20)}</a>`}
-
-    <section class="card">
-      ${label('Your details')}
-      <form id="p-form" class="stack">
-        <label>Display name<input name="displayName" value="${esc(u.displayName)}" maxlength="40"></label>
-        <div><span class="field-label">Color</span><div class="swatches">${store.COLORS.map((c) => `<button type="button" class="swatch ${c === u.color ? 'on' : ''}" data-color="${c}" style="--c:${c}" aria-label="Color ${c}"></button>`).join('')}</div></div>
-        <div class="fields">
-          <label>Daily calorie goal<input name="calorieGoal" type="number" min="800" max="6000" value="${u.calorieGoal}" inputmode="numeric"></label>
-          <label>Weight (kg)<input name="weightKg" type="number" min="25" max="300" step="0.1" value="${u.weightKg}" inputmode="decimal"></label>
-        </div>
-        <button class="btn primary" type="submit">Save changes</button>
-      </form>
-    </section>
-
-    <section class="card">
-      ${label('Badges')}
-      <div class="badge-list">
-        ${me.badges.map((b) => `<div class="badge-row ${b.earned ? 'earned' : ''}"><span class="badge ${b.earned ? 'earned' : ''}">${icon(b.icon, 18)}</span><div><strong>${esc(b.name)}</strong><div class="muted small">${esc(b.desc)}</div></div></div>`).join('')}
-      </div>
-      <p class="muted small">Best streak ${me.bestStreak} days · ${fmt(me.minutes)} lifetime minutes · ${fmt(me.workouts)} workouts</p>
-    </section>
-
-    <section class="card">
-      ${label('Change password')}
-      <form id="pw-form" class="stack">
-        <div class="fields">
-          <label>Current<input name="currentPassword" type="password" required autocomplete="current-password"></label>
-          <label>New<input name="newPassword" type="password" required minlength="6" autocomplete="new-password"></label>
-        </div>
-        <button class="btn" type="submit">Update password</button>
-      </form>
-    </section>
-
-    <button class="btn ghost-danger" id="logout">${icon('logout', 18)} Sign out</button>`;
-
-  let color = u.color;
-  $$('[data-color]').forEach((b) => b.addEventListener('click', () => {
-    color = b.dataset.color;
-    $$('[data-color]').forEach((x) => x.classList.toggle('on', x === b));
-    $('.me-head .ava').style.setProperty('--c', color);
-  }));
-  $('#p-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-      state.user = await store.updateProfile(state.user, { ...Object.fromEntries(new FormData(e.target)), color });
-      toast('Saved');
-      viewMe();
-    } catch (err) { toast(err.message, 'bad'); }
-  });
-  $('#pw-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    try {
-      const { currentPassword, newPassword } = Object.fromEntries(new FormData(e.target));
-      await store.changePassword(currentPassword, newPassword);
-      e.target.reset();
-      toast('Password updated');
-    } catch (err) { toast(err.message, 'bad'); }
-  });
-  $('#logout').addEventListener('click', async () => {
-    await store.signOut();
-    state.user = null;
-    location.hash = '#/login';
-  });
 }
 
 // ---------- admin ----------

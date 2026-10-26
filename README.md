@@ -8,8 +8,11 @@ A small health app for a group of friends: log workouts, count calories, and com
 - **Admin:** admins can set the invite code, promote other admins, reset a member's password, and remove members (Me → Admin panel).
 - **Password resets:** the admin taps the key next to a member to get a one-time code (valid 24 hours). The member taps **Forgot password?** on the sign-in screen and enters it with a new password. Firebase can't change another person's password without a paid server, so the reset makes a fresh login and moves the member's profile onto it. All their data stays.
 - **Installable:** add it to your phone's home screen from the Install tab. It opens full screen like a normal app.
-- **Workouts:** type, minutes, intensity, optional distance and notes. Calories burned are estimated from MET values and your weight.
-- **Calories:** a daily log by meal with quick-add foods, your recent foods, a daily goal, and protein tracking.
+- **Setup guide:** after sign-up, five quick steps (units, about you, activity, goal) produce a daily calorie target (Mifflin-St Jeor) plus protein, carbs and fat targets.
+- **Units:** pounds and miles by default; switch to kg and km in your profile. Everything is stored metric.
+- **Workouts:** 14 types, intensity, duration stepper, distance with live pace or speed, heart rate, notes, and sets × reps × weight for lifting. Shows what you did last time for each exercise and flags new personal records (by estimated 1RM). Edit, "do again", and delete with undo.
+- **Calories:** about 120 common foods with protein, carbs and fat, search and categories, your recent foods, custom foods, serving sizes, edit and undo, "same as yesterday" for a meal, macro bars, water glasses, and a 14-day chart against your goal.
+- **Body weight:** weigh-ins with an interactive chart (1M / 3M / 1Y / All), goal weight, weekly change, BMI. The latest weigh-in drives calorie-burn estimates.
 - **Arena:** an animated race track, a podium, a daily points heatmap, head-to-head stat bars, levels, XP and badges.
 
 **Stack:** a static site on GitHub Pages, with Firebase Authentication and Cloud Firestore on the free Spark plan. The `npm run build` step uses esbuild to bundle `src/` (including the Firebase SDK) into `dist/`.
@@ -47,7 +50,8 @@ To test without touching real data, run the Firebase emulators (`npx firebase-to
 |---|---|
 | `users/{uid}` | Profile and all-time stats (xp, workouts, minutes, calories, goalDays, types) |
 | `users/{uid}/workouts/{id}` | One workout |
-| `users/{uid}/foods/{id}` | One food entry |
+| `users/{uid}/foods/{id}` | One food entry (per-serving values plus totals for the servings eaten) |
+| `users/{uid}/weights/{date}` | One weigh-in per day, in kg |
 | `days/{uid}_{date}` | Daily totals per person. The Arena reads these, which keeps reads well inside the free quota |
 | `config/private` | Optional `inviteCode`. Only admins can read or change it |
 | `banned/{uid}` | Members removed by an admin |
