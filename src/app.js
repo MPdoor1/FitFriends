@@ -13,6 +13,8 @@ import { viewMe } from './pages/me.js';
 import { viewSetup } from './pages/setup.js';
 import { refreshPush } from './notify.js';
 import { viewAlerts } from './pages/alerts.js';
+import { viewRoutines, viewRoutineEdit } from './pages/routines-page.js';
+import { viewPlayer, viewTimers } from './pages/player.js';
 
 const app = $('#app');
 
@@ -51,6 +53,10 @@ const routes = {
   arena: viewArena,
   me: () => viewMe(app, () => stale('me'), install),
   notifications: () => viewAlerts(app, () => stale('notifications')),
+  routines: () => viewRoutines(app, () => stale('routines')),
+  routine: () => viewRoutineEdit(app, () => stale('routine')),
+  play: () => viewPlayer(app),
+  timers: () => viewTimers(app),
   admin: viewAdmin,
 };
 const PUBLIC_ROUTES = ['login', 'install'];
@@ -65,7 +71,7 @@ function buildNav() {
   $('#nav').style.setProperty('--n', items.length);
   highlightNav();
 }
-const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me', notifications: 'me' };
+const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me', notifications: 'me', routines: 'train', routine: 'train', play: 'train', timers: 'train' };
 function highlightNav() {
   const name = currentRoute();
   $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === (NAV_PARENT[name] || name)));
@@ -80,8 +86,10 @@ async function render({ soft = false } = {}) {
   if (state.user && name === 'login') { location.hash = '#/home'; return; }
   if (name === 'admin' && !state.user?.isAdmin) { location.hash = '#/me'; return; }
   document.body.classList.toggle('signed-in', Boolean(state.user));
-  $('#topbar').hidden = !state.user || name === 'setup';
-  document.body.classList.toggle('no-nav', name === 'setup');
+  // Setup and the live workout screen take over the whole screen.
+  const fullScreen = name === 'setup' || name === 'play';
+  $('#topbar').hidden = !state.user || fullScreen;
+  document.body.classList.toggle('no-nav', fullScreen);
   highlightNav();
   const y = window.scrollY;
   if (!soft) app.innerHTML = '<div class="loading"><span></span></div>';

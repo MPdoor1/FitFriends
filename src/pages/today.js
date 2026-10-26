@@ -9,6 +9,7 @@ import { toDisplayWeight, weightUnit } from '../units.js';
 import { openWorkoutSheet, workoutRow, bindWorkoutRows } from './train.js';
 import { openFoodSheet, calorieRing, macroBlock, waterCard, bindWater } from './fuel.js';
 import { openWeightSheet } from './body.js';
+import { sessionBanner } from './player.js';
 
 export async function viewToday(app, stale) {
   const today = localDate();
@@ -50,6 +51,8 @@ export async function viewToday(app, stale) {
       <div><strong>Set up your goals</strong><span class="muted small">One minute: get a calorie and protein target made for you.</span></div>
       ${icon('right', 20)}
     </a>`}
+
+    ${sessionBanner()}
 
     <section class="quick">
       <button type="button" class="quick-btn" id="q-workout">${icon('train', 22)}<span>Workout</span></button>

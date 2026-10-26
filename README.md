@@ -14,6 +14,9 @@ A small health app for a group of friends: log workouts, count calories, and com
 - **Units:** pounds and miles by default; switch to kg and km in your profile. Everything is stored metric.
 - **Workouts:** 14 types, intensity, duration stepper, distance with live pace or speed, heart rate, notes, and sets × reps × weight for lifting. Shows what you did last time for each exercise and flags new personal records (by estimated 1RM). Edit, "do again", and delete with undo.
 - **Calories:** about 120 common foods with protein, carbs and fat, search and categories, your recent foods, custom foods, serving sizes, edit and undo, "same as yesterday" for a meal, macro bars, water glasses, and a 14-day chart against your goal.
+- **Routines:** build workouts from lifting sets (sets × reps × weight, rest), timed moves and rest breaks, repeated for any number of rounds. Nine starters are included (Tabata, 7-Minute Workout, Push/Pull/Leg Day, and more). Share a routine with friends; they can start it or save a copy, and you hear when someone does it.
+- **Live workout mode:** step-by-step player with countdowns, automatic rest timers, beeps, optional voice cues and vibration. It keeps the screen awake, survives the app closing (the session is kept on the phone), and logs exactly what you did when you finish.
+- **Timers:** interval timer with presets (Tabata, EMOM and others), countdown, and a stopwatch with laps.
 - **Body weight:** weigh-ins with an interactive chart (1M / 3M / 1Y / All), goal weight, weekly change, BMI. The latest weigh-in drives calorie-burn estimates.
 - **Arena:** an animated race track, a podium, a daily points heatmap, head-to-head stat bars, levels, XP and badges.
 
@@ -57,6 +60,8 @@ To test without touching real data, run the Firebase emulators (`npx firebase-to
 | `days/{uid}_{date}` | Daily totals per person. The Arena reads these, which keeps reads well inside the free quota |
 | `config/private` | Optional `inviteCode`. Only admins can read or change it |
 | `banned/{uid}` | Members removed by an admin |
+| `routines/{id}` | Saved routines. Private unless `shared`; friends can only bump `uses` by one |
+| `nudges/{id}` | Friend nudges, delivered by the notifier |
 | `logins/{username}` | Which login a username currently uses (anyone can look up one username; nobody can list them) |
 | `resets/{uid}` | Pending password reset: only a SHA-256 hash of the code plus its expiry. Admins only |
 | `aliases/{loginUid}` | Links a login created by a reset to the member's profile |

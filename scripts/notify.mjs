@@ -12,6 +12,7 @@ import { getFirestore, Timestamp } from 'firebase-admin/firestore';
 import { getMessaging } from 'firebase-admin/messaging';
 import { notifyPrefs, isQuiet, NUDGES } from '../src/notify-catalog.js';
 import { levelFor, badgesFor } from '../src/scoring.js';
+import { summary as routineSummary } from '../src/routines.js';
 
 const DRY = process.env.DRY_RUN === '1';
 const key = process.env.GOOGLE_KEY ? JSON.parse(process.env.GOOGLE_KEY) : null;
@@ -97,6 +98,9 @@ await Promise.all(users.map(async (u) => {
   }
 }));
 const newMembers = users.filter((u) => u.createdAt?.toDate?.() > since);
+const newlyShared = (await db.collection('routines').where('shared', '==', true).get()).docs
+  .map((d) => ({ id: d.id, ...d.data() }))
+  .filter((r) => r.sharedAt?.toDate?.() > since && byId[r.owner]);
 
 // ---------- pass 1: each member's own level, badge and weight news ----------
 
@@ -293,7 +297,14 @@ for (const u of users) {
     }
     for (const m of milestones.filter((x) => x.by.id !== u.id)) add('friendMilestone', { ...m, by: undefined, url: './#/arena', tag: `ms-${m.by.id}` });
     for (const n of newMembers.filter((x) => x.id !== u.id)) add('newMember', { title: `${first(n.displayName)} joined FitFriends`, body: 'Say hi with a nudge from the Arena.', url: './#/arena', tag: `join-${n.id}` });
-    const theirs = fresh.filter((w) => w.by.id !== u.id);
+    for (const r of newlyShared.filter((x) => x.owner !== u.id)) {
+      add('friendRoutine', { title: `${first(byId[r.owner].displayName)} shared a routine: ${r.name}`, body: `${routineSummary(r)}. Start it from Train → Routines.`, url: './#/routines', tag: `routine-${r.id}` });
+    }
+    for (const w of fresh.filter((x) => x.routineOwner === u.id && x.by.id !== u.id)) {
+      add('routineUsed', { title: `${first(w.by.displayName)} did your ${w.routineName || 'routine'}`, body: `${w.durationMin} min · +${w.points} pts`, url: './#/arena', tag: `used-${w.by.id}` });
+    }
+    // A workout of your own routine already got its own alert above.
+    const theirs = fresh.filter((w) => w.by.id !== u.id && w.routineOwner !== u.id);
     if (theirs.length === 1 || theirs.length === 2) {
       for (const w of theirs) add('friendWorkout', { title: `${first(w.by.displayName)} logged ${w.type}`, body: `${w.durationMin} min${w.distanceKm ? ` · ${dist(w.distanceKm, u)}` : ''} · +${w.points} pts`, url: './#/arena', tag: `friend-${w.by.id}` });
     } else if (theirs.length > 2) {

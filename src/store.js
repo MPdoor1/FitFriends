@@ -25,7 +25,7 @@ import {
 import { firebaseConfig } from './firebase-config.js';
 import { NOTIFY_KEYS, NUDGES } from './notify-catalog.js';
 import {
-  workoutCalories, workoutPoints, goalDayPoints, GOAL_DAY_POINTS, levelFor, badgesFor,
+  workoutCalories, workoutPoints, goalDayPoints, GOAL_DAY_POINTS, levelFor, badgesFor, WORKOUT_TYPES, INTENSITY,
 } from './scoring.js';
 
 export const configured = !firebaseConfig.apiKey.startsWith('PASTE');
@@ -382,6 +382,10 @@ function cleanWorkout(me, input) {
     avgHr,
     exercises,
     notes: String(input.notes || '').trim().slice(0, 500),
+    // Set when the workout came from a routine, so its owner can hear that someone did it.
+    routineId: input.routineId ? String(input.routineId).slice(0, 60) : null,
+    routineName: input.routineName ? String(input.routineName).slice(0, 60) : null,
+    routineOwner: input.routineOwner ? String(input.routineOwner).slice(0, 60) : null,
     calories: workoutCalories(input.type, input.intensity, duration, me.weightKg),
     points: workoutPoints(input.intensity, duration),
   };
@@ -721,4 +725,84 @@ export async function sendNudge(toId, msg, date) {
     if (err.code === 'permission-denied') throw new Error('You already nudged them today.');
     throw err;
   }
+}
+
+// ---------- routines ----------
+
+const clampInt = (v, lo, hi, dflt) => {
+  const n = Math.round(Number(v));
+  return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : dflt;
+};
+
+function cleanRoutine(input) {
+  const name = String(input.name || '').trim().slice(0, 60);
+  if (!name) throw new Error('Give the routine a name.');
+  const steps = (input.steps || []).slice(0, 60).map((st) => {
+    if (st.kind === 'sets') {
+      const exName = String(st.name || '').trim().slice(0, 60);
+      if (!exName) throw new Error('Every exercise needs a name.');
+      const w = st.weightKg === '' || st.weightKg == null ? null : Number(st.weightKg);
+      return { kind: 'sets', name: exName, sets: clampInt(st.sets, 1, 20, 3), reps: clampInt(st.reps, 1, 100, 10), weightKg: w > 0 && w <= 700 ? Math.round(w * 100) / 100 : null, restSec: clampInt(st.restSec, 0, 900, 60) };
+    }
+    if (st.kind === 'timed') return { kind: 'timed', name: String(st.name || 'Work').trim().slice(0, 60) || 'Work', seconds: clampInt(st.seconds, 5, 7200, 30) };
+    return { kind: 'rest', seconds: clampInt(st.seconds, 5, 1800, 30) };
+  });
+  if (!steps.some((st) => st.kind !== 'rest')) throw new Error('Add at least one exercise or timed step.');
+  return {
+    name,
+    type: WORKOUT_TYPES.some((t) => t.name === input.type) ? input.type : 'Other',
+    intensity: INTENSITY[input.intensity] ? input.intensity : 'moderate',
+    rounds: clampInt(input.rounds, 1, 30, 1),
+    notes: String(input.notes || '').trim().slice(0, 500),
+    steps,
+  };
+}
+
+// Creates or updates one of your routines. Returns its id.
+export async function saveRoutine(me, input, id = null) {
+  const data = cleanRoutine(input);
+  const ref = id ? doc(db, 'routines', id) : doc(collection(db, 'routines'));
+  const prev = id ? (await getDoc(ref)).data() : null;
+  const shared = Boolean(input.shared);
+  await setDoc(ref, {
+    ...data,
+    owner: pid(),
+    ownerName: me.displayName,
+    shared,
+    sharedAt: shared ? (prev?.shared ? prev.sharedAt : serverTimestamp()) : null,
+    uses: prev?.uses || 0,
+    copiedFrom: prev?.copiedFrom ?? (input.copiedFrom || null),
+    createdAt: prev?.createdAt || serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  return ref.id;
+}
+
+const routineFrom = (d) => ({ id: d.id, ...d.data() });
+
+export async function myRoutines() {
+  const snap = await getDocs(query(collection(db, 'routines'), where('owner', '==', pid())));
+  return snap.docs.map(routineFrom).sort((a, b) => (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0));
+}
+
+export async function sharedRoutines() {
+  const snap = await getDocs(query(collection(db, 'routines'), where('shared', '==', true)));
+  return snap.docs.map(routineFrom).filter((r) => r.owner !== pid()).sort((a, b) => (b.uses || 0) - (a.uses || 0));
+}
+
+export async function getRoutine(id) {
+  const snap = await getDoc(doc(db, 'routines', id));
+  if (!snap.exists()) throw new Error('That routine is gone or private.');
+  return routineFrom(snap);
+}
+
+export const deleteRoutine = (id) => deleteDoc(doc(db, 'routines', id));
+
+export async function setRoutineShared(r, shared) {
+  await updateDoc(doc(db, 'routines', r.id), { shared, sharedAt: shared ? serverTimestamp() : null, updatedAt: serverTimestamp() });
+}
+
+// Bumps the "done N times" counter on a friend's shared routine.
+export async function countRoutineUse(id) {
+  await updateDoc(doc(db, 'routines', id), { uses: increment(1) }).catch(() => {});
 }

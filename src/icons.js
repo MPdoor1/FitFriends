@@ -6,6 +6,8 @@ import {
   SquarePlus, Smartphone, Check, Trash2, Users, KeyRound, Ban, TrendingUp, CalendarDays, Copy,
   Minus, Scale, GlassWater, Search, Pencil, Repeat, ChevronDown, HeartPulse, Ruler, Calculator, Route,
   History, Info, ArrowUpRight, ArrowDownRight, Settings, Goal,
+  Play, Pause, SkipForward, SkipBack, Volume2, VolumeX, ChevronUp, ListOrdered, Share2, Flag, RotateCcw,
+  AudioLines, Library, BookmarkPlus, Hourglass, Lock, Globe,
 } from 'lucide';
 
 const ICONS = {
@@ -18,6 +20,9 @@ const ICONS = {
   minus: Minus, scale: Scale, water: GlassWater, search: Search, edit: Pencil, repeat: Repeat, down: ChevronDown,
   heart: HeartPulse, ruler: Ruler, calc: Calculator, route: Route, history: History, info: Info,
   up: ArrowUpRight, downRight: ArrowDownRight, settings: Settings, goal: Goal,
+  play: Play, pause: Pause, skip: SkipForward, prev: SkipBack, sound: Volume2, mute: VolumeX, upChev: ChevronUp,
+  list: ListOrdered, shareOut: Share2, flag: Flag, reset: RotateCcw, voice: AudioLines, library: Library,
+  save: BookmarkPlus, hourglass: Hourglass, lock: Lock, globe: Globe,
   // workout types
   Running: Footprints, Walking: PersonStanding, Cycling: Bike, Swimming: Waves, Weightlifting: Dumbbell,
   HIIT: Zap, Yoga: Leaf, Hiking: Mountain, Sports: Volleyball, Dance: Music, Rowing: Sailboat,

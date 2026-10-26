@@ -7,6 +7,7 @@ import {
   toast, pointsPop, haptic, openSheet, closeSheet, stepper, bindSteppers, barChart, bindCharts,
 } from '../ui.js';
 import { weightUnit, toDisplayWeight, fromDisplayWeight, distUnit, toDisplayDist, fromDisplayDist, fmtDist, fmtWeight, paceText } from '../units.js';
+import { sessionBanner } from './player.js';
 
 const INTENSITY_HINTS = { light: 'Easy, could chat', moderate: 'Working, a bit breathless', hard: 'All out, can barely talk' };
 
@@ -322,6 +323,12 @@ export async function viewTrain(app, stale) {
       <button class="btn primary" id="log-workout">${icon('plus', 18)} Log</button>
     </div>
 
+    ${sessionBanner()}
+    <section class="train-tools">
+      <a class="tool-btn" href="#/routines">${icon('library', 24)}<span><b>Routines</b><small>Build, start &amp; share</small></span></a>
+      <a class="tool-btn" href="#/timers">${icon('timer', 24)}<span><b>Timers</b><small>Intervals, countdown, stopwatch</small></span></a>
+    </section>
+
     <section class="stats four">
       <div class="stat">${icon('train', 18)}<strong class="num">${sum(wk, 'wCount')}</strong><span>Workouts this week</span></div>
       <div class="stat">${icon('timer', 18)}<strong class="num">${fmt(sum(wk, 'wMinutes'))}</strong><span>Minutes this week</span></div>
@@ -383,6 +390,7 @@ export function workoutRow(w, u) {
         <span class="item-ico">${icon(w.type, 20)}</span>
         <span class="item-main">
           <strong>${esc(w.type)}</strong>
+          ${w.routineName ? `<span class="routine-tag small">${icon('library', 12)} ${esc(w.routineName)}</span>` : ''}
           <span class="muted small">${w.durationMin} min · ${esc(INTENSITY[w.intensity]?.label || w.intensity)}${w.distanceKm ? ` · ${fmtDist(w.distanceKm, u)}` : ''}${w.exercises?.length ? ` · ${w.exercises.length} exercise${w.exercises.length === 1 ? '' : 's'}` : ''}</span>
         </span>
         <span class="pts num">+${w.points}</span>

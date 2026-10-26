@@ -38,6 +38,8 @@ export const NOTIFY_TYPES = [
   { key: 'friendPr', group: 'friends', on: true, label: 'Friend records', when: 'Within ~15 min', desc: 'When a friend sets a lifting record', sample: ['Alex set a new record', 'Bench Press 225 lb × 3'] },
   { key: 'friendMilestone', group: 'friends', on: true, label: 'Friend milestones', when: 'Within ~15 min', desc: 'Friends leveling up or earning badges', sample: ['Sam reached LV 5', 'Athlete. Send a nudge to say nice work.'] },
   { key: 'newMember', group: 'friends', on: true, label: 'New members', when: 'Within ~15 min', desc: 'When someone joins the group', sample: ['Jordan joined FitFriends', 'Say hi with a nudge from the Arena.'] },
+  { key: 'friendRoutine', group: 'friends', on: true, label: 'Shared routines', when: 'Within ~15 min', desc: 'When a friend shares a workout routine', sample: ['Alex shared a routine: Leg Day', '5 moves · ~42 min. Start it from Train → Routines.'] },
+  { key: 'routineUsed', group: 'friends', on: true, label: 'Someone did your routine', when: 'Within ~15 min', desc: 'When a friend finishes a routine you shared', sample: ['Sam did your Leg Day', '48 min · +96 pts'] },
   { key: 'nudges', group: 'friends', on: true, label: 'Nudges & cheers', when: 'Within ~15 min', desc: 'When a friend nudges or cheers you', sample: ['Kaden nudged you', 'Race you this week.'] },
 ];
 
@@ -49,7 +51,7 @@ const LEGACY = {
   water: ['waterAm', 'waterPm'],
   workout: ['workout', 'streakSaver'],
   arena: ['arenaPassed', 'arenaFirst', 'arenaClose'],
-  friends: ['friendWorkout', 'friendPr', 'friendMilestone', 'newMember'],
+  friends: ['friendWorkout', 'friendPr', 'friendMilestone', 'newMember', 'friendRoutine', 'routineUsed'],
 };
 
 export const PRESETS = [

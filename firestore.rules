@@ -108,6 +108,24 @@ service cloud.firestore {
       }
     }
 
+    // Saved workout routines. Private unless shared; friends may only bump the "done" counter by one.
+    match /routines/{id} {
+      function validRoutine() {
+        let d = request.resource.data;
+        return d.owner == pid() && d.name is string && d.name.size() > 0 && d.name.size() <= 60
+          && d.steps is list && d.steps.size() > 0 && d.steps.size() <= 60
+          && d.shared is bool && d.rounds is int && d.rounds >= 1 && d.rounds <= 30;
+      }
+      allow read: if member() && (resource.data.owner == pid() || resource.data.shared == true);
+      allow create: if member() && validRoutine() && request.resource.data.uses == 0;
+      allow update: if member() && (
+        (resource.data.owner == pid() && validRoutine() && request.resource.data.uses == resource.data.uses)
+        || (resource.data.shared == true && resource.data.owner != pid()
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['uses'])
+            && request.resource.data.uses == resource.data.uses + 1));
+      allow delete: if member() && resource.data.owner == pid();
+    }
+
     // Nudges between friends, delivered by the notifier. One per sender, recipient and day; nobody can read them.
     match /nudges/{id} {
       allow create: if member()
