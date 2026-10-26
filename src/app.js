@@ -15,6 +15,7 @@ import { refreshPush } from './notify.js';
 import { viewAlerts } from './pages/alerts.js';
 import { viewRoutines, viewRoutineEdit } from './pages/routines-page.js';
 import { viewPlayer, viewTimers } from './pages/player.js';
+import { viewTrack } from './pages/track.js';
 
 const app = $('#app');
 
@@ -57,6 +58,7 @@ const routes = {
   routine: () => viewRoutineEdit(app, () => stale('routine')),
   play: () => viewPlayer(app),
   timers: () => viewTimers(app),
+  track: () => viewTrack(app),
   admin: viewAdmin,
 };
 const PUBLIC_ROUTES = ['login', 'install'];
@@ -71,7 +73,7 @@ function buildNav() {
   $('#nav').style.setProperty('--n', items.length);
   highlightNav();
 }
-const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me', notifications: 'me', routines: 'train', routine: 'train', play: 'train', timers: 'train' };
+const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me', notifications: 'me', routines: 'train', routine: 'train', play: 'train', timers: 'train', track: 'train' };
 function highlightNav() {
   const name = currentRoute();
   $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === (NAV_PARENT[name] || name)));
@@ -87,7 +89,7 @@ async function render({ soft = false } = {}) {
   if (name === 'admin' && !state.user?.isAdmin) { location.hash = '#/me'; return; }
   document.body.classList.toggle('signed-in', Boolean(state.user));
   // Setup and the live workout screen take over the whole screen.
-  const fullScreen = name === 'setup' || name === 'play';
+  const fullScreen = name === 'setup' || name === 'play' || name === 'track';
   $('#topbar').hidden = !state.user || fullScreen;
   document.body.classList.toggle('no-nav', fullScreen);
   highlightNav();

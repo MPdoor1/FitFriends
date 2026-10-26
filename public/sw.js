@@ -1,6 +1,6 @@
 // Network first so friends always get the latest version; the cache only kicks in offline.
 const CACHE = 'fitfriends-__BUILD__';
-const SHELL = ['./', './index.html', './app.js', './styles.css', './manifest.webmanifest', './icons/icon-192.png'];
+const SHELL = ['./', './index.html', './app.js', './styles.css', './leaflet.css', './manifest.webmanifest', './icons/icon-192.png'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));

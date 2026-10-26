@@ -5,6 +5,7 @@ import { cpSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 rmSync('dist', { recursive: true, force: true });
 cpSync('public', 'dist', { recursive: true });
 writeFileSync('dist/.nojekyll', '');
+cpSync('node_modules/leaflet/dist/leaflet.css', 'dist/leaflet.css');
 await build({
   entryPoints: ['src/app.js'],
   bundle: true,

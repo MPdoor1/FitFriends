@@ -3,6 +3,7 @@ import { state } from '../state.js';
 import { goalsFor } from '../nutrition.js';
 import { $, $$, esc, icon, label, avatar, localDate, shiftDate, weekStart, bindCharts } from '../ui.js';
 import { sessionBanner } from './player.js';
+import { trackBanner } from './track.js';
 import { WIDGETS, myWidgets, loadExtras, openWidgetEditor, runShortcut } from './widgets.js';
 
 export async function viewToday(app, stale) {
@@ -47,6 +48,7 @@ export async function viewToday(app, stale) {
     </a>`}
 
     ${sessionBanner()}
+    ${trackBanner()}
 
     <div class="widgets">
       ${ids.map((id) => `<div class="w ${WIDGETS[id].size === 'half' ? 'half' : ''}" data-widget="${id}">${WIDGETS[id].render(ctx)}</div>`).join('')}

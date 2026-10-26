@@ -8,7 +8,9 @@ import {
 } from '../ui.js';
 import { weightUnit, toDisplayWeight, fromDisplayWeight, distUnit, toDisplayDist, fromDisplayDist, fmtDist, fmtWeight, paceText } from '../units.js';
 import { sessionBanner } from './player.js';
+import { trackBanner, routeMap, openRouteSheet, openGpxImport, routeSvg } from './track.js';
 
+const clockPace = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`;
 const INTENSITY_HINTS = { light: 'Easy, could chat', moderate: 'Working, a bit breathless', hard: 'All out, can barely talk' };
 
 // Epley estimate of a one-rep max.
@@ -264,6 +266,8 @@ export async function openWorkoutSheet({ workout = null, template = null } = {})
           avgHr: f.avgHr.value,
           notes: f.notes.value,
           exercises: form.exercises.map((ex) => ({ name: ex.name, sets: ex.sets.map((s) => ({ reps: s.reps, weightKg: fromDisplayWeight(s.weight, u) || 0 })) })),
+          // A GPS route stays with the workout it was recorded on.
+          ...(editing && workout.route ? { route: workout.route, splits: workout.splits, splitUnit: workout.splitUnit, elevGainM: workout.elevGainM } : {}),
         };
         btn.disabled = true;
         try {
@@ -320,11 +324,13 @@ export async function viewTrain(app, stale) {
   app.innerHTML = `
     <div class="page-head">
       <div>${label('Train')}<h1>Workouts</h1></div>
-      <button class="btn primary" id="log-workout">${icon('plus', 18)} Log</button>
+      <div class="row gap"><button class="btn" id="import-gpx" aria-label="Import GPX">${icon('download', 18)} GPX</button><button class="btn primary" id="log-workout">${icon('plus', 18)} Log</button></div>
     </div>
 
     ${sessionBanner()}
+    ${trackBanner()}
     <section class="train-tools">
+      <a class="tool-btn wide" href="#/track">${icon('route', 24)}<span><b>Track a run</b><small>GPS map, pace &amp; splits</small></span></a>
       <a class="tool-btn" href="#/routines">${icon('library', 24)}<span><b>Routines</b><small>Build, start &amp; share</small></span></a>
       <a class="tool-btn" href="#/timers">${icon('timer', 24)}<span><b>Timers</b><small>Intervals, countdown, stopwatch</small></span></a>
     </section>
@@ -376,6 +382,7 @@ export async function viewTrain(app, stale) {
   bindCharts(app);
   requestAnimationFrame(() => $$('.grow-in', app).forEach((el) => el.classList.add('go')));
   $('#log-workout').addEventListener('click', () => openWorkoutSheet());
+  $('#import-gpx').addEventListener('click', openGpxImport);
   $('#log-first')?.addEventListener('click', () => openWorkoutSheet());
   $$('[data-filter]').forEach((b) => b.addEventListener('click', () => { typeFilter = b.dataset.filter; state.rerender(); }));
   bindWorkoutRows(app, workouts);
@@ -387,7 +394,7 @@ export function workoutRow(w, u) {
   return `
     <li class="item expandable ${open ? 'open' : ''}" data-w="${esc(w.id)}">
       <button type="button" class="item-top" data-toggle="${esc(w.id)}" aria-expanded="${open}">
-        <span class="item-ico">${icon(w.type, 20)}</span>
+        ${w.route ? routeSvg(w.route, 'route-thumb', 38) : `<span class="item-ico">${icon(w.type, 20)}</span>`}
         <span class="item-main">
           <strong>${esc(w.type)}</strong>
           ${w.routineName ? `<span class="routine-tag small">${icon('library', 12)} ${esc(w.routineName)}</span>` : ''}
@@ -397,15 +404,19 @@ export function workoutRow(w, u) {
       </button>
       ${open ? `
       <div class="item-detail">
+        ${w.route ? `<button type="button" class="route-mini" data-route-map="${esc(w.id)}" aria-label="Open map and splits"></button>` : ''}
         <div class="detail-grid">
           <div><span>Calories</span><b class="num">${fmt(w.calories)}</b></div>
           ${w.distanceKm ? `<div><span>Distance</span><b class="num">${fmtDist(w.distanceKm, u)}</b></div><div><span>${['Cycling', 'Rowing'].includes(w.type) ? 'Speed' : 'Pace'}</span><b class="num">${paceText(w.type, w.durationMin, w.distanceKm, u)}</b></div>` : ''}
+          ${w.elevGainM ? `<div><span>Climb</span><b class="num">${u === 'metric' ? `${w.elevGainM} m` : `${fmt(w.elevGainM * 3.28084)} ft`}</b></div>` : ''}
+          ${w.splits?.length ? `<div><span>Best ${w.splitUnit || 'mi'}</span><b class="num">${clockPace(Math.min(...w.splits))}</b></div>` : ''}
           ${w.avgHr ? `<div><span>Avg HR</span><b class="num">${w.avgHr} bpm</b></div>` : ''}
           ${vol ? `<div><span>Volume</span><b class="num">${fmtWeight(vol, u, 0)}</b></div>` : ''}
         </div>
         ${(w.exercises || []).map((ex) => `<div class="ex-line"><b>${esc(ex.name)}</b><span class="muted">${esc(setsSummary(ex.sets, u))}</span></div>`).join('')}
         ${w.notes ? `<p class="note">${esc(w.notes)}</p>` : ''}
         <div class="item-actions">
+          ${w.route ? `<button class="btn small-btn" data-route-open="${esc(w.id)}">${icon('route', 16)} Map &amp; splits</button>` : ''}
           <button class="btn small-btn" data-edit="${esc(w.id)}">${icon('edit', 16)} Edit</button>
           <button class="btn small-btn" data-repeat="${esc(w.id)}">${icon('repeat', 16)} Do again</button>
           <button class="btn small-btn danger-text" data-delete="${esc(w.id)}">${icon('trash', 16)} Delete</button>
@@ -420,6 +431,12 @@ export function bindWorkoutRows(root, workouts) {
     expanded = expanded === b.dataset.toggle ? null : b.dataset.toggle;
     state.rerender();
   }));
+  $$('[data-route-map]', root).forEach((el) => {
+    const w = find(el.dataset.routeMap);
+    requestAnimationFrame(() => routeMap(el, w.route, { interactive: false }));
+    el.addEventListener('click', () => openRouteSheet(w));
+  });
+  $$('[data-route-open]', root).forEach((b) => b.addEventListener('click', () => openRouteSheet(find(b.dataset.routeOpen))));
   $$('[data-edit]', root).forEach((b) => b.addEventListener('click', () => openWorkoutSheet({ workout: find(b.dataset.edit) })));
   $$('[data-repeat]', root).forEach((b) => b.addEventListener('click', () => {
     const { id, date, ...template } = find(b.dataset.repeat);

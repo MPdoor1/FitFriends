@@ -31,6 +31,19 @@
   ],
   "shortcuts": [
     {
+      "name": "Track a run",
+      "short_name": "Track run",
+      "description": "GPS map, pace and splits",
+      "url": "./#/track",
+      "icons": [
+        {
+          "src": "icons/sc-route.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
       "name": "Add water",
       "short_name": "Add water",
       "description": "+1 glass",

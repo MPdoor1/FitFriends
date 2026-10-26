@@ -7,11 +7,13 @@ import {
   $, $$, esc, fmt, icon, label, avatar, localDate, shiftDate, weekStart, prettyDate, shortDate, dayLetter, datesBetween,
   toast, pointsPop, haptic, openSheet, closeSheet, stepper, bindSteppers, barChart, lineChart, meter,
 } from '../ui.js';
-import { toDisplayWeight, weightUnit, fmtWeight } from '../units.js';
+import { toDisplayWeight, weightUnit, fmtWeight, fmtDist } from '../units.js';
 import { openWorkoutSheet, workoutRow, bindWorkoutRows, personalRecords } from './train.js';
 import { openFoodSheet, calorieRing, macroBlock, waterCard, bindWater, MEALS, mealForNow } from './fuel.js';
 import { openWeightSheet } from './body.js';
 import { startSession } from './player.js';
+import { routeSvg, openRouteSheet } from './track.js';
+import { paceClock } from '../geo.js';
 
 export const WIDGET_GROUPS = [
   ['log', 'Fast logging'],
@@ -21,7 +23,7 @@ export const WIDGET_GROUPS = [
   ['compete', 'Progress & Arena'],
 ];
 
-export const DEFAULT_WIDGETS = ['quick', 'checklist', 'calories', 'water', 'quickFoods', 'training', 'repeat', 'streak', 'weekGoal', 'week', 'weight', 'arena', 'level'];
+export const DEFAULT_WIDGETS = ['quick', 'checklist', 'calories', 'water', 'quickFoods', 'training', 'gps', 'repeat', 'streak', 'weekGoal', 'week', 'weight', 'arena', 'level'];
 
 // ---------- shared actions ----------
 
@@ -43,7 +45,7 @@ function addWater(ctx, n) {
 }
 
 async function logAgain(w) {
-  const { id, date, createdAt, calories, points, ...template } = w;
+  const { id, date, createdAt, calories, points, route, splits, splitUnit, elevGainM, ...template } = w;
   const saved = await store.addWorkout(state.user, { ...template, date: localDate() });
   haptic(15);
   pointsPop(saved.points);
@@ -75,6 +77,7 @@ export function runShortcut(action, ctx) {
     workout: () => openWorkoutSheet(),
     weight: () => openWeightSheet(),
     fast: () => toggleFast(),
+    track: () => { location.hash = '#/track'; },
   })[action]?.();
 }
 
@@ -335,6 +338,26 @@ export const WIDGETS = {
         openWorkoutSheet({ template });
       }));
     },
+  },
+
+  gps: {
+    name: 'GPS run', group: 'train', icon: 'route', desc: 'Start a tracked run, and your latest route', needs: ['history'],
+    render: (ctx) => {
+      const last = ctx.history.find((w) => w.route);
+      const unit = last?.splitUnit || 'mi';
+      return `
+      <section class="card gps-w">
+        ${head('GPS tracking', '<a href="#/track" class="link">Start ' + icon('right', 16) + '</a>')}
+        <div class="gps-row">
+          ${last ? `<button type="button" class="gps-last" data-last-route>${routeSvg(last.route, 'route-thumb big', 76)}
+            <span class="grow"><strong>${esc(last.type)} · ${shortDate(last.date)}</strong>
+            <span class="muted small">${last.distanceKm ? fmtDist(last.distanceKm, ctx.u) + ' · ' : ''}${last.durationMin} min${last.distanceKm ? ` · ${paceClock((last.durationMin * 60) / ((last.distanceKm * 1000) / (unit === 'km' ? 1000 : 1609.344)))} /${unit}` : ''}</span></span></button>`
+            : '<p class="muted small grow">Map your runs, walks and rides with your phone\'s GPS.</p>'}
+        </div>
+        <a class="btn primary full" href="#/track">${icon('play', 18)} Track a run</a>
+      </section>`;
+    },
+    bind: (el, ctx) => $('[data-last-route]', el)?.addEventListener('click', () => openRouteSheet(ctx.history.find((w) => w.route))),
   },
 
   routines: {

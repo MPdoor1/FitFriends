@@ -959,3 +959,66 @@ body.no-nav .nav { display: none; }
 .we-foot .btn { flex: 1; }
 #customize-2 { margin-top: 4px; }
 @media (max-width: 380px) { .timer-btn b { font-size: 1rem; hyphens: manual; } .timer-btn { padding: 10px 8px; } }
+
+/* ---------- GPS tracking & route maps ---------- */
+.tool-btn.wide { grid-column: 1 / -1; border-color: rgb(200 255 46 / 40%); }
+.trk { display: flex; flex-direction: column; gap: 14px; padding-top: calc(var(--safe-t) + 4px); }
+.trk-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 36px; }
+.trk-top .back { margin: 0; }
+.gps { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 99px; font-size: 0.8rem; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.gps.good { color: var(--good); border-color: rgb(61 255 168 / 35%); }
+.gps.ok { color: var(--accent); border-color: rgb(200 255 46 / 35%); }
+.gps.wait { color: #ffc53d; }
+.gps.bad { color: var(--bad); border-color: rgb(255 77 94 / 35%); }
+.trk-map-wrap { position: relative; }
+.trk-map { height: 42vh; min-height: 240px; border-radius: var(--radius); border: 1px solid var(--line); overflow: hidden; background: #1a1c1f; }
+.trk.on .trk-map { height: 38vh; }
+.trk-center { position: absolute; right: 10px; bottom: 10px; z-index: 500; background: var(--surface); color: var(--accent); }
+.hint.warn { color: #ffc53d; align-items: flex-start; }
+.trk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.trk-stat { display: flex; flex-direction: column; align-items: center; padding: 10px 6px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.trk-stat b { font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
+.trk-stat span { color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--display); font-weight: 700; }
+.trk-stat.big { grid-column: 1 / -1; padding: 12px; }
+.trk-stat.big b { font-size: 4.2rem; color: var(--accent); }
+.trk-paused { text-align: center; color: #ffc53d; font-weight: 700; display: flex; justify-content: center; align-items: center; gap: 6px; }
+.trk-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn.danger-fill { background: var(--bad); border-color: var(--bad); color: #fff; }
+.trk-opts { display: flex; justify-content: center; }
+.trk-splits { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; }
+.trk-splits:empty { display: none; }
+.trk-splits li { display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); font-size: 0.9rem; }
+.trk-splits b { font-size: 1.05rem; }
+.trk.done .trk-stat.big b { font-size: 3.4rem; }
+.route-full { height: 300px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--line); background: #1a1c1f; margin-bottom: 14px; }
+.route-full.small { height: 200px; }
+.route-none { padding: 20px; }
+.route-mini { display: block; width: 100%; height: 170px; padding: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: #1a1c1f; margin-bottom: 12px; cursor: pointer; }
+.route-mini .leaflet-control-attribution { font-size: 8px; }
+.route-thumb { flex-shrink: 0; border-radius: 10px; background: var(--surface-3); }
+.route-thumb path { fill: none; stroke: var(--accent); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.route-thumb.big { border-radius: 12px; }
+.route-thumb.big path { stroke-width: 3.5; }
+.route-stats { margin-bottom: 6px; }
+.splits { list-style: none; margin: 0; padding: 0; }
+.splits li { display: grid; grid-template-columns: 70px 1fr 60px; align-items: center; gap: 10px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; }
+.splits li:first-child { border-top: 0; }
+.splits b { text-align: right; font-size: 1.05rem; }
+.split-bar { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; }
+.split-bar i { display: block; height: 100%; background: var(--muted); border-radius: 99px; }
+.splits li.best .split-bar i { background: var(--accent); }
+.splits li.best b { color: var(--accent); }
+.file-pick { flex-direction: row; align-items: center; justify-content: center; gap: 10px; padding: 22px; border: 2px dashed var(--line); border-radius: var(--radius); color: var(--text); font-size: 1rem; text-transform: none; letter-spacing: 0; cursor: pointer; }
+.file-pick .i { color: var(--accent); }
+.file-pick input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.gpx-card { padding: 12px; }
+.gpx-card .route-full { margin-bottom: 10px; }
+.toggle-row { flex-direction: row; justify-content: space-between; align-items: center; text-transform: none; letter-spacing: 0; font-family: var(--body); font-weight: 500; font-size: 0.95rem; color: var(--text); }
+.toggle-row input { width: 22px; height: 22px; accent-color: var(--accent); }
+.gps-row { margin-bottom: 12px; }
+.gps-last { display: flex; align-items: center; gap: 14px; width: 100%; padding: 0; border: 0; background: none; text-align: left; }
+.gps-last .grow { display: flex; flex-direction: column; }
+.leaflet-container { font-family: var(--body); background: #1a1c1f; }
+.leaflet-control-attribution { background: rgb(12 13 15 / 70%) !important; color: var(--muted) !important; }
+.leaflet-control-attribution a { color: var(--muted) !important; }
+.leaflet-bar a { background: var(--surface) !important; color: var(--text) !important; border-color: var(--line) !important; }

@@ -394,6 +394,11 @@ function cleanWorkout(me, input) {
     routineId: input.routineId ? String(input.routineId).slice(0, 60) : null,
     routineName: input.routineName ? String(input.routineName).slice(0, 60) : null,
     routineOwner: input.routineOwner ? String(input.routineOwner).slice(0, 60) : null,
+    // GPS route as an encoded polyline, with split times (seconds per mile or km).
+    route: typeof input.route === 'string' && input.route.length <= 30000 && /^[\x3f-\x7e]*$/.test(input.route) ? input.route || null : null,
+    splits: Array.isArray(input.splits) ? input.splits.map((x) => Math.round(Number(x))).filter((x) => x > 0 && x <= 36000).slice(0, 300) : [],
+    splitUnit: input.splitUnit === 'km' ? 'km' : 'mi',
+    elevGainM: Number.isFinite(Number(input.elevGainM)) && input.elevGainM != null ? Math.max(0, Math.min(20000, Math.round(Number(input.elevGainM)))) : null,
     calories: workoutCalories(input.type, input.intensity, duration, me.weightKg),
     points: workoutPoints(input.intensity, duration),
   };
