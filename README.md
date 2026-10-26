@@ -5,6 +5,8 @@ A small health app for a group of friends: log workouts, count calories, and com
 **Live site:** https://mpdoor1.github.io/FitFriends/
 
 - **Accounts:** a username and password. No email or verification.
+- **Admin:** admins can set the invite code, promote other admins, and remove members (Me → Admin panel).
+- **Installable:** add it to your phone's home screen from the Install tab. It opens full screen like a normal app.
 - **Workouts:** type, minutes, intensity, optional distance and notes. Calories burned are estimated from MET values and your weight.
 - **Calories:** a daily log by meal with quick-add foods, your recent foods, a daily goal, and protein tracking.
 - **Arena:** an animated race track, a podium, a daily points heatmap, head-to-head stat bars, levels, XP and badges.
@@ -27,12 +29,7 @@ Your all-time points are your XP, and XP sets your level (Couch Potato → Olymp
 2. **Turn on sign-in.** Go to **Build → Authentication → Get started → Sign-in method → Email/Password → Enable**. Leave "Email link" off.
 3. **Create the database.** Go to **Build → Firestore Database → Create database**. Choose any location (e.g. `nam5`) and **Start in production mode**.
 4. **Add the security rules.** In Firestore → **Rules**, replace the contents with [`firestore.rules`](firestore.rules) and click **Publish**.
-5. **Optional: add an invite code** (recommended, because the site is public). In Firestore → **Data**, click **Start collection**:
-   - Collection ID: `config`
-   - Document ID: `private`
-   - Field: `inviteCode` (string), with any phrase as the value.
-
-   After that, new accounts need that code. To change it, edit the field. To turn it off, delete the document.
+5. **Make yourself admin.** In Firestore → **Data**, open `users` → your document and add a field `role` (string) = `admin`. After that, set the invite code and manage members from **Me → Admin panel** in the app.
 
 ### GitHub Pages
 In the repo, go to **Settings → Pages → Build and deployment → Source** and choose **GitHub Actions**. Every push to `main` then builds and deploys the site.
@@ -51,4 +48,5 @@ To test without touching real data, run the Firebase emulators (`npx firebase-to
 | `users/{uid}/workouts/{id}` | One workout |
 | `users/{uid}/foods/{id}` | One food entry |
 | `days/{uid}_{date}` | Daily totals per person. The Arena reads these, which keeps reads well inside the free quota |
-| `config/private` | Optional `inviteCode`. Only the security rules can read it |
+| `config/private` | Optional `inviteCode`. Only admins can read or change it |
+| `banned/{uid}` | Members removed by an admin |

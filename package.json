@@ -9,7 +9,8 @@
   },
   "devDependencies": {
     "esbuild": "^0.25.10",
-    "firebase": "^12.19.0"
+    "firebase": "^12.19.0",
+    "lucide": "^1.52.0"
   },
   "type": "module"
 }

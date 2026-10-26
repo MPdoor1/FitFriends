@@ -1,26 +1,26 @@
 // Workout catalog with MET values (metabolic equivalents) used to estimate calories burned.
 export const WORKOUT_TYPES = [
-  { name: 'Running', icon: '🏃', met: 9.8 },
-  { name: 'Walking', icon: '🚶', met: 3.5 },
-  { name: 'Cycling', icon: '🚴', met: 7.5 },
-  { name: 'Swimming', icon: '🏊', met: 7.0 },
-  { name: 'Weightlifting', icon: '🏋️', met: 5.0 },
-  { name: 'HIIT', icon: '⚡', met: 8.0 },
-  { name: 'Yoga', icon: '🧘', met: 2.8 },
-  { name: 'Hiking', icon: '🥾', met: 6.0 },
-  { name: 'Sports', icon: '⚽', met: 7.0 },
-  { name: 'Dance', icon: '💃', met: 5.5 },
-  { name: 'Rowing', icon: '🚣', met: 7.0 },
-  { name: 'Climbing', icon: '🧗', met: 8.0 },
-  { name: 'Stretching', icon: '🤸', met: 2.3 },
-  { name: 'Other', icon: '💪', met: 5.0 },
+  { name: 'Running', met: 9.8 },
+  { name: 'Walking', met: 3.5 },
+  { name: 'Cycling', met: 7.5 },
+  { name: 'Swimming', met: 7.0 },
+  { name: 'Weightlifting', met: 5.0 },
+  { name: 'HIIT', met: 8.0 },
+  { name: 'Yoga', met: 2.8 },
+  { name: 'Hiking', met: 6.0 },
+  { name: 'Sports', met: 7.0 },
+  { name: 'Dance', met: 5.5 },
+  { name: 'Rowing', met: 7.0 },
+  { name: 'Climbing', met: 8.0 },
+  { name: 'Stretching', met: 2.3 },
+  { name: 'Other', met: 5.0 },
 ];
 
 // Intensity scales both the calorie estimate and the points earned per minute.
 export const INTENSITY = {
-  light: { met: 0.75, points: 1, label: '🙂 Light' },
-  moderate: { met: 1, points: 1.5, label: '😤 Moderate' },
-  hard: { met: 1.3, points: 2, label: '🥵 Hard' },
+  light: { met: 0.75, points: 1, label: 'Light' },
+  moderate: { met: 1, points: 1.5, label: 'Moderate' },
+  hard: { met: 1.3, points: 2, label: 'Hard' },
 };
 
 export function workoutCalories(type, intensity, minutes, weightKg) {
@@ -39,7 +39,7 @@ export function goalDayPoints(total, goal) {
   return total >= goal * 0.7 && total <= goal * 1.05 ? GOAL_DAY_POINTS : 5;
 }
 
-const LEVELS = ['Couch Potato', 'Rookie', 'Mover', 'Sweater', 'Athlete', 'Machine', 'Beast', 'Titan', 'Legend', 'Olympian'];
+const LEVELS = ['Couch Potato', 'Rookie', 'Mover', 'Grinder', 'Athlete', 'Machine', 'Beast', 'Titan', 'Legend', 'Olympian'];
 
 // Level L starts at 50 * L * (L - 1) XP: 0, 100, 300, 600, 1000, ...
 export function levelFor(xp) {
@@ -56,15 +56,15 @@ export function levelFor(xp) {
 }
 
 const BADGES = [
-  { id: 'first', icon: '🎉', name: 'First Sweat', desc: 'Log your first workout', test: (s) => s.workouts >= 1 },
-  { id: 'ten', icon: '🔟', name: 'Double Digits', desc: 'Log 10 workouts', test: (s) => s.workouts >= 10 },
-  { id: 'fifty', icon: '🏅', name: 'Half Century', desc: 'Log 50 workouts', test: (s) => s.workouts >= 50 },
-  { id: 'streak3', icon: '🔥', name: 'Heating Up', desc: '3-day workout streak', test: (s) => s.bestStreak >= 3 },
-  { id: 'streak7', icon: '☄️', name: 'Unstoppable', desc: '7-day workout streak', test: (s) => s.bestStreak >= 7 },
-  { id: 'min1000', icon: '⏱️', name: '1000 Club', desc: '1,000 total workout minutes', test: (s) => s.minutes >= 1000 },
-  { id: 'fuel', icon: '🥗', name: 'Fuel Master', desc: 'Hit your calorie target 10 days', test: (s) => s.goalDays >= 10 },
-  { id: 'variety', icon: '🎨', name: 'Mix It Up', desc: 'Try 5 different workout types', test: (s) => s.types >= 5 },
-  { id: 'burn', icon: '🌋', name: 'Furnace', desc: 'Burn 10,000 calories total', test: (s) => s.calories >= 10000 },
+  { id: 'first', icon: 'sparkles', name: 'First Sweat', desc: 'Log your first workout', test: (s) => s.workouts >= 1 },
+  { id: 'ten', icon: 'hash', name: 'Double Digits', desc: 'Log 10 workouts', test: (s) => s.workouts >= 10 },
+  { id: 'fifty', icon: 'medal', name: 'Half Century', desc: 'Log 50 workouts', test: (s) => s.workouts >= 50 },
+  { id: 'streak3', icon: 'flame', name: 'Heating Up', desc: '3-day workout streak', test: (s) => s.bestStreak >= 3 },
+  { id: 'streak7', icon: 'trend', name: 'Unstoppable', desc: '7-day workout streak', test: (s) => s.bestStreak >= 7 },
+  { id: 'min1000', icon: 'timer', name: '1000 Club', desc: '1,000 total workout minutes', test: (s) => s.minutes >= 1000 },
+  { id: 'fuel', icon: 'salad', name: 'Fuel Master', desc: 'Hit your calorie target 10 days', test: (s) => s.goalDays >= 10 },
+  { id: 'variety', icon: 'shuffle', name: 'Mix It Up', desc: 'Try 5 different workout types', test: (s) => s.types >= 5 },
+  { id: 'burn', icon: 'gauge', name: 'Furnace', desc: 'Burn 10,000 calories total', test: (s) => s.calories >= 10000 },
 ];
 
 export function badgesFor(stats) {

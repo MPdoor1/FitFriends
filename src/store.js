@@ -5,7 +5,8 @@
 //   users/{uid}/workouts/{id}   one workout
 //   users/{uid}/foods/{id}      one food entry
 //   days/{uid}_{date}           per-user daily totals; the Arena reads these instead of every entry
-//   config/private              optional { inviteCode }; readable only by security rules
+//   config/private              optional { inviteCode }; only admins can read or change it
+//   banned/{uid}                members removed by an admin
 import { initializeApp } from 'firebase/app';
 import {
   getAuth, connectAuthEmulator, onAuthStateChanged, createUserWithEmailAndPassword,
@@ -13,7 +14,7 @@ import {
 } from 'firebase/auth';
 import {
   getFirestore, connectFirestoreEmulator, doc, collection, getDoc, getDocs, setDoc, updateDoc, query, where,
-  orderBy, limit, runTransaction, increment, serverTimestamp,
+  orderBy, limit, runTransaction, increment, serverTimestamp, deleteDoc, writeBatch,
 } from 'firebase/firestore/lite';
 import { firebaseConfig } from './firebase-config.js';
 import {
@@ -47,8 +48,7 @@ const AUTH_ERRORS = {
 };
 const friendly = (err) => new Error(AUTH_ERRORS[err.code] || err.message || 'Something went wrong.');
 
-const AVATARS = ['🏃', '🚴', '🏋️', '🧘', '🏊', '⛹️', '🤸', '🥊'];
-const COLORS = ['#6366f1', '#ef4444', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#8b5cf6', '#84cc16'];
+export const COLORS = ['#c8ff2e', '#ff6b3d', '#3dd6ff', '#ff4d8d', '#a78bfa', '#ffc53d', '#3dffa8', '#f2f3f5'];
 
 function profileFrom(snap) {
   const d = snap.data();
@@ -56,8 +56,10 @@ function profileFrom(snap) {
     id: snap.id,
     username: d.username,
     displayName: d.displayName,
-    avatar: d.avatar,
     color: d.color,
+    role: d.role || 'member',
+    isAdmin: d.role === 'admin',
+    joined: d.createdAt?.toDate?.() || null,
     calorieGoal: d.calorieGoal,
     weightKg: d.weightKg,
     bestStreak: d.bestStreak || 0,
@@ -83,12 +85,11 @@ export async function signUp({ username, password, displayName, inviteCode }) {
     cred = await createUserWithEmailAndPassword(auth, emailFor(username), password);
   } catch (err) { throw friendly(err); }
   // Starting look comes from the username so friends usually differ; everyone can change it in Profile.
-  const i = [...username].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % AVATARS.length;
+  const i = [...username].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % COLORS.length;
   try {
     await setDoc(doc(db, 'users', cred.user.uid), {
       username,
       displayName: String(displayName || '').trim().slice(0, 40) || username,
-      avatar: AVATARS[i],
       color: COLORS[i],
       calorieGoal: 2000,
       weightKg: 70,
@@ -114,7 +115,7 @@ export async function signIn({ username, password }) {
   const profile = await getProfile(cred.user.uid).catch(() => null);
   if (!profile) {
     await fbSignOut(auth);
-    throw new Error('This account was never finished. Create it again with the invite code.');
+    throw new Error('This account is not active. Ask the group admin.');
   }
   return profile;
 }
@@ -150,7 +151,6 @@ export async function updateProfile(me, changes) {
   const weight = Number(changes.weightKg);
   await updateDoc(userRef(), {
     displayName: String(changes.displayName || '').trim().slice(0, 40) || me.displayName,
-    avatar: changes.avatar || me.avatar,
     color: /^#[0-9a-f]{6}$/i.test(changes.color) ? changes.color : me.color,
     calorieGoal: goal >= 800 && goal <= 6000 ? goal : me.calorieGoal,
     weightKg: weight >= 25 && weight <= 300 ? weight : me.weightKg,
@@ -380,4 +380,46 @@ export async function leaderboard({ from, today }) {
   });
   board.sort((a, b) => b.points - a.points || b.minutes - a.minutes);
   return { board, meId: auth.currentUser?.uid };
+}
+
+// ---------- admin ----------
+
+export async function getInviteCode() {
+  const snap = await getDoc(doc(db, 'config', 'private'));
+  return snap.exists() ? snap.data().inviteCode || '' : '';
+}
+
+// An empty code removes the requirement, so anyone with the link can join.
+export async function setInviteCode(code) {
+  code = String(code || '').trim().slice(0, 60);
+  if (code) await setDoc(doc(db, 'config', 'private'), { inviteCode: code });
+  else await deleteDoc(doc(db, 'config', 'private'));
+}
+
+export async function listMembers() {
+  const snap = await getDocs(collection(db, 'users'));
+  return snap.docs.map(profileFrom).sort((a, b) => (a.joined || 0) - (b.joined || 0));
+}
+
+export async function setRole(memberId, role) {
+  if (memberId === uid()) throw new Error('You cannot change your own role.');
+  await updateDoc(userRef(memberId), { role: role === 'admin' ? 'admin' : 'member' });
+}
+
+// Blocks the account and deletes the member's data. Their login stays, but the rules treat it as locked out.
+export async function removeMember(memberId) {
+  if (memberId === uid()) throw new Error('You cannot remove yourself.');
+  await setDoc(doc(db, 'banned', memberId), { at: serverTimestamp() });
+  const [workouts, foods, days] = await Promise.all([
+    getDocs(collection(db, 'users', memberId, 'workouts')),
+    getDocs(collection(db, 'users', memberId, 'foods')),
+    getDocs(query(collection(db, 'days'), where('uid', '==', memberId))),
+  ]);
+  const refs = [...workouts.docs, ...foods.docs, ...days.docs].map((d) => d.ref);
+  for (let i = 0; i < refs.length; i += 400) {
+    const batch = writeBatch(db);
+    refs.slice(i, i + 400).forEach((r) => batch.delete(r));
+    await batch.commit();
+  }
+  await deleteDoc(userRef(memberId));
 }

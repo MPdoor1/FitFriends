@@ -1,48 +1,69 @@
 rules_version = '2';
 
-// FitFriends security rules. Paste into Firebase console → Firestore Database → Rules → Publish.
+// FitFriends security rules (Firebase console → Firestore Database → Rules).
 service cloud.firestore {
   match /databases/{database}/documents {
     function signedIn() {
       return request.auth != null;
     }
-    // A member is a signed-in user who finished sign-up (has a profile).
+    function profilePath(uid) {
+      return /databases/$(database)/documents/users/$(uid);
+    }
+    function banned(uid) {
+      return exists(/databases/$(database)/documents/banned/$(uid));
+    }
+    // A member is a signed-in user who finished sign-up (has a profile) and was not removed.
     function member() {
-      return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
+      return signedIn() && exists(profilePath(request.auth.uid)) && !banned(request.auth.uid);
+    }
+    function admin() {
+      return member() && get(profilePath(request.auth.uid)).data.get('role', 'member') == 'admin';
+    }
+    function isOwner(uid) {
+      return signedIn() && request.auth.uid == uid;
     }
     // If config/private exists, new profiles must carry its inviteCode.
     function inviteOk() {
       let cfg = /databases/$(database)/documents/config/private;
       return !exists(cfg) || request.resource.data.invite == get(cfg).data.inviteCode;
     }
+    function unchanged(field) {
+      return request.resource.data.get(field, null) == resource.data.get(field, null);
+    }
 
-    // Holds the invite code. Only the rules can read it; edit it in the Firebase console.
+    // Invite code. Only admins can see or change it.
     match /config/{doc} {
-      allow read, write: if false;
+      allow read, write: if admin();
+    }
+
+    // Members removed by an admin.
+    match /banned/{uid} {
+      allow read, write: if admin();
     }
 
     match /users/{uid} {
       allow read: if member();
-      allow create: if signedIn() && request.auth.uid == uid && inviteOk();
-      allow update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.username == resource.data.username
-        && request.resource.data.invite == resource.data.invite;
-      allow delete: if false;
+      // New accounts can never give themselves a role.
+      allow create: if isOwner(uid) && !banned(uid) && inviteOk() && !('role' in request.resource.data);
+      allow update: if (isOwner(uid) && !banned(uid) && unchanged('username') && unchanged('invite') && unchanged('role'))
+        || (admin() && unchanged('username'));
+      allow delete: if admin();
 
       // Workouts and food: friends can see them, only the owner can change them.
       match /{sub}/{id} {
         allow read: if member();
-        allow write: if signedIn() && request.auth.uid == uid;
+        allow write: if isOwner(uid) && member();
+        allow delete: if admin();
       }
     }
 
     // Daily totals used by the Arena. Document id is "<uid>_<date>".
     match /days/{id} {
       allow read: if member();
-      allow create, update: if signedIn()
+      allow create, update: if member()
         && request.resource.data.uid == request.auth.uid
         && id == request.auth.uid + '_' + request.resource.data.date;
-      allow delete: if signedIn() && resource.data.uid == request.auth.uid;
+      allow delete: if (signedIn() && resource.data.uid == request.auth.uid) || admin();
     }
   }
 }
