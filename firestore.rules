@@ -108,6 +108,18 @@ service cloud.firestore {
       }
     }
 
+    // Nudges between friends, delivered by the notifier. One per sender, recipient and day; nobody can read them.
+    match /nudges/{id} {
+      allow create: if member()
+        && request.resource.data.keys().hasOnly(['from', 'to', 'date', 'msg', 'createdAt'])
+        && request.resource.data.from == pid()
+        && request.resource.data.to is string && request.resource.data.to != pid()
+        && exists(profilePath(request.resource.data.to))
+        && request.resource.data.msg in ['go', 'streak', 'race', 'cheer']
+        && request.resource.data.date is string
+        && id == pid() + '_' + request.resource.data.to + '_' + request.resource.data.date;
+    }
+
     // Daily totals used by the Arena. Document id is "<pid>_<date>".
     match /days/{id} {
       allow read: if member();

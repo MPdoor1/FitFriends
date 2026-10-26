@@ -23,6 +23,7 @@ import {
   orderBy, limit, runTransaction, increment, serverTimestamp, deleteDoc, writeBatch, Timestamp,
 } from 'firebase/firestore/lite';
 import { firebaseConfig } from './firebase-config.js';
+import { NOTIFY_KEYS, NUDGES } from './notify-catalog.js';
 import {
   workoutCalories, workoutPoints, goalDayPoints, GOAL_DAY_POINTS, levelFor, badgesFor,
 } from './scoring.js';
@@ -82,7 +83,7 @@ function profileFrom(snap) {
     waterGoal: d.waterGoal ?? 8,
     onboarded: Boolean(d.onboarded),
     tz: d.tz || null,
-    notify: { workout: true, meals: true, water: true, arena: true, weekly: true, friends: true, ...(d.notify || {}) },
+    notify: d.notify || {},
     bestStreak: d.bestStreak || 0,
     stats: { xp: 0, workouts: 0, minutes: 0, calories: 0, goalDays: 0, types: {}, ...d.stats },
   };
@@ -228,7 +229,6 @@ export async function getProfile(id = pid()) {
 }
 
 const ACTIVITIES = ['sedentary', 'light', 'moderate', 'very', 'athlete'];
-export const NOTIFY_KEYS = ['workout', 'meals', 'water', 'arena', 'weekly', 'friends'];
 const inRange = (v, lo, hi) => typeof v === 'number' && Number.isFinite(v) && v >= lo && v <= hi;
 
 // Saves only the fields given; each is checked so bad input never reaches the database.
@@ -250,7 +250,9 @@ export async function updateProfile(changes) {
   if ('onboarded' in c) patch.onboarded = Boolean(c.onboarded);
   if ('tz' in c && /^[A-Za-z_+\-/0-9]{1,64}$/.test(c.tz)) patch.tz = c.tz;
   if ('notify' in c) {
-    patch.notify = Object.fromEntries(NOTIFY_KEYS.map((k) => [k, c.notify[k] !== false]));
+    const n = Object.fromEntries(NOTIFY_KEYS.map((k) => [k, Boolean(c.notify[k])]));
+    for (const k of ['quietStart', 'quietEnd']) if (Number.isInteger(c.notify[k]) && c.notify[k] >= 0 && c.notify[k] <= 23) n[k] = c.notify[k];
+    patch.notify = n;
   }
   num('calorieGoal', 800, 6000);
   num('weightKg', 25, 300, 2);
@@ -708,4 +710,15 @@ export async function saveDevice(token, label) {
 
 export async function removeDevice(id) {
   await deleteDoc(doc(db, 'users', pid(), 'devices', id));
+}
+
+// One nudge per friend per day; the notifier delivers it within ~15 minutes.
+export async function sendNudge(toId, msg, date) {
+  if (!NUDGES[msg]) throw new Error('Pick a message.');
+  try {
+    await setDoc(doc(db, 'nudges', `${pid()}_${toId}_${date}`), { from: pid(), to: toId, date, msg, createdAt: serverTimestamp() });
+  } catch (err) {
+    if (err.code === 'permission-denied') throw new Error('You already nudged them today.');
+    throw err;
+  }
 }

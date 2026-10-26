@@ -7,7 +7,8 @@ A small health app for a group of friends: log workouts, count calories, and com
 - **Accounts:** a username and password. No email or verification.
 - **Admin:** admins can set the invite code, promote other admins, reset a member's password, and remove members (Me → Admin panel).
 - **Password resets:** the admin taps the key next to a member to get a one-time code (valid 24 hours). The member taps **Forgot password?** on the sign-in screen and enters it with a new password. Firebase can't change another person's password without a paid server, so the reset makes a fresh login and moves the member's profile onto it. All their data stays.
-- **Notifications:** workout, meal and water reminders, Arena alerts, weekly results and friend activity. Turn them on under **Me → Notifications** (on iPhone, install to the Home Screen first). Each type can be switched off, and nothing is sent between 10pm and 8am in the member's time zone.
+- **Notifications:** 25 types in four groups (Reminders, Progress & fun, Arena, Friends), listed in `src/notify-catalog.js`. Turn them on under **Me → Notifications** (on iPhone, install to the Home Screen first). There are one-tap presets, a switch per group, a switch and a Preview button per type, and adjustable quiet hours (default 10pm–8am, member's time zone).
+- **Nudges:** send a friend "Let's go!", "Race you this week" and similar from their card in the Arena (one per friend per day).
 - **Installable:** add it to your phone's home screen from the Install tab. It opens full screen like a normal app.
 - **Setup guide:** after sign-up, five quick steps (units, about you, activity, goal) produce a daily calorie target (Mifflin-St Jeor) plus protein, carbs and fat targets.
 - **Units:** pounds and miles by default; switch to kg and km in your profile. Everything is stored metric.

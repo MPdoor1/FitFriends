@@ -3,16 +3,8 @@ import { state } from '../state.js';
 import { ACTIVITY, paceLabel, calorieTarget, macroTargets, goalsFor, ageFrom } from '../nutrition.js';
 import { $, $$, esc, fmt, icon, label, avatar, toast, haptic, localDate } from '../ui.js';
 import { imperial, weightUnit, toDisplayWeight, fmtWeight, fmtHeight } from '../units.js';
-import { pushStatus, enablePush, disablePush, testPush } from '../notify.js';
-
-const NOTIFY_OPTIONS = [
-  ['workout', 'Workout reminder', 'Evening nudge if you haven\'t trained, with your streak'],
-  ['meals', 'Meal reminders', 'Early afternoon if nothing is logged, and at dinner time'],
-  ['water', 'Water check', 'Mid-afternoon if you\'re under half your glasses'],
-  ['arena', 'Arena alerts', 'When someone passes you or you take first place'],
-  ['weekly', 'Weekly results', 'Monday morning: how last week finished'],
-  ['friends', 'Friend activity', 'When a friend logs a workout'],
-];
+import { notifyPrefs } from '../notify-catalog.js';
+import { countOn } from './alerts.js';
 
 export async function viewMe(app, stale, install) {
   const { board, meId } = await store.leaderboard({ from: null, today: localDate() });
@@ -36,6 +28,7 @@ export async function viewMe(app, stale, install) {
 
     <nav class="link-list card">
       <a href="#/body">${icon('scale', 20)}<span>Body weight<small class="muted">${u.weightKg ? fmtWeight(u.weightKg, u.units) : 'Log a weigh-in'}${u.goalWeightKg != null ? ` · goal ${fmtWeight(u.goalWeightKg, u.units)}` : ''}</small></span>${icon('right', 18)}</a>
+      <a href="#/notifications">${icon('zap', 20)}<span>Notifications<small class="muted">${countOn(notifyPrefs(u))} types on · reminders, Arena, friends</small></span>${icon('right', 18)}</a>
       <a href="#/setup">${icon('calc', 20)}<span>Goal setup<small class="muted">${u.onboarded && u.sex ? `${ACTIVITY[u.activity]?.label} · ${paceLabel(u.goalPace, !imperial(u.units))}` : 'Get targets made for you'}</small></span>${icon('right', 18)}</a>
       ${u.isAdmin ? `<a href="#/admin">${icon('shield', 20)}<span>Admin panel<small class="muted">Members, roles, resets and invite code</small></span>${icon('right', 18)}</a>` : ''}
       ${install.standalone ? '' : `<a href="#/install">${icon('download', 20)}<span>Install the app<small class="muted">Add FitFriends to your home screen</small></span>${icon('right', 18)}</a>`}
@@ -48,8 +41,6 @@ export async function viewMe(app, stale, install) {
         <button type="button" data-units="metric" class="${imperial(u.units) ? '' : 'on'}">kg · km</button>
       </div>
     </section>
-
-    <section class="card" id="notify-card">${label('Notifications')}<div class="loading small"><span></span></div></section>
 
     <section class="card">
       <div class="row between head">${label('Daily targets')}${differs ? '<button class="link" id="use-suggested">Recalculate</button>' : ''}</div>
@@ -157,58 +148,9 @@ export async function viewMe(app, stale, install) {
       toast('Password updated');
     } catch (err) { toast(err.message, 'bad'); }
   });
-  drawNotify(u);
-
   $('#logout').addEventListener('click', async () => {
     await store.signOut();
     state.user = null;
     location.hash = '#/login';
   });
-}
-
-async function drawNotify(u) {
-  const card = $('#notify-card');
-  if (!card) return;
-  const status = await pushStatus();
-  const intro = {
-    'ios-install': `On iPhone, notifications work once FitFriends is on your Home Screen. <a class="link" href="#/install">Install it</a>, open it from the Home Screen, then come back here.`,
-    unsupported: 'This browser can\'t show notifications. Try Chrome on Android, or install the app on iPhone.',
-    denied: 'Notifications are blocked. iPhone: Settings → Notifications → FitFriends. Android: tap the lock icon or site settings and allow notifications. Then come back.',
-    off: 'Get reminders and Arena alerts on this phone. You can pick which ones below.',
-    on: 'On for this phone. Alerts can take up to about 20 minutes to arrive.',
-  }[status];
-  card.innerHTML = `
-    <div class="row between head">${label('Notifications')}${status === 'on' ? '<span class="tag">On</span>' : ''}</div>
-    <p class="muted small notify-intro">${intro}</p>
-    ${status === 'off' ? `<button class="btn primary full" id="push-on">${icon('zap', 18)} Turn on notifications</button>` : ''}
-    ${status === 'on' ? `<div class="row gap"><button class="btn small-btn" id="push-test">Send a test</button><button class="btn small-btn ghost" id="push-off">Turn off on this phone</button></div>` : ''}
-    <div class="toggles ${status === 'on' || status === 'off' ? '' : 'disabled'}">
-      ${NOTIFY_OPTIONS.map(([k, t, d]) => `
-        <label class="toggle"><span><b>${t}</b><small class="muted">${d}</small></span>
-          <input type="checkbox" data-notify="${k}" ${u.notify[k] ? 'checked' : ''}><i aria-hidden="true"></i></label>`).join('')}
-    </div>
-    <p class="muted small">Quiet from 10pm to 8am your time.</p>`;
-  $('#push-on')?.addEventListener('click', async (e) => {
-    e.currentTarget.disabled = true;
-    try {
-      await enablePush(state.user);
-      state.user = await store.getProfile();
-      haptic(20);
-      toast('Notifications on');
-    } catch (err) { toast(err.message, 'bad'); }
-    drawNotify(state.user);
-  });
-  $('#push-test')?.addEventListener('click', () => testPush().catch((err) => toast(err.message, 'bad')));
-  $('#push-off')?.addEventListener('click', async () => {
-    await disablePush();
-    toast('Notifications off for this phone');
-    drawNotify(state.user);
-  });
-  $$('[data-notify]', card).forEach((box) => box.addEventListener('change', async () => {
-    const notify = { ...state.user.notify, [box.dataset.notify]: box.checked };
-    try {
-      state.user = await store.updateProfile({ notify });
-      haptic(6);
-    } catch (err) { toast(err.message, 'bad'); box.checked = !box.checked; }
-  }));
 }

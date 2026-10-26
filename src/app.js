@@ -2,7 +2,9 @@ import * as store from './store.js';
 import { state } from './state.js';
 import {
   $, $$, esc, fmt, icon, label, avatar, localDate, shiftDate, weekStart, monthStart, dayLetter, toast,
+  openSheet, closeSheet, haptic,
 } from './ui.js';
+import { NUDGES } from './notify-catalog.js';
 import { viewToday } from './pages/today.js';
 import { viewTrain } from './pages/train.js';
 import { viewFuel } from './pages/fuel.js';
@@ -10,6 +12,7 @@ import { viewBody } from './pages/body.js';
 import { viewMe } from './pages/me.js';
 import { viewSetup } from './pages/setup.js';
 import { refreshPush } from './notify.js';
+import { viewAlerts } from './pages/alerts.js';
 
 const app = $('#app');
 
@@ -47,6 +50,7 @@ const routes = {
   body: () => viewBody(app, () => stale('body')),
   arena: viewArena,
   me: () => viewMe(app, () => stale('me'), install),
+  notifications: () => viewAlerts(app, () => stale('notifications')),
   admin: viewAdmin,
 };
 const PUBLIC_ROUTES = ['login', 'install'];
@@ -61,7 +65,7 @@ function buildNav() {
   $('#nav').style.setProperty('--n', items.length);
   highlightNav();
 }
-const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me' };
+const NAV_PARENT = { admin: 'me', body: 'me', setup: 'me', notifications: 'me' };
 function highlightNav() {
   const name = currentRoute();
   $$('#nav a').forEach((a) => a.classList.toggle('active', a.dataset.route === (NAV_PARENT[name] || name)));
@@ -310,6 +314,7 @@ async function viewArena() {
               </div>
             </div>
             <div class="badges">${p.badges.map((b) => `<span class="badge ${b.earned ? 'earned' : ''}" title="${esc(b.name)}: ${esc(b.desc)}">${icon(b.icon, 18)}</span>`).join('')}</div>
+            ${p.id !== meId ? `<button type="button" class="btn small-btn nudge-btn" data-nudge="${esc(p.id)}" data-name="${esc(p.displayName)}">${icon('zap', 16)} Nudge ${esc(p.displayName.split(' ')[0])}</button>` : ''}
           </div>`).join('')}
       </div>
     </section>
@@ -325,7 +330,32 @@ async function viewArena() {
     </section>`;
 
   $$('[data-period]').forEach((b) => b.addEventListener('click', () => { arenaPeriod = b.dataset.period; viewArena(); }));
+  $$('[data-nudge]').forEach((b) => b.addEventListener('click', () => openNudgeSheet(b.dataset.nudge, b.dataset.name)));
   requestAnimationFrame(() => requestAnimationFrame(() => $$('.race, .cmp').forEach((el) => el.classList.add('go'))));
+}
+
+// Send a friend a quick nudge or cheer; it arrives as a phone notification.
+function openNudgeSheet(toId, name) {
+  const first = name.split(' ')[0];
+  openSheet({
+    title: `Nudge ${first}`,
+    html: `
+      <p class="muted" style="margin-bottom:14px">${esc(first)} gets this as a notification if they have them on. One nudge per friend per day.</p>
+      <div class="options">
+        ${Object.entries(NUDGES).map(([k, n]) => `<button type="button" class="option" data-msg="${k}"><strong>${esc(n.label)}</strong><span class="muted">${esc(n.body)}</span>${icon('right', 20)}</button>`).join('')}
+      </div>`,
+    onMount(sheet) {
+      $$('[data-msg]', sheet).forEach((b) => b.addEventListener('click', async () => {
+        b.disabled = true;
+        try {
+          await store.sendNudge(toId, b.dataset.msg, localDate());
+          closeSheet();
+          haptic(20);
+          toast(`Sent to ${first}`);
+        } catch (err) { toast(err.message, 'bad'); b.disabled = false; }
+      }));
+    },
+  });
 }
 
 // ---------- admin ----------
