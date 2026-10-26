@@ -84,6 +84,10 @@ function profileFrom(snap) {
     onboarded: Boolean(d.onboarded),
     tz: d.tz || null,
     notify: d.notify || {},
+    widgets: Array.isArray(d.widgets) ? d.widgets : null,
+    workoutGoal: d.workoutGoal ?? 4,
+    fastStart: d.fastStart ?? null,
+    fastHours: d.fastHours ?? 16,
     bestStreak: d.bestStreak || 0,
     stats: { xp: 0, workouts: 0, minutes: 0, calories: 0, goalDays: 0, types: {}, ...d.stats },
   };
@@ -254,7 +258,11 @@ export async function updateProfile(changes) {
     for (const k of ['quietStart', 'quietEnd']) if (Number.isInteger(c.notify[k]) && c.notify[k] >= 0 && c.notify[k] <= 23) n[k] = c.notify[k];
     patch.notify = n;
   }
+  if ('widgets' in c) patch.widgets = c.widgets === null ? null : [...new Set((c.widgets || []).map(String))].filter((w) => /^[a-zA-Z]{1,24}$/.test(w)).slice(0, 40);
   num('calorieGoal', 800, 6000);
+  num('workoutGoal', 1, 14);
+  num('fastStart', 1.6e12, 4e12);
+  num('fastHours', 8, 72);
   num('weightKg', 25, 300, 2);
   num('goalWeightKg', 25, 300, 2);
   num('heightCm', 90, 250, 1);

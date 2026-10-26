@@ -10,8 +10,103 @@
   "background_color": "#0c0d0f",
   "theme_color": "#0c0d0f",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add water",
+      "short_name": "Add water",
+      "description": "+1 glass",
+      "url": "./#/home?do=water",
+      "icons": [
+        {
+          "src": "icons/sc-water.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Log food",
+      "short_name": "Log food",
+      "description": "Search and add food",
+      "url": "./#/home?do=food",
+      "icons": [
+        {
+          "src": "icons/sc-food.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Log workout",
+      "short_name": "Log workout",
+      "description": "Add a workout",
+      "url": "./#/home?do=workout",
+      "icons": [
+        {
+          "src": "icons/sc-workout.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Log weight",
+      "short_name": "Log weight",
+      "description": "Today's weigh-in",
+      "url": "./#/home?do=weight",
+      "icons": [
+        {
+          "src": "icons/sc-weight.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Timers",
+      "short_name": "Timers",
+      "description": "Intervals and countdowns",
+      "url": "./#/timers",
+      "icons": [
+        {
+          "src": "icons/sc-timer.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Routines",
+      "short_name": "Routines",
+      "description": "Start a routine",
+      "url": "./#/routines",
+      "icons": [
+        {
+          "src": "icons/sc-routines.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }
