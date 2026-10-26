@@ -1,0 +1,630 @@
+# Format: name | serving | kcal | protein g | carbs g | fat g   (one serving; "# Category" starts a section)
+# Values are typical USDA or label figures, rounded.
+
+# Eggs & Dairy
+Egg, large | 1 egg | 72 | 6.3 | 0.4 | 4.8
+Egg, hard-boiled | 1 large | 78 | 6.3 | 0.6 | 5.3
+Egg, fried | 1 large | 90 | 6.3 | 0.4 | 6.8
+Eggs, scrambled | 2 eggs with milk & butter | 200 | 13 | 2 | 15
+Egg whites | 3 large | 51 | 10.8 | 0.7 | 0.2
+Liquid egg whites | ½ cup | 60 | 12 | 1 | 0
+Omelet, cheese | 3 eggs | 400 | 26 | 2 | 31
+Omelet, veggie | 3 eggs | 300 | 20 | 6 | 21
+Milk, whole | 1 cup | 149 | 7.7 | 11.7 | 7.9
+Milk, 2% | 1 cup | 122 | 8.1 | 11.7 | 4.8
+Milk, 1% | 1 cup | 102 | 8.2 | 12.2 | 2.4
+Milk, skim | 1 cup | 83 | 8.3 | 12.2 | 0.2
+Chocolate milk | 1 cup | 208 | 7.9 | 26 | 8.5
+Fairlife 2% milk | 1 cup | 120 | 13 | 6 | 4.5
+Fairlife Core Power 26g | 14 oz bottle | 170 | 26 | 9 | 4.5
+Fairlife Core Power 42g | 14 oz bottle | 230 | 42 | 8 | 3.5
+Almond milk, unsweetened | 1 cup | 30 | 1 | 1 | 2.5
+Almond milk, original | 1 cup | 60 | 1 | 8 | 2.5
+Oat milk (Oatly) | 1 cup | 120 | 3 | 16 | 5
+Soy milk | 1 cup | 105 | 6.3 | 12 | 3.6
+Coconut milk beverage | 1 cup | 45 | 0 | 1 | 4.5
+Half and half | 2 tbsp | 39 | 0.9 | 1.3 | 3.5
+Heavy cream | 1 tbsp | 51 | 0.4 | 0.4 | 5.4
+Coffee creamer, flavored | 1 tbsp | 35 | 0 | 5 | 1.5
+Whipped cream (aerosol) | 2 tbsp | 15 | 0 | 1 | 1.5
+Sour cream | 2 tbsp | 57 | 0.7 | 1.3 | 5.6
+Butter | 1 tbsp | 102 | 0.1 | 0 | 11.5
+Cream cheese | 2 tbsp | 99 | 1.7 | 1.6 | 9.8
+Cheddar cheese | 1 oz | 114 | 7 | 0.4 | 9.4
+Cheddar cheese, shredded | ¼ cup | 110 | 7 | 0.5 | 9
+Mozzarella, part-skim | 1 oz | 72 | 6.9 | 0.8 | 4.5
+String cheese | 1 stick | 80 | 7 | 1 | 6
+Swiss cheese | 1 oz | 111 | 7.6 | 0.4 | 8.8
+American cheese | 1 slice | 70 | 3.5 | 1.5 | 5.5
+Provolone | 1 oz | 100 | 7.3 | 0.6 | 7.6
+Parmesan, grated | 1 tbsp | 22 | 1.9 | 0.2 | 1.4
+Feta | 1 oz | 75 | 4 | 1.2 | 6
+Goat cheese | 1 oz | 103 | 6 | 0 | 8.5
+Pepper jack | 1 oz | 110 | 7 | 0 | 9
+Brie | 1 oz | 95 | 5.9 | 0.1 | 7.9
+Cottage cheese, 2% | ½ cup | 92 | 12 | 5 | 2.5
+Cottage cheese, 4% | ½ cup | 110 | 12 | 4 | 5
+Ricotta, whole | ¼ cup | 108 | 7 | 1.9 | 8
+Greek yogurt, plain nonfat | 1 cup | 133 | 23 | 8 | 0.4
+Greek yogurt, plain whole | 1 cup | 220 | 20 | 9 | 11
+Fage Total 0% | 170 g cup | 90 | 18 | 5 | 0
+Chobani nonfat vanilla | 5.3 oz cup | 110 | 12 | 13 | 0
+Chobani fruit on the bottom | 5.3 oz cup | 120 | 11 | 15 | 0
+Oikos Triple Zero | 5.3 oz cup | 90 | 15 | 7 | 0
+Oikos Pro | 5.3 oz cup | 140 | 20 | 7 | 3
+Siggi's vanilla | 5.3 oz cup | 110 | 15 | 9 | 2
+Yoplait Original | 6 oz cup | 140 | 5 | 26 | 1.5
+Yoplait Light | 6 oz cup | 90 | 5 | 16 | 0
+Activia | 4 oz cup | 90 | 4 | 15 | 2
+Go-Gurt | 1 tube | 50 | 1 | 9 | 0.5
+Yogurt, plain low-fat | 1 cup | 154 | 12.9 | 17 | 3.8
+Kefir, low-fat | 1 cup | 110 | 10 | 12 | 2
+
+# Meat & Poultry
+Chicken breast, grilled | 4 oz cooked | 187 | 35 | 0 | 4
+Chicken breast, raw weight | 4 oz raw | 136 | 25.6 | 0 | 3
+Chicken thigh, skinless | 4 oz cooked | 236 | 29 | 0 | 12
+Chicken thigh, with skin | 1 thigh | 230 | 23 | 0 | 15
+Chicken drumstick | 1 drumstick | 155 | 19 | 0 | 8.5
+Chicken wings, plain | 6 wings | 430 | 38 | 0 | 30
+Rotisserie chicken | 4 oz mixed meat | 230 | 30 | 0 | 12
+Chicken tenders, breaded | 3 pieces | 330 | 20 | 18 | 19
+Chicken nuggets, frozen | 5 pieces | 230 | 12 | 13 | 14
+Ground chicken | 4 oz cooked | 220 | 27 | 0 | 12
+Ground turkey 93% lean | 4 oz cooked | 200 | 28 | 0 | 10
+Ground turkey 99% lean | 4 oz cooked | 140 | 32 | 0 | 1.5
+Turkey breast, roasted | 4 oz | 153 | 34 | 0 | 1
+Deli turkey | 2 oz | 60 | 11 | 2 | 1
+Ground beef 80/20 | 4 oz cooked | 307 | 26 | 0 | 22
+Ground beef 85/15 | 4 oz cooked | 280 | 28 | 0 | 18
+Ground beef 90/10 | 4 oz cooked | 245 | 30 | 0 | 13
+Ground beef 93/7 | 4 oz cooked | 200 | 31 | 0 | 8
+Hamburger patty | ¼ lb cooked | 280 | 22 | 0 | 21
+Sirloin steak | 6 oz cooked | 340 | 52 | 0 | 13
+Ribeye steak | 8 oz cooked | 610 | 52 | 0 | 44
+Filet mignon | 6 oz cooked | 380 | 46 | 0 | 21
+New York strip | 8 oz cooked | 520 | 56 | 0 | 32
+Flank steak | 4 oz cooked | 220 | 32 | 0 | 9
+Beef brisket | 4 oz | 330 | 28 | 0 | 24
+Pot roast | 4 oz | 270 | 34 | 0 | 14
+Beef jerky | 1 oz | 116 | 9.4 | 3.1 | 7.3
+Jack Link's beef jerky | 1 oz | 80 | 11 | 6 | 1
+Pork chop | 4 oz cooked | 240 | 31 | 0 | 12
+Pork tenderloin | 4 oz cooked | 163 | 30 | 0 | 4
+Pulled pork | 4 oz | 270 | 26 | 6 | 15
+Pork ribs, BBQ | 4 ribs | 720 | 44 | 18 | 52
+Ham, sliced | 2 oz | 60 | 10 | 2 | 1.5
+Bacon | 3 slices | 129 | 9 | 0.4 | 10
+Turkey bacon | 2 slices | 70 | 6 | 1 | 5
+Canadian bacon | 2 slices | 60 | 10 | 1 | 2
+Breakfast sausage links | 3 links | 230 | 9 | 1 | 21
+Sausage patty | 1 patty | 180 | 8 | 1 | 16
+Italian sausage | 1 link | 290 | 16 | 3 | 24
+Bratwurst | 1 link | 280 | 12 | 3 | 25
+Hot dog, beef | 1 frank | 180 | 6 | 2 | 16
+Hot dog with bun | 1 | 310 | 11 | 24 | 18
+Pepperoni | 15 slices | 140 | 5 | 0 | 13
+Salami | 1 oz | 110 | 6 | 1 | 9
+Lamb chop | 4 oz cooked | 330 | 28 | 0 | 24
+Meatballs, beef | 4 meatballs | 290 | 18 | 8 | 20
+Chorizo | 2 oz | 260 | 14 | 1 | 22
+Corned beef | 4 oz | 285 | 21 | 0 | 22
+Roast beef, deli | 2 oz | 70 | 12 | 1 | 2
+Spam | 2 oz | 180 | 7 | 1 | 16
+
+# Seafood
+Salmon, baked | 4 oz | 234 | 25 | 0 | 14
+Salmon, smoked | 2 oz | 66 | 10 | 0 | 2.4
+Tuna, canned in water | 1 can (5 oz) | 120 | 26 | 0 | 1
+Tuna, canned in oil | 1 can (5 oz) | 220 | 30 | 0 | 10
+Tuna steak | 4 oz cooked | 150 | 34 | 0 | 1
+Tuna salad | ½ cup | 190 | 16 | 10 | 9
+Shrimp, cooked | 4 oz | 112 | 24 | 0 | 1.2
+Fried shrimp | 6 pieces | 280 | 14 | 20 | 16
+Tilapia | 4 oz cooked | 145 | 30 | 0 | 3
+Cod | 4 oz cooked | 120 | 26 | 0 | 1
+Halibut | 4 oz cooked | 125 | 25 | 0 | 2.6
+Mahi mahi | 4 oz cooked | 124 | 27 | 0 | 1
+Catfish, fried | 4 oz | 260 | 18 | 9 | 16
+Fish sticks | 6 sticks | 290 | 12 | 24 | 16
+Crab meat | 4 oz | 110 | 22 | 0 | 1.5
+Lobster | 4 oz | 110 | 23 | 0 | 1
+Scallops | 4 oz cooked | 125 | 23 | 6 | 1
+Sardines, canned | 1 can (3.75 oz) | 190 | 23 | 0 | 11
+Canned chicken | 1 can (5 oz) | 140 | 30 | 0 | 2
+Sushi, California roll | 6 pieces | 255 | 9 | 38 | 7
+Sushi, spicy tuna roll | 6 pieces | 290 | 12 | 26 | 11
+Sushi, salmon nigiri | 2 pieces | 140 | 8 | 20 | 3
+Poke bowl | 1 bowl | 650 | 35 | 80 | 20
+
+# Bread, Grains & Pasta
+White bread | 1 slice | 79 | 2.7 | 15 | 1
+Whole wheat bread | 1 slice | 81 | 4 | 14 | 1.1
+Dave's Killer Bread 21 Whole Grains | 1 slice | 110 | 5 | 22 | 1.5
+Ezekiel bread | 1 slice | 80 | 5 | 15 | 0.5
+Sourdough bread | 1 slice | 120 | 4.5 | 23 | 1
+Rye bread | 1 slice | 83 | 2.7 | 15 | 1
+Texas toast | 1 slice | 150 | 3 | 18 | 7
+Bagel, plain | 1 medium | 277 | 11 | 55 | 1.4
+Bagel, everything | 1 medium | 290 | 11 | 56 | 2.5
+English muffin | 1 muffin | 134 | 4.4 | 26 | 1
+Hamburger bun | 1 bun | 120 | 4 | 22 | 2
+Hot dog bun | 1 bun | 110 | 4 | 20 | 1.5
+Brioche bun | 1 bun | 200 | 6 | 30 | 6
+Croissant | 1 medium | 231 | 4.7 | 26 | 12
+Dinner roll | 1 roll | 87 | 3 | 15 | 2
+Biscuit | 1 biscuit | 190 | 4 | 24 | 9
+Cornbread | 1 piece | 198 | 4.5 | 28 | 7.5
+Pita bread | 1 large | 165 | 5.5 | 33 | 0.7
+Naan | 1 piece | 260 | 9 | 45 | 5
+Flour tortilla, 8 in | 1 tortilla | 140 | 4 | 24 | 3.5
+Flour tortilla, 10 in burrito | 1 tortilla | 210 | 6 | 35 | 5
+Corn tortilla | 1 tortilla | 52 | 1.4 | 11 | 0.7
+Low-carb tortilla (Mission) | 1 tortilla | 70 | 5 | 19 | 3
+White rice, cooked | 1 cup | 205 | 4.3 | 45 | 0.4
+Brown rice, cooked | 1 cup | 216 | 5 | 45 | 1.8
+Jasmine rice, cooked | 1 cup | 205 | 4.2 | 45 | 0.4
+Fried rice | 1 cup | 238 | 5.5 | 34 | 9
+Spanish rice | 1 cup | 215 | 4.5 | 42 | 3.5
+Uncle Ben's Ready Rice | 1 cup | 220 | 5 | 43 | 3
+Quinoa, cooked | 1 cup | 222 | 8 | 39 | 3.6
+Couscous, cooked | 1 cup | 176 | 6 | 36 | 0.3
+Pasta, cooked | 1 cup | 221 | 8.1 | 43 | 1.3
+Whole wheat pasta, cooked | 1 cup | 174 | 7.5 | 37 | 0.8
+Pasta, dry | 2 oz | 200 | 7 | 42 | 1
+Banza chickpea pasta | 2 oz dry | 190 | 11 | 32 | 3.5
+Egg noodles, cooked | 1 cup | 221 | 7.3 | 40 | 3.3
+Ramen noodles, instant | 1 package | 380 | 8 | 52 | 14
+Rice noodles, cooked | 1 cup | 190 | 1.6 | 42 | 0.4
+Oatmeal, cooked | 1 cup | 166 | 5.9 | 28 | 3.6
+Rolled oats, dry | ½ cup | 150 | 5 | 27 | 2.5
+Instant oatmeal packet, flavored | 1 packet | 160 | 4 | 32 | 2
+Cream of Wheat | 1 cup cooked | 130 | 4 | 27 | 0.5
+Grits | 1 cup cooked | 150 | 3.5 | 32 | 0.5
+Barley, cooked | 1 cup | 193 | 3.5 | 44 | 0.7
+Farro, cooked | 1 cup | 200 | 7 | 40 | 1.5
+Crackers, saltine | 5 crackers | 63 | 1.4 | 11 | 1.5
+Ritz crackers | 5 crackers | 80 | 1 | 10 | 4.5
+Triscuit | 6 crackers | 120 | 3 | 20 | 3.5
+Wheat Thins | 16 crackers | 140 | 2 | 22 | 5
+Rice cake | 1 cake | 35 | 0.7 | 7.3 | 0.3
+Graham crackers | 2 sheets | 130 | 2 | 24 | 3
+
+# Cereal
+Cheerios | 1½ cups | 140 | 5 | 29 | 2.5
+Honey Nut Cheerios | 1 cup | 140 | 3 | 30 | 2
+Frosted Flakes | 1 cup | 140 | 1 | 34 | 0
+Corn Flakes | 1 cup | 100 | 2 | 24 | 0
+Raisin Bran | 1 cup | 190 | 5 | 46 | 1
+Special K | 1 cup | 120 | 6 | 23 | 0.5
+Rice Krispies | 1¼ cups | 130 | 2 | 29 | 0
+Froot Loops | 1⅓ cups | 150 | 2 | 34 | 1.5
+Lucky Charms | 1 cup | 140 | 3 | 30 | 1.5
+Cinnamon Toast Crunch | 1 cup | 170 | 2 | 33 | 4
+Cocoa Puffs | 1 cup | 140 | 2 | 30 | 2
+Cap'n Crunch | 1 cup | 150 | 1 | 31 | 2
+Frosted Mini-Wheats | 25 biscuits | 210 | 6 | 49 | 1
+Life cereal | 1 cup | 160 | 4 | 33 | 2
+Kashi GO | 1¼ cups | 180 | 13 | 32 | 3
+Grape-Nuts | ½ cup | 200 | 6 | 47 | 1
+Granola | ½ cup | 280 | 6 | 36 | 12
+Pop-Tarts, frosted | 2 pastries | 370 | 4 | 69 | 9
+Nutri-Grain bar | 1 bar | 130 | 2 | 24 | 3
+
+# Breakfast
+Pancakes | 3 medium, plain | 260 | 7 | 33 | 11
+Buttermilk pancakes, restaurant | 3 large | 520 | 14 | 90 | 12
+Waffle, homemade | 1 7-inch | 218 | 6 | 25 | 11
+Eggo waffles | 2 waffles | 180 | 4 | 28 | 6
+French toast | 2 slices | 300 | 10 | 34 | 13
+Maple syrup | 2 tbsp | 104 | 0 | 27 | 0
+Pancake syrup | ¼ cup | 210 | 0 | 53 | 0
+Hash browns | 1 cup | 326 | 3 | 35 | 20
+Breakfast burrito | 1 burrito | 500 | 22 | 40 | 28
+Breakfast sandwich, egg & cheese | 1 sandwich | 320 | 15 | 30 | 15
+Breakfast sandwich, sausage egg & cheese | 1 sandwich | 480 | 20 | 30 | 31
+Jimmy Dean Croissant sandwich | 1 sandwich | 410 | 13 | 25 | 29
+Biscuits and gravy | 1 biscuit with gravy | 450 | 9 | 40 | 28
+Avocado toast | 1 slice | 260 | 6 | 25 | 16
+Muffin, blueberry | 1 large | 425 | 6 | 60 | 18
+Banana bread | 1 slice | 326 | 4.3 | 55 | 11
+Cinnamon roll | 1 large | 420 | 6 | 58 | 18
+Donut, glazed | 1 donut | 240 | 3 | 31 | 11
+Donut, chocolate frosted | 1 donut | 280 | 3 | 33 | 15
+Danish | 1 pastry | 263 | 4 | 34 | 13
+Quiche | 1 slice | 450 | 13 | 22 | 34
+
+# Fruit
+Apple | 1 medium | 95 | 0.5 | 25 | 0.3
+Banana | 1 medium | 105 | 1.3 | 27 | 0.4
+Orange | 1 medium | 62 | 1.2 | 15 | 0.2
+Clementine | 1 fruit | 35 | 0.6 | 9 | 0.1
+Grapes | 1 cup | 104 | 1.1 | 27 | 0.2
+Strawberries | 1 cup | 49 | 1 | 12 | 0.5
+Blueberries | 1 cup | 84 | 1.1 | 21 | 0.5
+Raspberries | 1 cup | 64 | 1.5 | 15 | 0.8
+Blackberries | 1 cup | 62 | 2 | 14 | 0.7
+Watermelon | 2 cups diced | 92 | 1.9 | 23 | 0.5
+Cantaloupe | 1 cup | 54 | 1.3 | 13 | 0.3
+Honeydew | 1 cup | 61 | 0.9 | 15 | 0.2
+Pineapple | 1 cup | 82 | 0.9 | 22 | 0.2
+Mango | 1 cup | 99 | 1.4 | 25 | 0.6
+Peach | 1 medium | 59 | 1.4 | 14 | 0.4
+Pear | 1 medium | 101 | 0.6 | 27 | 0.2
+Plum | 1 fruit | 30 | 0.5 | 7.5 | 0.2
+Cherries | 1 cup | 97 | 1.6 | 25 | 0.3
+Kiwi | 1 fruit | 42 | 0.8 | 10 | 0.4
+Grapefruit | ½ fruit | 52 | 0.9 | 13 | 0.2
+Avocado | ½ fruit | 120 | 1.5 | 6 | 11
+Guacamole | 2 tbsp | 50 | 0.6 | 3 | 4.5
+Raisins | small box (1.5 oz) | 129 | 1.3 | 34 | 0.2
+Dried cranberries | ¼ cup | 130 | 0 | 33 | 0.5
+Dates, Medjool | 2 dates | 133 | 0.9 | 36 | 0.1
+Applesauce, unsweetened | 1 cup | 102 | 0.4 | 27 | 0.2
+Fruit cup in juice | 1 cup | 110 | 1 | 28 | 0
+Coconut, shredded sweetened | ¼ cup | 120 | 1 | 12 | 8
+Pomegranate seeds | ½ cup | 72 | 1.5 | 16 | 1
+Fruit salad | 1 cup | 90 | 1 | 23 | 0.3
+
+# Vegetables
+Broccoli | 1 cup | 31 | 2.6 | 6 | 0.3
+Broccoli, steamed | 1 cup | 55 | 3.7 | 11 | 0.6
+Cauliflower | 1 cup | 27 | 2 | 5 | 0.3
+Cauliflower rice | 1 cup | 25 | 2 | 5 | 0
+Carrots | 1 medium | 25 | 0.6 | 6 | 0.1
+Baby carrots | 10 carrots | 35 | 0.6 | 8 | 0.1
+Spinach, raw | 2 cups | 14 | 1.7 | 2.2 | 0.2
+Spinach, cooked | 1 cup | 41 | 5.3 | 7 | 0.5
+Kale | 2 cups | 16 | 1.4 | 2.8 | 0.6
+Romaine lettuce | 2 cups | 16 | 1.2 | 3 | 0.3
+Mixed greens | 2 cups | 18 | 1.5 | 3 | 0.2
+Iceberg lettuce | 2 cups | 20 | 1 | 4 | 0.2
+Cucumber | 1 cup sliced | 16 | 0.7 | 3.8 | 0.1
+Tomato | 1 medium | 22 | 1.1 | 4.8 | 0.2
+Cherry tomatoes | 1 cup | 27 | 1.3 | 5.8 | 0.3
+Bell pepper | 1 medium | 30 | 1 | 7 | 0.3
+Onion | 1 medium | 44 | 1.2 | 10 | 0.1
+Mushrooms | 1 cup | 15 | 2.2 | 2.3 | 0.2
+Zucchini | 1 medium | 33 | 2.4 | 6 | 0.6
+Green beans | 1 cup | 31 | 1.8 | 7 | 0.2
+Asparagus | 6 spears | 20 | 2.2 | 3.9 | 0.1
+Brussels sprouts | 1 cup | 38 | 3 | 8 | 0.3
+Corn | 1 ear | 90 | 3.3 | 19 | 1.4
+Corn, canned | ½ cup | 70 | 2 | 15 | 1
+Peas | ½ cup | 62 | 4 | 11 | 0.3
+Celery | 2 stalks | 13 | 0.6 | 2.4 | 0.1
+Cabbage | 1 cup | 22 | 1.1 | 5 | 0.1
+Coleslaw | ½ cup | 150 | 1 | 14 | 10
+Sweet potato, baked | 1 medium | 103 | 2.3 | 24 | 0.2
+Potato, baked | 1 medium | 161 | 4.3 | 37 | 0.2
+Baked potato, loaded | 1 potato | 420 | 13 | 42 | 23
+Mashed potatoes | 1 cup | 237 | 4 | 35 | 9
+French fries, homemade | 1 cup | 312 | 3.4 | 41 | 15
+Frozen fries (Ore-Ida) | 3 oz | 120 | 2 | 19 | 4
+Tater tots | 9 pieces | 160 | 2 | 20 | 8
+Potato salad | ½ cup | 180 | 2 | 14 | 12
+Edamame | 1 cup shelled | 188 | 18 | 14 | 8
+Beets | 1 cup | 59 | 2.2 | 13 | 0.2
+Eggplant | 1 cup cooked | 35 | 0.8 | 8.6 | 0.2
+Butternut squash | 1 cup cooked | 82 | 1.8 | 22 | 0.2
+Pickles | 1 spear | 4 | 0.1 | 0.9 | 0.1
+Salsa | 2 tbsp | 10 | 0.5 | 2 | 0
+Side salad with ranch | 1 bowl | 200 | 2 | 8 | 18
+Caesar salad | 1 entree | 470 | 10 | 20 | 39
+Garden salad, no dressing | 1 bowl | 50 | 2.5 | 10 | 0.3
+Stir-fry vegetables | 1 cup | 60 | 2 | 10 | 1.5
+
+# Beans, Nuts & Seeds
+Black beans | ½ cup | 114 | 7.6 | 20 | 0.5
+Pinto beans | ½ cup | 122 | 7.7 | 22 | 0.6
+Kidney beans | ½ cup | 112 | 7.7 | 20 | 0.4
+Chickpeas | ½ cup | 134 | 7.3 | 22 | 2.1
+Lentils, cooked | ½ cup | 115 | 9 | 20 | 0.4
+Refried beans | ½ cup | 120 | 7 | 20 | 1.5
+Baked beans | ½ cup | 140 | 6 | 29 | 0.5
+Hummus | 2 tbsp | 70 | 2 | 4 | 5
+Tofu, firm | ½ cup | 181 | 22 | 3.5 | 11
+Tempeh | 3 oz | 160 | 17 | 8 | 9
+Peanut butter | 2 tbsp | 190 | 7 | 7 | 16
+Almond butter | 2 tbsp | 196 | 6.7 | 6 | 18
+PB2 powdered peanut butter | 2 tbsp | 60 | 6 | 5 | 1.5
+Nutella | 2 tbsp | 200 | 2 | 22 | 11
+Almonds | 1 oz (23) | 164 | 6 | 6 | 14
+Peanuts | 1 oz | 166 | 7 | 6 | 14
+Cashews | 1 oz | 157 | 5.2 | 8.6 | 12
+Walnuts | 1 oz | 185 | 4.3 | 3.9 | 18
+Pistachios | 1 oz (49) | 159 | 5.7 | 7.7 | 13
+Pecans | 1 oz | 196 | 2.6 | 3.9 | 20
+Mixed nuts | 1 oz | 170 | 5 | 6 | 15
+Trail mix | ¼ cup | 175 | 5 | 16 | 11
+Sunflower seeds | 1 oz | 165 | 5.5 | 7 | 14
+Chia seeds | 1 tbsp | 58 | 2 | 5 | 3.7
+Flaxseed, ground | 1 tbsp | 37 | 1.3 | 2 | 3
+Pumpkin seeds | 1 oz | 151 | 7 | 5 | 13
+
+# Snacks & Chips
+Lay's Classic chips | 1 oz (15 chips) | 160 | 2 | 15 | 10
+Lay's, small bag | 1 bag (1 oz) | 160 | 2 | 15 | 10
+Doritos Nacho Cheese | 1 oz (11 chips) | 150 | 2 | 18 | 8
+Doritos Cool Ranch | 1 oz | 150 | 2 | 18 | 8
+Cheetos Crunchy | 1 oz | 160 | 2 | 15 | 10
+Cheetos Flamin' Hot | 1 oz | 170 | 1 | 15 | 11
+Fritos | 1 oz | 160 | 2 | 16 | 10
+Pringles Original | 1 oz (16 crisps) | 150 | 1 | 15 | 9
+Ruffles | 1 oz | 160 | 2 | 14 | 10
+Kettle chips | 1 oz | 150 | 2 | 16 | 9
+SunChips | 1 oz | 140 | 2 | 19 | 6
+Takis Fuego | 1 oz | 150 | 2 | 17 | 8
+Tortilla chips | 1 oz | 140 | 2 | 19 | 7
+Pretzels | 1 oz | 110 | 3 | 23 | 1
+Goldfish crackers | 55 pieces | 140 | 4 | 20 | 5
+Cheez-It | 27 crackers | 150 | 3 | 17 | 8
+Popcorn, air-popped | 3 cups | 93 | 3 | 19 | 1
+Popcorn, microwave butter | 1 bag popped | 440 | 7 | 44 | 26
+Skinny Pop | 3¾ cups | 150 | 2 | 15 | 10
+Smartfood white cheddar | 1¾ cups | 160 | 3 | 14 | 10
+Veggie Straws | 1 oz | 130 | 1 | 17 | 7
+Chex Mix | ½ cup | 130 | 2 | 22 | 4
+Rice Krispies Treat | 1 bar | 90 | 1 | 17 | 2.5
+Fruit snacks | 1 pouch | 80 | 1 | 19 | 0
+Applesauce pouch | 1 pouch | 60 | 0 | 14 | 0
+Pudding cup | 1 cup | 110 | 2 | 20 | 3
+Jell-O cup | 1 cup | 70 | 1 | 17 | 0
+Beef stick (Slim Jim) | 1 stick | 80 | 3 | 1 | 7
+Cheese and crackers pack | 1 pack | 160 | 5 | 13 | 10
+Celery with peanut butter | 2 stalks, 2 tbsp | 200 | 7 | 9 | 16
+Apple with peanut butter | 1 apple, 2 tbsp | 285 | 7.5 | 32 | 16
+Hard-boiled egg snack pack | 2 eggs | 160 | 13 | 1 | 11
+
+# Bars & Protein
+Protein shake (whey, with water) | 1 scoop | 120 | 24 | 3 | 1.5
+Protein shake (whey, with milk) | 1 scoop + 1 cup 2% milk | 240 | 32 | 15 | 6
+Optimum Nutrition Gold Standard Whey | 1 scoop | 120 | 24 | 3 | 1.5
+Premier Protein shake | 11 oz bottle | 160 | 30 | 5 | 3
+Muscle Milk Pro | 14 oz bottle | 160 | 32 | 9 | 1.5
+Orgain protein shake | 11 oz | 150 | 16 | 15 | 4
+Casein protein | 1 scoop | 120 | 24 | 3 | 1
+Plant protein powder | 1 scoop | 130 | 21 | 6 | 3
+Mass gainer | 1 serving | 650 | 32 | 110 | 9
+Quest bar | 1 bar | 190 | 21 | 22 | 8
+Clif bar | 1 bar | 250 | 9 | 44 | 5
+Clif Builders | 1 bar | 280 | 20 | 30 | 10
+KIND bar | 1 bar | 200 | 6 | 16 | 15
+RXBAR | 1 bar | 210 | 12 | 23 | 9
+Barebells protein bar | 1 bar | 200 | 20 | 18 | 8
+ONE protein bar | 1 bar | 220 | 20 | 23 | 8
+Pure Protein bar | 1 bar | 200 | 20 | 17 | 7
+Built bar | 1 bar | 130 | 17 | 18 | 4.5
+Nature Valley Crunchy | 2 bars | 190 | 4 | 29 | 7
+Nature Valley Protein | 1 bar | 190 | 10 | 14 | 12
+Larabar | 1 bar | 220 | 6 | 24 | 12
+Fiber One bar | 1 bar | 140 | 2 | 29 | 4
+Kirkland protein bar | 1 bar | 190 | 21 | 22 | 7
+Creatine | 5 g | 0 | 0 | 0 | 0
+Pre-workout | 1 scoop | 10 | 0 | 2 | 0
+Energy gel | 1 gel | 100 | 0 | 25 | 0
+
+# Sweets & Desserts
+Oreo cookies | 3 cookies | 160 | 1 | 25 | 7
+Chips Ahoy | 3 cookies | 160 | 2 | 22 | 8
+Chocolate chip cookie, bakery | 1 large | 380 | 4 | 50 | 18
+Chocolate chip cookie, homemade | 1 medium | 150 | 2 | 20 | 7
+Sugar cookie | 1 cookie | 150 | 2 | 20 | 7
+Brownie | 1 square | 230 | 2.7 | 36 | 9
+Cupcake, frosted | 1 cupcake | 300 | 3 | 45 | 13
+Chocolate cake | 1 slice | 350 | 5 | 50 | 15
+Cheesecake | 1 slice | 400 | 7 | 32 | 28
+Apple pie | 1 slice | 410 | 4 | 58 | 19
+Pumpkin pie | 1 slice | 320 | 6 | 41 | 14
+Ice cream, vanilla | ½ cup | 137 | 2.3 | 16 | 7.3
+Ice cream, premium (Ben & Jerry's) | ⅔ cup | 360 | 6 | 35 | 21
+Halo Top | ⅔ cup | 100 | 6 | 20 | 3
+Frozen yogurt | ½ cup | 110 | 3 | 19 | 3
+Ice cream sandwich | 1 | 170 | 3 | 27 | 6
+Popsicle | 1 bar | 45 | 0 | 11 | 0
+Snickers | 1 bar (1.86 oz) | 250 | 4 | 33 | 12
+M&M's, milk chocolate | 1 bag (1.69 oz) | 240 | 2 | 34 | 10
+Peanut M&M's | 1 bag (1.74 oz) | 250 | 5 | 30 | 13
+Reese's Peanut Butter Cups | 2 cups | 210 | 5 | 24 | 13
+Kit Kat | 1 bar (1.5 oz) | 210 | 3 | 27 | 11
+Hershey's milk chocolate bar | 1 bar (1.55 oz) | 220 | 3 | 26 | 13
+Twix | 1 package | 250 | 2 | 33 | 12
+Milky Way | 1 bar | 240 | 2 | 37 | 9
+Skittles | 1 bag (2.17 oz) | 250 | 0 | 56 | 2.5
+Starburst | 1 pack | 240 | 0 | 48 | 5
+Sour Patch Kids | 1 bag (2 oz) | 210 | 0 | 51 | 0
+Gummy bears | 17 pieces | 140 | 3 | 33 | 0
+Dark chocolate | 1 oz | 170 | 2.2 | 13 | 12
+Chocolate chips | 1 tbsp | 70 | 1 | 9 | 4
+Jelly beans | 1 oz | 105 | 0 | 26 | 0
+Marshmallows | 4 large | 92 | 0.5 | 23 | 0
+Honey | 1 tbsp | 64 | 0.1 | 17 | 0
+Sugar | 1 tsp | 16 | 0 | 4 | 0
+Jam / jelly | 1 tbsp | 56 | 0.1 | 14 | 0
+Whipped topping (Cool Whip) | 2 tbsp | 25 | 0 | 3 | 1.5
+Chocolate syrup | 2 tbsp | 100 | 1 | 24 | 0.5
+
+# Condiments, Sauces & Oils
+Olive oil | 1 tbsp | 119 | 0 | 0 | 13.5
+Vegetable oil | 1 tbsp | 120 | 0 | 0 | 14
+Coconut oil | 1 tbsp | 121 | 0 | 0 | 13.5
+Cooking spray | 1 second spray | 7 | 0 | 0 | 0.8
+Mayonnaise | 1 tbsp | 94 | 0.1 | 0.1 | 10
+Light mayo | 1 tbsp | 35 | 0 | 1 | 3.5
+Ketchup | 1 tbsp | 20 | 0.2 | 5 | 0
+Mustard | 1 tsp | 3 | 0.2 | 0.3 | 0.2
+Honey mustard | 2 tbsp | 120 | 0 | 8 | 10
+BBQ sauce | 2 tbsp | 70 | 0 | 17 | 0
+Ranch dressing | 2 tbsp | 129 | 0.4 | 1.8 | 13
+Light ranch | 2 tbsp | 70 | 0 | 3 | 6
+Italian dressing | 2 tbsp | 70 | 0 | 3 | 6
+Caesar dressing | 2 tbsp | 160 | 1 | 1 | 17
+Balsamic vinaigrette | 2 tbsp | 90 | 0 | 4 | 8
+Blue cheese dressing | 2 tbsp | 140 | 1 | 2 | 15
+Thousand Island | 2 tbsp | 110 | 0 | 5 | 10
+Soy sauce | 1 tbsp | 9 | 1 | 1 | 0
+Teriyaki sauce | 1 tbsp | 16 | 1 | 3 | 0
+Sriracha | 1 tsp | 5 | 0 | 1 | 0
+Hot sauce | 1 tsp | 0 | 0 | 0 | 0
+Buffalo sauce | 2 tbsp | 30 | 0 | 1 | 3
+Marinara sauce | ½ cup | 70 | 2 | 10 | 2.5
+Alfredo sauce | ¼ cup | 110 | 2 | 3 | 10
+Pesto | 2 tbsp | 160 | 2 | 2 | 16
+Gravy | ¼ cup | 30 | 1 | 4 | 1.5
+Queso dip | 2 tbsp | 45 | 1 | 3 | 3
+Tzatziki | 2 tbsp | 30 | 1 | 2 | 2
+Chick-fil-A sauce | 1 packet | 140 | 0 | 6 | 13
+Tartar sauce | 2 tbsp | 140 | 0 | 4 | 14
+Cocktail sauce | ¼ cup | 60 | 1 | 14 | 0
+Salsa verde | 2 tbsp | 10 | 0 | 2 | 0
+Peanut sauce | 2 tbsp | 90 | 3 | 6 | 7
+
+# Meals & Dishes
+Spaghetti with meat sauce | 2 cups | 560 | 28 | 70 | 18
+Spaghetti and meatballs | 1 plate | 750 | 33 | 85 | 30
+Lasagna | 1 piece | 400 | 23 | 30 | 21
+Mac and cheese, homemade | 1 cup | 500 | 20 | 45 | 27
+Kraft Mac & Cheese | 1 cup prepared | 350 | 10 | 48 | 13
+Chicken alfredo | 1 plate | 900 | 45 | 80 | 45
+Chicken stir-fry with rice | 1 plate | 550 | 32 | 70 | 14
+Chicken and rice | 1 plate | 500 | 38 | 55 | 12
+Chicken fried rice | 1½ cups | 520 | 22 | 65 | 18
+Orange chicken with rice | 1 plate | 800 | 30 | 110 | 25
+General Tso's chicken | 1 cup | 430 | 20 | 40 | 22
+Beef and broccoli | 1 cup | 340 | 26 | 15 | 20
+Lo mein | 1½ cups | 450 | 16 | 60 | 16
+Pad thai | 1 plate | 700 | 26 | 90 | 26
+Chicken curry with rice | 1 plate | 650 | 32 | 75 | 24
+Chicken tikka masala | 1 cup | 380 | 28 | 12 | 24
+Beef stew | 1½ cups | 390 | 26 | 30 | 18
+Chili with beans | 1 cup | 260 | 18 | 24 | 10
+Pot pie, chicken | 1 pie | 640 | 20 | 55 | 38
+Meatloaf | 1 slice | 330 | 22 | 12 | 21
+Fried chicken | 1 breast | 480 | 40 | 16 | 28
+Chicken parmesan | 1 cutlet | 520 | 42 | 25 | 27
+Grilled cheese | 1 sandwich | 390 | 14 | 30 | 24
+Turkey sandwich | 1 sandwich | 350 | 22 | 36 | 12
+Ham sandwich | 1 sandwich | 350 | 20 | 34 | 14
+PB&J sandwich | 1 sandwich | 380 | 12 | 48 | 16
+BLT | 1 sandwich | 400 | 14 | 30 | 25
+Chicken salad sandwich | 1 sandwich | 450 | 20 | 35 | 25
+Tuna sandwich | 1 sandwich | 400 | 22 | 34 | 19
+Philly cheesesteak | 1 sandwich | 650 | 38 | 50 | 32
+Hamburger | 1 burger | 500 | 25 | 35 | 28
+Cheeseburger | 1 burger | 560 | 30 | 36 | 32
+Double cheeseburger | 1 burger | 800 | 45 | 38 | 50
+Veggie burger | 1 burger with bun | 400 | 18 | 45 | 15
+Tacos, beef | 2 tacos | 370 | 18 | 26 | 21
+Tacos, chicken | 2 tacos | 330 | 22 | 26 | 14
+Burrito, chicken | 1 large | 700 | 38 | 80 | 24
+Burrito, beef & bean | 1 large | 750 | 32 | 85 | 30
+Quesadilla, cheese | 1 large | 520 | 22 | 40 | 30
+Quesadilla, chicken | 1 large | 650 | 40 | 40 | 35
+Nachos with cheese | 1 plate | 570 | 15 | 56 | 33
+Enchiladas | 2 enchiladas | 520 | 24 | 40 | 28
+Fajitas, chicken | 2 fajitas | 520 | 36 | 50 | 18
+Pizza, cheese | 1 slice (large) | 285 | 12 | 36 | 10
+Pizza, pepperoni | 1 slice (large) | 313 | 13 | 35 | 13
+Pizza, supreme | 1 slice (large) | 330 | 14 | 36 | 15
+Frozen pizza (DiGiorno) | ¼ pizza | 380 | 16 | 42 | 16
+Totino's Pizza Rolls | 6 rolls | 220 | 6 | 25 | 10
+Hot Pocket | 1 sandwich | 300 | 11 | 38 | 12
+Lean Cuisine entree | 1 meal | 300 | 15 | 40 | 8
+Healthy Choice Power Bowl | 1 bowl | 320 | 22 | 36 | 9
+Marie Callender's pot pie | 1 pie | 600 | 15 | 60 | 33
+Frozen burrito | 1 burrito | 300 | 10 | 44 | 9
+Uncrustables PB&J | 1 sandwich | 210 | 6 | 26 | 9
+Chicken noodle soup | 1 cup | 90 | 6 | 11 | 2.5
+Tomato soup | 1 cup | 160 | 4 | 28 | 4
+Broccoli cheddar soup | 1 cup | 290 | 10 | 16 | 21
+Clam chowder | 1 cup | 230 | 9 | 18 | 14
+Minestrone | 1 cup | 110 | 5 | 18 | 2
+Chili, canned (Hormel) | 1 cup | 260 | 16 | 31 | 7
+Cup Noodles | 1 cup | 290 | 6 | 37 | 13
+Sushi platter | 12 pieces | 550 | 25 | 85 | 12
+Chicken Caesar wrap | 1 wrap | 600 | 33 | 45 | 31
+Chicken salad | ½ cup | 260 | 14 | 3 | 21
+Egg salad | ½ cup | 290 | 12 | 2 | 26
+Deviled eggs | 2 halves | 125 | 6 | 1 | 11
+Stuffing | ½ cup | 180 | 3 | 22 | 9
+Green bean casserole | ½ cup | 140 | 2 | 10 | 10
+Mashed potatoes and gravy | 1 cup | 280 | 5 | 38 | 11
+Fried rice, vegetable | 1 cup | 240 | 5 | 36 | 8
+Ramen bowl, restaurant | 1 bowl | 900 | 35 | 90 | 40
+Pho | 1 large bowl | 520 | 30 | 70 | 12
+Gyro | 1 sandwich | 600 | 28 | 45 | 34
+Falafel wrap | 1 wrap | 550 | 17 | 65 | 25
+Chicken shawarma plate | 1 plate | 750 | 45 | 70 | 30
+Burrito bowl, chicken | 1 bowl | 650 | 42 | 70 | 20
+Grain bowl | 1 bowl | 550 | 22 | 65 | 22
+Corn dog | 1 | 280 | 9 | 29 | 15
+Chicken wings, buffalo | 10 wings | 800 | 70 | 2 | 56
+Mozzarella sticks | 5 sticks | 450 | 20 | 35 | 25
+Onion rings | 8 rings | 400 | 5 | 45 | 22
+Soft pretzel | 1 large | 390 | 9 | 80 | 3.5
+
+# Drinks
+Water | 1 cup | 0 | 0 | 0 | 0
+Black coffee | 1 cup | 2 | 0.3 | 0 | 0
+Coffee with cream & sugar | 1 cup | 70 | 1 | 9 | 3
+Latte (2% milk) | 16 oz | 190 | 13 | 19 | 7
+Cappuccino | 12 oz | 120 | 8 | 12 | 4
+Cold brew, black | 16 oz | 5 | 0 | 0 | 0
+Tea, unsweetened | 1 cup | 2 | 0 | 0.5 | 0
+Sweet tea | 16 oz | 180 | 0 | 45 | 0
+Orange juice | 1 cup | 112 | 1.7 | 26 | 0.5
+Apple juice | 1 cup | 114 | 0.2 | 28 | 0.3
+Cranberry juice cocktail | 1 cup | 137 | 0 | 34 | 0.3
+Lemonade | 12 oz | 150 | 0 | 40 | 0
+Coca-Cola | 12 oz can | 140 | 0 | 39 | 0
+Coca-Cola | 20 oz bottle | 240 | 0 | 65 | 0
+Diet Coke / Coke Zero | 12 oz can | 0 | 0 | 0 | 0
+Pepsi | 12 oz can | 150 | 0 | 41 | 0
+Dr Pepper | 12 oz can | 150 | 0 | 40 | 0
+Sprite | 12 oz can | 140 | 0 | 38 | 0
+Mountain Dew | 12 oz can | 170 | 0 | 46 | 0
+Root beer | 12 oz can | 160 | 0 | 43 | 0
+Ginger ale | 12 oz can | 124 | 0 | 32 | 0
+Sparkling water (LaCroix) | 12 oz can | 0 | 0 | 0 | 0
+Gatorade | 20 oz bottle | 140 | 0 | 34 | 0
+Gatorade Zero | 20 oz | 10 | 0 | 2 | 0
+Powerade | 20 oz | 130 | 0 | 35 | 0
+Body Armor | 16 oz | 120 | 0 | 29 | 0
+Red Bull | 8.4 oz can | 110 | 0 | 28 | 0
+Red Bull Sugarfree | 8.4 oz can | 5 | 0 | 2 | 0
+Monster Energy | 16 oz can | 210 | 0 | 54 | 0
+Monster Zero Ultra | 16 oz can | 10 | 0 | 2 | 0
+Celsius | 12 oz can | 10 | 0 | 2 | 0
+Bang Energy | 16 oz can | 0 | 0 | 0 | 0
+Ghost Energy | 16 oz can | 5 | 0 | 2 | 0
+Prime Hydration | 16.9 oz | 20 | 0 | 6 | 0
+Prime Energy | 12 oz can | 10 | 0 | 2 | 0
+Vitamin Water | 20 oz | 120 | 0 | 32 | 0
+Coconut water | 1 cup | 46 | 1.7 | 9 | 0.5
+Kombucha | 16 oz bottle | 60 | 0 | 14 | 0
+Hot chocolate | 1 cup | 192 | 8 | 27 | 6
+Fruit smoothie | 16 oz | 270 | 5 | 60 | 2
+Protein smoothie | 16 oz | 350 | 25 | 45 | 7
+Milkshake, chocolate | 16 oz | 580 | 14 | 90 | 18
+
+# Alcohol
+Beer, regular | 12 oz | 153 | 1.6 | 12.6 | 0
+Light beer (Bud Light, Coors Light) | 12 oz | 103 | 0.9 | 5.8 | 0
+Michelob Ultra | 12 oz | 95 | 0.6 | 2.6 | 0
+IPA | 12 oz | 200 | 2 | 18 | 0
+Guinness | 12 oz | 125 | 1 | 10 | 0
+Hard seltzer (White Claw) | 12 oz | 100 | 0 | 2 | 0
+Hard cider | 12 oz | 180 | 0 | 21 | 0
+Red wine | 5 oz glass | 125 | 0.1 | 3.8 | 0
+White wine | 5 oz glass | 121 | 0.1 | 3.8 | 0
+Champagne | 4 oz flute | 90 | 0.3 | 1.5 | 0
+Vodka / gin / rum / whiskey | 1.5 oz shot | 97 | 0 | 0 | 0
+Tequila | 1.5 oz shot | 97 | 0 | 0 | 0
+Margarita | 8 oz | 280 | 0 | 36 | 0
+Rum and Coke | 1 drink | 190 | 0 | 24 | 0
+Vodka soda | 1 drink | 97 | 0 | 0 | 0
+Mojito | 1 drink | 215 | 0 | 25 | 0
+Piña colada | 8 oz | 450 | 1 | 60 | 14
+Long Island iced tea | 1 drink | 280 | 0 | 33 | 0
+Moscow mule | 1 drink | 180 | 0 | 18 | 0
+Mimosa | 1 drink | 75 | 0 | 7 | 0

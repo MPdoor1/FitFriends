@@ -1,6 +1,6 @@
 import * as store from '../store.js';
 import { state } from '../state.js';
-import { FOODS, FOOD_CATEGORIES } from '../data.js';
+import { loadFoodDb, searchFoods, chains, categories, searchGroceries, lookupBarcode } from '../food-db.js';
 import { goalsFor } from '../nutrition.js';
 import {
   $, $$, esc, fmt, fmt1, icon, label, localDate, shiftDate, prettyDate, dayLetter, datesBetween,
@@ -87,24 +87,32 @@ const macroLine = (f, servings = 1) => `${fmt(f.proteinG * servings)}P · ${fmt(
 const SERVING_CHIPS = [0.5, 1, 1.5, 2, 3];
 const fraction = (n) => ({ 0.25: '¼', 0.5: '½', 0.75: '¾', 1.5: '1½', 2.5: '2½' }[n] || String(n));
 
-export async function openFoodSheet({ date = localDate(), meal = mealForNow() } = {}) {
-  const recent = await store.recentFoods().catch(() => []);
+export async function openFoodSheet({ date = localDate(), meal = mealForNow(), food: startWith = null } = {}) {
+  const [recent] = await Promise.all([store.recentFoods().catch(() => []), loadFoodDb()]);
   let category = null;
-  let picked = null;
+  let chain = null;
+  let online = { q: '', items: [], busy: false, failed: false };
+  let onlineTimer;
+  const lists = { r: recent, d: [], o: [] };
 
   const resultRow = (f, i, list) => `
     <button type="button" class="food-row" data-pick="${list}:${i}">
-      <span class="food-main"><strong>${esc(f.name)}</strong><span class="muted small">${esc(f.serving)} · ${macroLine(f)}</span></span>
+      <span class="food-main"><strong>${esc(f.name)}</strong><span class="muted small">${f.brand && list === 'd' && !chain ? `${esc(f.brand)} · ` : ''}${esc(f.serving)} · ${macroLine(f)}</span></span>
       <span class="num food-kcal">${fmt(f.calories)}</span>
       <span class="food-add">${icon('plus', 18)}</span>
     </button>`;
 
   const html = `
     <div id="fs-search-view">
-      <div class="search">${icon('search', 18)}<input id="fs-q" type="search" placeholder="Search foods" autocomplete="off" enterkeyhint="search"></div>
+      <div class="search-row">
+        <div class="search">${icon('search', 18)}<input id="fs-q" type="search" placeholder="Search foods, brands, restaurants" autocomplete="off" enterkeyhint="search"></div>
+        <button type="button" class="icon-btn accent scan-btn" id="fs-scan" aria-label="Scan a barcode">${icon('barcode', 22)}</button>
+      </div>
       <div class="chips scroll" id="fs-cats">
         <button type="button" class="chip on" data-cat="">All</button>
-        ${FOOD_CATEGORIES.map((c) => `<button type="button" class="chip" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
+        <button type="button" class="chip" data-cat="Restaurants">${icon('store', 14)} Restaurants</button>
+        <button type="button" class="chip" data-cat="Groceries">${icon('cart', 14)} Grocery brands</button>
+        ${categories().map((c) => `<button type="button" class="chip" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}
       </div>
       <div id="fs-results"></div>
       <button type="button" class="btn ghost full" id="fs-custom">${icon('edit', 18)} Enter my own food</button>
@@ -117,32 +125,89 @@ export async function openFoodSheet({ date = localDate(), meal = mealForNow() } 
     onMount(sheet) {
       const results = $('#fs-results', sheet);
       const q = $('#fs-q', sheet);
-      const lists = { r: recent, d: FOODS };
+
+      // Brand-name packaged foods from Open Food Facts, fetched as you type.
+      const onlineBlock = () => {
+        const text = q.value.trim();
+        if (text.length < 3) {
+          return category === 'Groceries' ? '<p class="empty">Type a product or brand, like “Kirkland protein bar” or “Chobani”, or scan a barcode.</p>' : '';
+        }
+        if (online.failed && online.q === text) return '<h3 class="sub">Grocery brands</h3><p class="muted small">Couldn’t reach the grocery database. Check your connection.</p>';
+        if (online.q !== text) return '<h3 class="sub">Grocery brands</h3><p class="muted small loading-line"><span class="spin"></span> Searching Open Food Facts…</p>';
+        lists.o = online.items;
+        return online.items.length
+          ? `<h3 class="sub">Grocery brands <span class="muted">· Open Food Facts</span></h3>${online.items.map((f, i) => resultRow(f, i, 'o')).join('')}`
+          : `<h3 class="sub">Grocery brands</h3><p class="muted small">No packaged products found for “${esc(text)}”.</p>`;
+      };
 
       const draw = () => {
-        const words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
-        const match = (f) => words.every((w) => f.name.toLowerCase().includes(w));
-        const mine = recent.filter(match).filter(() => !category);
-        const db = FOODS.filter((f) => match(f) && (!category || f.category === category));
+        const text = q.value.trim();
+        // Restaurant browser: pick a chain, then its menu.
+        if (category === 'Restaurants' && !chain && !text) {
+          const list = chains();
+          results.innerHTML = `<h3 class="sub">${list.length} restaurants</h3><div class="chain-grid">${list.map((c) => `
+            <button type="button" class="chain" data-chain="${esc(c)}"><span class="chain-mark">${esc(c.replace(/[^A-Za-z0-9 ]/g, '').split(' ').filter(Boolean).slice(0, 2).map((w) => w[0]).join(''))}</span><span>${esc(c)}</span></button>`).join('')}</div>`;
+          return;
+        }
+        let local = [];
+        if (category === 'Restaurants') local = searchFoods(text, { brand: chain, category: 'Restaurants', limit: chain ? 300 : 80 });
+        else if (category !== 'Groceries') local = searchFoods(text, { category, limit: text ? 60 : 30 });
+        lists.d = local;
+        const lower = text.toLowerCase();
+        const mine = category ? [] : text ? recent.filter((f) => f.name.toLowerCase().includes(lower)) : recent.slice(0, 8);
+        const squash = (x) => x.toLowerCase().replace(/[^a-z0-9]/g, '');
+        const chainHit = !chain && squash(text).length >= 3 && category !== 'Groceries' ? chains().find((c) => squash(c).includes(squash(text)) || squash(text).startsWith(squash(c))) : null;
+        const wantOnline = !chain && (category === null || category === 'Groceries');
         results.innerHTML = `
-          ${mine.length ? `<h3 class="sub">${words.length ? 'Your foods' : 'Recent'}</h3>${mine.slice(0, words.length ? 20 : 8).map((f) => resultRow(f, recent.indexOf(f), 'r')).join('')}` : ''}
-          ${db.length ? `<h3 class="sub">${category || (words.length ? 'Food list' : 'Popular foods')}</h3>${db.slice(0, words.length || category ? 60 : 25).map((f) => resultRow(f, FOODS.indexOf(f), 'd')).join('')}` : ''}
-          ${!mine.length && !db.length ? `<p class="empty">No match for “${esc(q.value)}”. Add it as your own food below.</p>` : ''}`;
+          ${chain ? `<button type="button" class="back" id="fs-chains">${icon('left', 18)} All restaurants</button><h3 class="chain-title">${esc(chain)}</h3><p class="muted small">From the chain's published nutrition info. Close estimates: recipes and portions vary.</p>` : ''}
+          ${chainHit ? `<button type="button" class="chain-jump" data-chain="${esc(chainHit)}">${icon('store', 18)}<span>See the full ${esc(chainHit)} menu</span>${icon('right', 16)}</button>` : ''}
+          ${mine.length ? `<h3 class="sub">${text ? 'Your foods' : 'Recent'}</h3>${mine.slice(0, 10).map((f) => resultRow(f, recent.indexOf(f), 'r')).join('')}` : ''}
+          ${local.length ? `<h3 class="sub">${chain ? 'Menu' : category && category !== 'Restaurants' ? esc(category) : category === 'Restaurants' ? 'Restaurant items' : text ? 'Foods' : 'Popular foods'}</h3>${local.map((f, i) => resultRow(f, i, 'd')).join('')}` : ''}
+          ${wantOnline ? onlineBlock() : ''}
+          ${!mine.length && !local.length && text && !(wantOnline && text.length >= 3) ? `<p class="empty">No match for “${esc(text)}”. Add it as your own food below.</p>` : ''}`;
       };
-      q.addEventListener('input', draw);
+
+      const searchOnline = () => {
+        clearTimeout(onlineTimer);
+        const text = q.value.trim();
+        if (text.length < 3 || chain || !(category === null || category === 'Groceries')) return;
+        if (online.q === text && !online.failed) return;
+        onlineTimer = setTimeout(async () => {
+          let next;
+          try { next = { q: text, items: await searchGroceries(text), failed: false }; } catch { next = { q: text, items: [], failed: true }; }
+          if (q.value.trim() !== text) return;
+          online = next;
+          if (!$('#fs-search-view', sheet).hidden) draw();
+        }, 450);
+      };
+
+      q.addEventListener('input', () => { draw(); searchOnline(); });
       $$('[data-cat]', sheet).forEach((b) => b.addEventListener('click', () => {
         category = b.dataset.cat || null;
+        chain = null;
         $$('[data-cat]', sheet).forEach((x) => x.classList.toggle('on', x === b));
         draw();
+        searchOnline();
       }));
       results.addEventListener('click', (e) => {
+        const ch = e.target.closest('[data-chain]');
+        if (ch) {
+          chain = ch.dataset.chain;
+          category = 'Restaurants';
+          q.value = '';
+          $$('[data-cat]', sheet).forEach((x) => x.classList.toggle('on', x.dataset.cat === 'Restaurants'));
+          draw();
+          sheet.querySelector('.sheet-body')?.scrollTo(0, 0);
+          return;
+        }
+        if (e.target.closest('#fs-chains')) { chain = null; draw(); return; }
         const row = e.target.closest('[data-pick]');
         if (!row) return;
         const [list, i] = row.dataset.pick.split(':');
-        picked = lists[list][Number(i)];
-        showDetail(picked);
+        showDetail(lists[list][Number(i)]);
       });
       $('#fs-custom', sheet).addEventListener('click', () => showDetail(null));
+      $('#fs-scan', sheet).addEventListener('click', () => openScanner({ date, meal }));
 
       const showDetail = (food) => {
         $('#fs-search-view', sheet).hidden = true;
@@ -161,12 +226,20 @@ export async function openFoodSheet({ date = localDate(), meal = mealForNow() } 
                 <label>Carbs g<input name="carbsG" type="number" inputmode="decimal" min="0" step="any"></label>
                 <label>Fat g<input name="fatG" type="number" inputmode="decimal" min="0" step="any"></label>
               </div>` : `
-              <div class="food-title"><h3>${esc(food.name)}</h3><span class="muted">${esc(food.serving)} per serving</span></div>`}
-            <div>
+              <div class="food-title"><h3>${esc(food.name)}</h3><span class="muted">${food.brand && food.source !== 'off' ? `${esc(food.brand)} · ` : ''}${esc(food.serving)} per serving${food.per100 ? ` · ${fmt(food.per100.calories)} kcal per 100 g` : ''}</span>
+                ${food.source === 'off' ? '<span class="muted small source-note">From Open Food Facts, a free crowd-sourced database. Check the label if anything looks off.</span>' : ''}</div>`}
+            ${food?.per100 ? `
+            <div class="seg" id="fs-mode"><button type="button" data-mode="serv" class="on">Servings</button><button type="button" data-mode="grams">Grams</button></div>` : ''}
+            <div id="fs-serv-block">
               <span class="field-label">Servings</span>
               ${stepper('servings', 1, { step: 0.25, min: 0.25, max: 20, decimals: 2 })}
               <div class="chips tight">${SERVING_CHIPS.map((n) => `<button type="button" class="chip ${n === 1 ? 'on' : ''}" data-serv="${n}">${fraction(n)}</button>`).join('')}</div>
             </div>
+            ${food?.per100 ? `
+            <div id="fs-gram-block" hidden>
+              <span class="field-label">Amount</span>
+              ${stepper('grams', food.servingGrams || 100, { step: 5, min: 1, max: 2000, unit: 'g' })}
+            </div>` : ''}
             <div>
               <span class="field-label">Meal</span>
               <div class="seg">${MEALS.map(([k, l]) => `<button type="button" data-meal="${k}" class="${k === meal ? 'on' : ''}">${l}</button>`).join('')}</div>
@@ -177,26 +250,36 @@ export async function openFoodSheet({ date = localDate(), meal = mealForNow() } 
         bindSteppers(d);
         const f = $('#fs-form', d);
         let chosenMeal = meal;
+        let grams = false;
         const per = () => (custom ? {
           calories: Number(f.calories.value) || 0, proteinG: Number(f.proteinG.value) || 0, carbsG: Number(f.carbsG.value) || 0, fatG: Number(f.fatG.value) || 0,
-        } : food);
+        } : grams ? food.per100 : food);
+        // Weighed foods are stored as hundreds of grams of the per-100 g values.
+        const amount = () => (grams ? (Number(f.grams.value) || 0) / 100 : Number(f.servings.value) || 0);
         const update = () => {
-          const s = Number(f.servings.value) || 0;
+          const s = amount();
           const p = per();
           $('#fs-totals', d).innerHTML = `
             <div><b class="num">${fmt(p.calories * s)}</b><span>kcal</span></div>
             <div><b class="num">${fmt1(p.proteinG * s)}g</b><span>protein</span></div>
             <div><b class="num">${fmt1(p.carbsG * s)}g</b><span>carbs</span></div>
             <div><b class="num">${fmt1(p.fatG * s)}g</b><span>fat</span></div>`;
-          $$('[data-serv]', d).forEach((c) => c.classList.toggle('on', Number(c.dataset.serv) === s));
+          $$('[data-serv]', d).forEach((c) => c.classList.toggle('on', !grams && Number(c.dataset.serv) === s));
         };
+        $$('[data-mode]', d).forEach((b) => b.addEventListener('click', () => {
+          grams = b.dataset.mode === 'grams';
+          $$('[data-mode]', d).forEach((x) => x.classList.toggle('on', x === b));
+          $('#fs-serv-block', d).hidden = grams;
+          $('#fs-gram-block', d).hidden = !grams;
+          update();
+        }));
         f.addEventListener('input', update);
         $$('[data-serv]', d).forEach((c) => c.addEventListener('click', () => { f.servings.value = c.dataset.serv; update(); haptic(5); }));
         $$('[data-meal]', d).forEach((b) => b.addEventListener('click', () => {
           chosenMeal = b.dataset.meal;
           $$('[data-meal]', d).forEach((x) => x.classList.toggle('on', x === b));
         }));
-        $('#fs-back', d).addEventListener('click', () => { d.hidden = true; $('#fs-search-view', sheet).hidden = false; });
+        $('#fs-back', d).addEventListener('click', () => { d.hidden = true; $('#fs-search-view', sheet).hidden = false; draw(); });
         f.addEventListener('submit', async (e) => {
           e.preventDefault();
           const btn = f.querySelector('button[type=submit]');
@@ -204,8 +287,8 @@ export async function openFoodSheet({ date = localDate(), meal = mealForNow() } 
           try {
             const p = per();
             const entry = await store.addFood(state.user, {
-              date, meal: chosenMeal, name: custom ? f.name.value : food.name,
-              serving: custom ? f.serving.value : food.serving, servings: f.servings.value,
+              date, meal: chosenMeal, name: custom ? f.name.value : entryName(food),
+              serving: custom ? f.serving.value : grams ? '100 g' : food.serving, servings: amount(),
               per: { calories: p.calories, proteinG: p.proteinG, carbsG: p.carbsG, fatG: p.fatG },
             });
             closeSheet();
@@ -222,6 +305,93 @@ export async function openFoodSheet({ date = localDate(), meal = mealForNow() } 
       };
 
       draw();
+      if (startWith) showDetail(startWith);
+    },
+  });
+}
+
+// Restaurant items keep the chain in their name so the log reads "McDonald's Big Mac".
+const entryName = (f) => (f.brand && f.source !== 'off' && !f.name.toLowerCase().includes(f.brand.toLowerCase()) ? `${f.brand} ${f.name}` : f.name).slice(0, 80);
+
+// ---------- barcode scanner ----------
+
+// Uses the phone's own barcode reader when it has one (Android Chrome), otherwise the bundled one.
+async function makeDetector() {
+  const formats = ['ean_13', 'ean_8', 'upc_a', 'upc_e'];
+  if ('BarcodeDetector' in window) {
+    try {
+      const ok = await window.BarcodeDetector.getSupportedFormats();
+      const usable = formats.filter((x) => ok.includes(x));
+      if (usable.length) return new window.BarcodeDetector({ formats: usable });
+    } catch { /* fall back to the bundled reader */ }
+  }
+  const mod = await import(new URL('barcode.js', document.baseURI).href);
+  return new mod.default({ formats });
+}
+
+export function openScanner({ date = localDate(), meal = mealForNow() } = {}) {
+  let stream = null;
+  let done = false;
+  const stop = () => { done = true; stream?.getTracks().forEach((t) => t.stop()); };
+  const found = async (code, status) => {
+    stop();
+    haptic(30);
+    status.textContent = `Found ${code}. Looking it up…`;
+    try {
+      const food = await lookupBarcode(code);
+      openFoodSheet({ date, meal, food });
+    } catch (err) {
+      status.textContent = err.message;
+      toast(err.message, 'bad');
+    }
+  };
+  openSheet({
+    title: 'Scan a barcode',
+    html: `
+      <div class="stack">
+        <div class="scan-box"><video id="sc-video" playsinline muted autoplay></video><div class="scan-frame"></div></div>
+        <p class="muted small" id="sc-status">Starting camera…</p>
+        <form id="sc-form" class="scan-form">
+          <input name="code" inputmode="numeric" placeholder="Or type the barcode number" aria-label="Barcode number" autocomplete="off">
+          <button class="btn primary" type="submit">Look up</button>
+        </form>
+        <p class="hint">${icon('info', 14)}<span>Product info comes from Open Food Facts, a free database of millions of grocery items.</span></p>
+      </div>`,
+    async onMount(sheet) {
+      const video = $('#sc-video', sheet);
+      const status = $('#sc-status', sheet);
+      $('#sc-form', sheet).addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = e.target.code.value.replace(/\D/g, '');
+        if (code) found(code, status);
+      });
+      try {
+        if (!navigator.mediaDevices?.getUserMedia) throw new Error('no camera');
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 1280 } }, audio: false });
+        if (done || !document.contains(video)) { stop(); return; }
+        video.srcObject = stream;
+        await video.play().catch(() => {});
+        status.textContent = 'Loading scanner…';
+        const detector = await makeDetector();
+        status.textContent = 'Point the camera at the barcode.';
+        const tick = async () => {
+          if (done) return;
+          if (!document.contains(video)) { stop(); return; }
+          try {
+            const codes = video.readyState >= 2 ? await detector.detect(video) : [];
+            const hit = codes.find((c) => /^\d{8,14}$/.test(c.rawValue));
+            if (hit && !done) { found(hit.rawValue, status); return; }
+          } catch { /* keep trying */ }
+          setTimeout(tick, 200);
+        };
+        tick();
+      } catch (err) {
+        if (done) return;
+        stop();
+        status.textContent = err?.name === 'NotAllowedError'
+          ? 'Camera blocked. Allow camera access for this site, or type the barcode number below.'
+          : 'Camera not available. Type the barcode number below.';
+      }
     },
   });
 }
@@ -307,7 +477,7 @@ export async function viewFuel(app, stale) {
   app.innerHTML = `
     <div class="page-head">
       <div>${label('Fuel')}<h1>Calories</h1></div>
-      <button class="btn primary" id="add-food">${icon('plus', 18)} Add</button>
+      <div class="row gap"><button class="btn" id="scan-food" aria-label="Scan a barcode">${icon('barcode', 18)} Scan</button><button class="btn primary" id="add-food">${icon('plus', 18)} Add</button></div>
     </div>
 
     <div class="date-nav card slim">
@@ -365,6 +535,7 @@ export async function viewFuel(app, stale) {
   bindCharts(app);
   bindWater(app);
   $('#add-food').addEventListener('click', () => openFoodSheet({ date }));
+  $('#scan-food').addEventListener('click', () => openScanner({ date }));
   $$('[data-add-meal]').forEach((b) => b.addEventListener('click', () => openFoodSheet({ date, meal: b.dataset.addMeal })));
   $$('[data-entry]').forEach((b) => b.addEventListener('click', () => openEntrySheet(foods.find((f) => f.id === b.dataset.entry))));
   $$('[data-copy]').forEach((b) => b.addEventListener('click', async () => {

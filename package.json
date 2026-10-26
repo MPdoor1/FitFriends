@@ -8,6 +8,7 @@
     "serve": "npx --yes serve@14.2.4 dist -l 5173"
   },
   "devDependencies": {
+    "barcode-detector": "^3.0.8",
     "esbuild": "^0.25.10",
     "firebase": "^12.19.0",
     "firebase-admin": "^14.5.0",

@@ -1,0 +1,1025 @@
+# Format: "@ Chain" starts a restaurant, then: item | serving | kcal | protein g | carbs g | fat g
+# From the chains' published nutrition info, rounded. Recipes and sizes change, so treat as close estimates.
+
+@ McDonald's
+Big Mac | 1 sandwich | 590 | 25 | 46 | 34
+Quarter Pounder with Cheese | 1 sandwich | 520 | 30 | 42 | 26
+Double Quarter Pounder with Cheese | 1 sandwich | 740 | 48 | 43 | 42
+Quarter Pounder Deluxe | 1 sandwich | 620 | 30 | 45 | 36
+Cheeseburger | 1 sandwich | 300 | 15 | 32 | 13
+Double Cheeseburger | 1 sandwich | 450 | 25 | 34 | 24
+McDouble | 1 sandwich | 400 | 22 | 33 | 20
+Hamburger | 1 sandwich | 250 | 12 | 31 | 9
+Filet-O-Fish | 1 sandwich | 390 | 16 | 39 | 19
+McChicken | 1 sandwich | 400 | 14 | 39 | 21
+McCrispy | 1 sandwich | 470 | 26 | 46 | 20
+Spicy McCrispy | 1 sandwich | 530 | 27 | 48 | 26
+Deluxe McCrispy | 1 sandwich | 530 | 27 | 48 | 26
+Chicken McNuggets | 4 piece | 170 | 9 | 10 | 10
+Chicken McNuggets | 6 piece | 250 | 14 | 15 | 15
+Chicken McNuggets | 10 piece | 410 | 23 | 25 | 24
+Chicken McNuggets | 20 piece | 830 | 46 | 50 | 49
+French Fries | small | 230 | 3 | 31 | 11
+French Fries | medium | 320 | 5 | 43 | 15
+French Fries | large | 480 | 7 | 65 | 23
+Egg McMuffin | 1 sandwich | 310 | 17 | 30 | 13
+Sausage McMuffin with Egg | 1 sandwich | 480 | 20 | 30 | 31
+Sausage McMuffin | 1 sandwich | 400 | 14 | 29 | 26
+Bacon Egg & Cheese Biscuit | 1 sandwich | 460 | 18 | 39 | 26
+Sausage Biscuit | 1 sandwich | 460 | 11 | 37 | 30
+Sausage Egg & Cheese McGriddles | 1 sandwich | 550 | 20 | 48 | 31
+Hotcakes | 3 hotcakes, no syrup | 340 | 8 | 58 | 8
+Hotcakes and Sausage | 1 order with syrup & butter | 770 | 15 | 102 | 33
+Big Breakfast with Hotcakes | 1 order | 1340 | 36 | 158 | 63
+Hash Brown | 1 | 140 | 2 | 18 | 8
+Fruit & Maple Oatmeal | 1 bowl | 320 | 6 | 64 | 4.5
+Sausage Burrito | 1 burrito | 310 | 13 | 25 | 17
+Apple Pie | 1 pie | 230 | 2 | 34 | 11
+McFlurry with Oreo | regular | 510 | 12 | 80 | 16
+McFlurry with M&M's | regular | 640 | 13 | 96 | 21
+Vanilla Cone | 1 cone | 200 | 5 | 33 | 5
+Chocolate Shake | medium | 640 | 14 | 107 | 17
+Hot Fudge Sundae | 1 | 330 | 8 | 53 | 10
+Chocolate Chip Cookie | 1 cookie | 170 | 2 | 22 | 8
+Coca-Cola | medium (21 oz) | 200 | 0 | 55 | 0
+Sweet Tea | medium | 120 | 0 | 30 | 0
+Iced Coffee (regular) | medium | 140 | 2 | 23 | 5
+Caramel Frappé | medium | 510 | 9 | 71 | 21
+
+@ Burger King
+Whopper | 1 sandwich | 670 | 31 | 50 | 40
+Whopper with Cheese | 1 sandwich | 760 | 35 | 51 | 47
+Double Whopper | 1 sandwich | 920 | 50 | 50 | 58
+Whopper Jr. | 1 sandwich | 330 | 15 | 27 | 19
+Bacon King | 1 sandwich | 1150 | 61 | 49 | 79
+Cheeseburger | 1 sandwich | 290 | 15 | 30 | 13
+Original Chicken Sandwich | 1 sandwich | 680 | 27 | 51 | 41
+Royal Crispy Chicken | 1 sandwich | 600 | 28 | 50 | 33
+Chicken Fries | 9 piece | 280 | 13 | 20 | 17
+Chicken Nuggets | 8 piece | 380 | 18 | 23 | 24
+Impossible Whopper | 1 sandwich | 630 | 25 | 58 | 34
+French Fries | medium | 380 | 4 | 53 | 17
+Onion Rings | medium | 410 | 5 | 50 | 21
+Croissan'wich Sausage Egg & Cheese | 1 sandwich | 500 | 19 | 27 | 35
+French Toast Sticks | 5 sticks | 370 | 6 | 49 | 17
+Hershey's Sundae Pie | 1 slice | 310 | 3 | 32 | 19
+Oreo Shake | medium | 710 | 15 | 116 | 21
+
+@ Wendy's
+Dave's Single | 1 sandwich | 590 | 29 | 39 | 37
+Dave's Double | 1 sandwich | 860 | 49 | 40 | 57
+Dave's Triple | 1 sandwich | 1150 | 69 | 40 | 78
+Baconator | 1 sandwich | 960 | 59 | 38 | 66
+Son of Baconator | 1 sandwich | 620 | 34 | 37 | 38
+Jr. Bacon Cheeseburger | 1 sandwich | 370 | 18 | 26 | 22
+Jr. Cheeseburger | 1 sandwich | 290 | 15 | 26 | 14
+Dave's Single (no bun) | 1 patty with toppings | 380 | 26 | 6 | 28
+Spicy Chicken Sandwich | 1 sandwich | 490 | 29 | 50 | 19
+Classic Chicken Sandwich | 1 sandwich | 490 | 30 | 49 | 19
+Grilled Chicken Sandwich | 1 sandwich | 350 | 33 | 36 | 8
+Chicken Nuggets | 10 piece | 410 | 22 | 22 | 26
+Spicy Nuggets | 10 piece | 430 | 22 | 25 | 27
+French Fries | medium | 350 | 5 | 47 | 16
+Baked Potato, sour cream & chive | 1 potato | 310 | 8 | 59 | 4
+Chili | large | 360 | 25 | 35 | 13
+Chili | small | 240 | 17 | 23 | 9
+Frosty, chocolate | medium | 470 | 12 | 77 | 12
+Frosty, chocolate | small | 350 | 9 | 57 | 9
+Apple Pecan Salad | full size | 530 | 34 | 35 | 29
+Breakfast Baconator | 1 sandwich | 730 | 32 | 32 | 52
+Honey Butter Chicken Biscuit | 1 | 500 | 19 | 46 | 26
+Seasoned Potatoes | medium | 360 | 5 | 47 | 17
+
+@ Chick-fil-A
+Chick-fil-A Chicken Sandwich | 1 sandwich | 420 | 29 | 41 | 18
+Spicy Chicken Sandwich | 1 sandwich | 450 | 28 | 42 | 19
+Deluxe Chicken Sandwich | 1 sandwich | 490 | 30 | 44 | 22
+Grilled Chicken Sandwich | 1 sandwich | 390 | 28 | 44 | 12
+Grilled Chicken Club | 1 sandwich | 520 | 38 | 45 | 21
+Chick-n-Strips | 3 count | 310 | 29 | 16 | 14
+Chick-n-Strips | 4 count | 410 | 39 | 21 | 19
+Chicken Nuggets | 8 count | 250 | 27 | 11 | 11
+Chicken Nuggets | 12 count | 380 | 40 | 16 | 17
+Grilled Nuggets | 8 count | 130 | 25 | 1 | 3
+Grilled Nuggets | 12 count | 200 | 38 | 2 | 4.5
+Waffle Potato Fries | medium | 420 | 5 | 45 | 24
+Waffle Potato Fries | small | 320 | 4 | 35 | 18
+Mac & Cheese | medium | 450 | 20 | 27 | 29
+Cobb Salad (no dressing) | 1 salad | 830 | 42 | 28 | 61
+Market Salad (no dressing) | 1 salad | 540 | 28 | 31 | 34
+Spicy Southwest Salad (no dressing) | 1 salad | 680 | 33 | 26 | 49
+Cool Wrap | 1 wrap | 660 | 43 | 32 | 41
+Chicken Noodle Soup | medium | 250 | 18 | 26 | 6
+Chicken Biscuit | 1 | 460 | 19 | 45 | 23
+Chick-n-Minis | 4 count | 360 | 18 | 41 | 13
+Hash Brown Scramble Bowl | 1 bowl | 470 | 29 | 19 | 30
+Egg White Grill | 1 | 300 | 27 | 30 | 8
+Fruit Cup | medium | 70 | 1 | 17 | 0
+Chocolate Chunk Cookie | 1 | 370 | 4 | 49 | 17
+Cookies & Cream Milkshake | small | 630 | 14 | 90 | 25
+Icedream Cone | 1 cone | 180 | 4 | 31 | 4
+Frosted Lemonade | small | 330 | 7 | 63 | 6
+Lemonade | medium | 220 | 0 | 58 | 0
+Sweet Tea | medium | 120 | 0 | 31 | 0
+Chick-fil-A Sauce | 1 packet | 140 | 0 | 6 | 13
+Polynesian Sauce | 1 packet | 110 | 0 | 13 | 6
+
+@ Taco Bell
+Crunchy Taco | 1 taco | 170 | 8 | 13 | 10
+Soft Taco | 1 taco | 180 | 9 | 18 | 9
+Crunchy Taco Supreme | 1 taco | 190 | 8 | 15 | 11
+Nacho Cheese Doritos Locos Taco | 1 taco | 170 | 8 | 13 | 10
+Chalupa Supreme, beef | 1 | 360 | 13 | 30 | 21
+Gordita Crunch | 1 | 490 | 20 | 39 | 28
+Crunchwrap Supreme | 1 | 530 | 16 | 71 | 21
+Mexican Pizza | 1 | 540 | 20 | 47 | 30
+Bean Burrito | 1 | 350 | 13 | 54 | 9
+Beefy 5-Layer Burrito | 1 | 490 | 18 | 63 | 18
+Burrito Supreme, beef | 1 | 390 | 16 | 51 | 14
+Cheesy Gordita Crunch | 1 | 500 | 20 | 41 | 28
+Chicken Quesadilla | 1 | 520 | 27 | 37 | 28
+Steak Quesadilla | 1 | 520 | 26 | 37 | 28
+Quesarito, beef | 1 | 650 | 21 | 69 | 32
+Cheesy Bean & Rice Burrito | 1 | 420 | 9 | 55 | 17
+Nachos BellGrande | 1 order | 740 | 16 | 82 | 38
+Chips and Nacho Cheese | 1 order | 220 | 3 | 25 | 12
+Cinnamon Twists | 1 order | 170 | 1 | 26 | 7
+Cantina Chicken Bowl | 1 bowl | 490 | 25 | 47 | 23
+Power Menu Bowl, chicken | 1 bowl | 470 | 26 | 46 | 20
+Baja Blast | medium | 280 | 0 | 75 | 0
+Nacho Fries | regular | 320 | 3 | 35 | 18
+Cheesy Roll Up | 1 | 180 | 9 | 15 | 9
+Breakfast Crunchwrap, sausage | 1 | 640 | 18 | 52 | 41
+
+@ Chipotle
+Chicken burrito (rice, black beans, cheese, salsa, sour cream) | 1 burrito | 1080 | 58 | 117 | 42
+Steak burrito (rice, beans, salsa, cheese) | 1 burrito | 1005 | 55 | 113 | 36
+Chicken bowl (rice, black beans, fajita veg, salsa, lettuce) | 1 bowl | 640 | 46 | 76 | 16
+Chicken bowl with cheese & guac | 1 bowl | 990 | 55 | 84 | 47
+Steak bowl (rice, beans, salsa, cheese) | 1 bowl | 685 | 46 | 71 | 23
+Barbacoa bowl (rice, beans, salsa, cheese) | 1 bowl | 685 | 46 | 71 | 23
+Carnitas bowl (rice, beans, salsa, cheese) | 1 bowl | 715 | 41 | 71 | 28
+Sofritas bowl (rice, beans, salsa) | 1 bowl | 570 | 22 | 82 | 17
+Chicken salad (lettuce, chicken, fajita veg, salsa, vinaigrette) | 1 salad | 520 | 34 | 31 | 30
+Chicken quesadilla | 1 quesadilla | 1060 | 63 | 80 | 55
+Chicken tacos, soft flour | 3 tacos | 585 | 46 | 56 | 20
+Chicken (protein only) | 4 oz | 180 | 32 | 0 | 7
+Steak (protein only) | 4 oz | 150 | 21 | 1 | 6
+Barbacoa (protein only) | 4 oz | 170 | 24 | 2 | 7
+Carnitas (protein only) | 4 oz | 210 | 23 | 0 | 12
+White rice | 1 serving | 210 | 4 | 40 | 4
+Brown rice | 1 serving | 210 | 4 | 36 | 6
+Black beans | 1 serving | 130 | 8 | 22 | 1.5
+Pinto beans | 1 serving | 130 | 8 | 21 | 1.5
+Cheese | 1 serving | 110 | 6 | 1 | 8
+Sour cream | 1 serving | 110 | 2 | 2 | 9
+Guacamole | 1 serving | 230 | 2 | 8 | 22
+Queso Blanco | 1 serving (side) | 120 | 5 | 4 | 9
+Fajita veggies | 1 serving | 20 | 1 | 5 | 0
+Chips | 1 bag | 540 | 7 | 73 | 25
+Chips and guacamole | 1 order | 770 | 9 | 81 | 47
+Chips and queso | 1 order large side | 780 | 18 | 79 | 43
+Flour tortilla (burrito) | 1 tortilla | 320 | 8 | 50 | 9
+
+@ Subway
+Turkey Breast, 6-inch | 1 sub | 280 | 18 | 46 | 3.5
+Turkey Breast, footlong | 1 sub | 560 | 36 | 92 | 7
+Italian B.M.T., 6-inch | 1 sub | 410 | 19 | 46 | 16
+Italian B.M.T., footlong | 1 sub | 820 | 38 | 92 | 32
+Spicy Italian, 6-inch | 1 sub | 470 | 18 | 45 | 24
+Meatball Marinara, 6-inch | 1 sub | 480 | 21 | 58 | 18
+Meatball Marinara, footlong | 1 sub | 960 | 42 | 116 | 36
+Chicken Teriyaki, 6-inch | 1 sub | 330 | 25 | 51 | 4.5
+Rotisserie-Style Chicken, 6-inch | 1 sub | 310 | 26 | 44 | 5
+Steak & Cheese, 6-inch | 1 sub | 360 | 24 | 45 | 10
+Tuna, 6-inch | 1 sub | 470 | 19 | 44 | 25
+Cold Cut Combo, 6-inch | 1 sub | 340 | 16 | 46 | 11
+Veggie Delite, 6-inch | 1 sub | 200 | 9 | 39 | 2.5
+B.L.T., 6-inch | 1 sub | 360 | 15 | 44 | 14
+Chicken & Bacon Ranch, 6-inch | 1 sub | 520 | 33 | 45 | 24
+Subway Club, 6-inch | 1 sub | 330 | 23 | 46 | 5
+Oven Roasted Turkey & Ham, 6-inch | 1 sub | 290 | 19 | 46 | 4
+Protein Bowl, chicken | 1 bowl | 230 | 32 | 9 | 7
+Chocolate Chip Cookie | 1 | 210 | 2 | 30 | 10
+Chips (Lay's) | 1 bag | 240 | 3 | 24 | 15
+Mayo (6-inch amount) | 1 serving | 110 | 0 | 0 | 12
+Chipotle Southwest sauce (6-inch) | 1 serving | 100 | 0 | 1 | 10
+Cheese, American (6-inch) | 2 slices | 40 | 2 | 1 | 3.5
+
+@ KFC
+Original Recipe Chicken Breast | 1 piece | 390 | 39 | 11 | 21
+Original Recipe Drumstick | 1 piece | 130 | 12 | 4 | 8
+Original Recipe Thigh | 1 piece | 280 | 19 | 8 | 19
+Original Recipe Wing | 1 piece | 130 | 10 | 3 | 8
+Extra Crispy Breast | 1 piece | 530 | 35 | 18 | 35
+Extra Crispy Drumstick | 1 piece | 170 | 12 | 5 | 12
+Extra Crispy Tenders | 3 tenders | 420 | 37 | 21 | 21
+KFC Chicken Sandwich | 1 sandwich | 650 | 34 | 49 | 35
+Famous Bowl | 1 bowl | 740 | 26 | 81 | 35
+Chicken Pot Pie | 1 pie | 720 | 26 | 60 | 41
+Popcorn Nuggets | large | 620 | 32 | 39 | 39
+Mashed Potatoes & Gravy | individual | 130 | 2 | 19 | 5
+Mac & Cheese | individual | 140 | 5 | 15 | 7
+Coleslaw | individual | 170 | 1 | 14 | 12
+Biscuit | 1 | 180 | 4 | 22 | 8
+Secret Recipe Fries | individual | 320 | 4 | 41 | 15
+Corn on the Cob | 1 ear | 70 | 2 | 16 | 0.5
+
+@ Popeyes
+Classic Chicken Sandwich | 1 sandwich | 700 | 28 | 50 | 42
+Spicy Chicken Sandwich | 1 sandwich | 700 | 28 | 50 | 42
+Chicken Tenders, Classic | 3 pieces | 445 | 37 | 24 | 21
+Chicken Tenders, Classic | 5 pieces | 740 | 62 | 40 | 35
+Bonafide Chicken Breast | 1 piece | 380 | 35 | 16 | 20
+Bonafide Chicken Thigh | 1 piece | 280 | 14 | 9 | 21
+Bonafide Chicken Leg | 1 piece | 160 | 14 | 5 | 9
+Bonafide Chicken Wing | 1 piece | 210 | 13 | 7 | 14
+Popcorn Shrimp | regular | 270 | 11 | 19 | 17
+Cajun Fries | regular | 260 | 4 | 31 | 14
+Red Beans & Rice | regular | 250 | 8 | 30 | 11
+Mashed Potatoes with Gravy | regular | 110 | 1 | 18 | 4
+Mac & Cheese | regular | 310 | 13 | 27 | 17
+Biscuit | 1 | 210 | 3 | 22 | 12
+Coleslaw | regular | 150 | 1 | 13 | 10
+Cajun Rice | regular | 170 | 7 | 17 | 8
+
+@ Sonic
+Sonic Cheeseburger | 1 sandwich | 720 | 31 | 52 | 43
+SuperSONIC Double Cheeseburger | 1 sandwich | 1080 | 54 | 50 | 74
+Jr. Burger | 1 sandwich | 330 | 15 | 30 | 17
+Classic Crispy Chicken Sandwich | 1 sandwich | 610 | 25 | 59 | 30
+Crispy Tenders | 3 pieces | 410 | 26 | 24 | 23
+Footlong Quarter Pound Coney | 1 | 800 | 30 | 52 | 52
+All-American Dog | 1 | 320 | 11 | 23 | 20
+Corn Dog | 1 | 230 | 6 | 23 | 13
+Tots | medium | 400 | 4 | 41 | 25
+Chili Cheese Tots | medium | 530 | 13 | 44 | 34
+French Fries | medium | 330 | 4 | 47 | 15
+Onion Rings | medium | 570 | 8 | 71 | 28
+Mozzarella Sticks | 4 pieces | 440 | 19 | 38 | 23
+Breakfast Burrito, sausage | 1 | 510 | 18 | 32 | 34
+Oreo Blast | medium | 980 | 15 | 120 | 48
+Vanilla Shake | medium | 670 | 10 | 85 | 32
+Cherry Limeade | medium | 230 | 0 | 64 | 0
+Ocean Water | medium | 280 | 0 | 77 | 0
+Route 44 Diet Coke | 1 drink | 0 | 0 | 0 | 0
+
+@ Arby's
+Classic Roast Beef | 1 sandwich | 360 | 23 | 37 | 14
+Double Roast Beef | 1 sandwich | 510 | 38 | 38 | 24
+Beef 'n Cheddar Classic | 1 sandwich | 450 | 23 | 45 | 20
+Smokehouse Brisket | 1 sandwich | 600 | 32 | 47 | 32
+French Dip & Swiss | 1 sandwich | 540 | 37 | 49 | 21
+Classic Crispy Chicken Sandwich | 1 sandwich | 500 | 25 | 51 | 22
+Chicken Tenders | 3 pieces | 360 | 24 | 22 | 19
+Turkey Club Wrap | 1 wrap | 580 | 31 | 43 | 33
+Gyro, Greek | 1 | 710 | 24 | 49 | 46
+Curly Fries | medium | 550 | 7 | 67 | 29
+Crinkle Fries | medium | 410 | 5 | 57 | 18
+Mozzarella Sticks | 4 pieces | 440 | 18 | 35 | 26
+Jamocha Shake | medium | 710 | 15 | 115 | 20
+
+@ Jack in the Box
+Jumbo Jack | 1 sandwich | 580 | 25 | 43 | 34
+Jumbo Jack with Cheese | 1 sandwich | 670 | 29 | 45 | 41
+Sourdough Jack | 1 sandwich | 720 | 32 | 38 | 49
+Ultimate Cheeseburger | 1 sandwich | 950 | 48 | 42 | 66
+Spicy Chicken Sandwich | 1 sandwich | 530 | 20 | 53 | 27
+Chicken Teriyaki Bowl | 1 bowl | 690 | 30 | 113 | 13
+Tacos | 2 tacos | 350 | 12 | 32 | 19
+Egg Rolls | 3 pieces | 440 | 13 | 46 | 22
+Curly Fries | medium | 430 | 6 | 46 | 24
+Seasoned Curly Fries | small | 280 | 4 | 31 | 16
+Breakfast Jack | 1 | 350 | 16 | 30 | 18
+Supreme Croissant | 1 | 570 | 21 | 33 | 39
+
+@ Five Guys
+Hamburger | 1 burger | 840 | 39 | 39 | 43
+Cheeseburger | 1 burger | 980 | 47 | 40 | 55
+Bacon Cheeseburger | 1 burger | 1060 | 51 | 40 | 62
+Little Hamburger | 1 burger | 540 | 23 | 39 | 26
+Little Cheeseburger | 1 burger | 610 | 27 | 40 | 32
+Little Bacon Cheeseburger | 1 burger | 690 | 31 | 40 | 39
+Burger in a lettuce wrap | 1 burger | 400 | 32 | 3 | 27
+Hot Dog | 1 | 545 | 18 | 40 | 35
+Grilled Cheese | 1 sandwich | 470 | 11 | 41 | 26
+Five Guys Fries | little | 530 | 8 | 72 | 23
+Five Guys Fries | regular | 950 | 15 | 131 | 41
+Five Guys Fries | large | 1310 | 20 | 181 | 57
+Cajun Fries | regular | 950 | 15 | 131 | 41
+Milkshake (base) | 1 shake | 670 | 13 | 80 | 32
+
+@ In-N-Out
+Double-Double | 1 burger | 670 | 37 | 39 | 41
+Cheeseburger | 1 burger | 480 | 22 | 39 | 27
+Hamburger | 1 burger | 390 | 16 | 39 | 19
+Double-Double Protein Style | 1 burger | 520 | 33 | 11 | 39
+Cheeseburger Protein Style | 1 burger | 330 | 18 | 11 | 25
+Animal Style Double-Double | 1 burger | 750 | 38 | 42 | 47
+3x3 | 1 burger | 860 | 50 | 40 | 55
+French Fries | 1 order | 360 | 6 | 49 | 15
+Animal Style Fries | 1 order | 750 | 19 | 54 | 42
+Chocolate Shake | 15 oz | 590 | 16 | 74 | 29
+
+@ Shake Shack
+ShackBurger | single | 500 | 29 | 26 | 30
+Double ShackBurger | 1 burger | 760 | 51 | 27 | 48
+SmokeShack | single | 570 | 32 | 27 | 36
+Shack Stack | 1 burger | 770 | 36 | 52 | 46
+Chicken Shack | 1 sandwich | 550 | 33 | 34 | 31
+Hamburger | single | 370 | 24 | 25 | 18
+Crinkle Cut Fries | 1 order | 470 | 6 | 63 | 22
+Cheese Fries | 1 order | 710 | 15 | 66 | 43
+Chicken Bites | 6 piece | 300 | 18 | 15 | 18
+Vanilla Shake | regular | 680 | 15 | 70 | 37
+
+@ Whataburger
+Whataburger | 1 burger | 590 | 29 | 62 | 25
+Double Meat Whataburger | 1 burger | 840 | 47 | 62 | 45
+Whataburger Jr. | 1 burger | 310 | 14 | 31 | 14
+Triple Meat Whataburger | 1 burger | 1070 | 66 | 62 | 62
+Honey BBQ Chicken Strip Sandwich | 1 sandwich | 770 | 35 | 69 | 40
+Whatachick'n Sandwich | 1 sandwich | 590 | 31 | 57 | 26
+Whatachick'n Strips | 3 strips | 550 | 33 | 31 | 33
+Patty Melt | 1 sandwich | 950 | 47 | 47 | 64
+Honey Butter Chicken Biscuit | 1 | 600 | 19 | 54 | 35
+Taquito with Cheese, sausage | 1 | 410 | 18 | 27 | 26
+Breakfast on a Bun, sausage | 1 | 570 | 23 | 29 | 40
+French Fries | medium | 400 | 6 | 51 | 19
+Onion Rings | medium | 400 | 6 | 47 | 21
+
+@ Culver's
+ButterBurger The Original | single | 390 | 20 | 38 | 17
+ButterBurger Cheese | double | 690 | 39 | 39 | 41
+ButterBurger Deluxe | double | 780 | 40 | 42 | 50
+Crispy Chicken Sandwich | 1 | 690 | 34 | 60 | 35
+Original Chicken Tenders | 4 pieces | 540 | 40 | 34 | 27
+Cheese Curds | regular | 510 | 23 | 37 | 30
+Crinkle Cut Fries | medium | 400 | 5 | 51 | 19
+Concrete Mixer, vanilla with Oreo | medium | 940 | 15 | 110 | 49
+Fresh Frozen Custard, vanilla | 1 scoop dish | 340 | 6 | 31 | 21
+
+@ Dairy Queen
+Blizzard, Oreo | medium | 750 | 15 | 113 | 26
+Blizzard, Oreo | small | 590 | 12 | 87 | 21
+Blizzard, Reese's | medium | 780 | 18 | 105 | 32
+Blizzard, Cookie Dough | medium | 1050 | 17 | 155 | 39
+Blizzard, M&M's | medium | 730 | 14 | 112 | 25
+Vanilla Cone | medium | 330 | 8 | 53 | 9
+Dipped Cone | medium | 470 | 8 | 58 | 24
+Dilly Bar | 1 | 220 | 3 | 23 | 13
+Peanut Buster Parfait | 1 | 710 | 17 | 98 | 30
+Banana Split | 1 | 520 | 8 | 96 | 13
+1/4 lb Bacon Cheese GrillBurger | 1 | 730 | 38 | 46 | 42
+Chicken Strip Basket | 4 piece | 1010 | 39 | 104 | 49
+Chili Cheese Dog | 1 | 390 | 13 | 29 | 25
+Fries | regular | 300 | 4 | 41 | 14
+
+@ Starbucks
+Caffè Latte, 2% | grande (16 oz) | 190 | 13 | 19 | 7
+Caffè Latte, oat milk | grande | 190 | 3 | 28 | 7
+Caffè Latte, nonfat | grande | 130 | 13 | 19 | 0
+Cappuccino, 2% | grande | 140 | 9 | 14 | 5
+Flat White | grande | 220 | 12 | 18 | 11
+Caramel Macchiato, 2% | grande | 250 | 10 | 35 | 7
+Iced Caramel Macchiato | grande | 250 | 10 | 37 | 7
+Caffè Mocha, 2% with whip | grande | 370 | 14 | 43 | 15
+White Chocolate Mocha with whip | grande | 430 | 14 | 54 | 18
+Pumpkin Spice Latte, 2% with whip | grande | 390 | 14 | 52 | 14
+Vanilla Latte, 2% | grande | 250 | 12 | 37 | 6
+Iced Brown Sugar Oatmilk Shaken Espresso | grande | 120 | 2 | 20 | 3
+Iced Chai Tea Latte | grande | 240 | 7 | 42 | 4.5
+Chai Tea Latte, 2% | grande | 240 | 8 | 45 | 4.5
+Matcha Tea Latte, 2% | grande | 240 | 12 | 34 | 7
+Pink Drink | grande | 140 | 1 | 27 | 2.5
+Strawberry Açaí Refresher | grande | 100 | 0 | 24 | 0
+Dragon Drink | grande | 130 | 1 | 25 | 2.5
+Caramel Frappuccino with whip | grande | 380 | 4 | 54 | 16
+Mocha Frappuccino with whip | grande | 370 | 5 | 54 | 15
+Java Chip Frappuccino with whip | grande | 440 | 6 | 66 | 18
+Vanilla Bean Crème Frappuccino | grande | 380 | 5 | 57 | 15
+Cold Brew, black | grande | 5 | 0 | 0 | 0
+Vanilla Sweet Cream Cold Brew | grande | 110 | 1 | 14 | 5
+Salted Caramel Cream Cold Brew | grande | 240 | 2 | 33 | 12
+Pike Place brewed coffee | grande | 5 | 1 | 0 | 0
+Americano | grande | 15 | 1 | 2 | 0
+Hot Chocolate, 2% with whip | grande | 370 | 14 | 43 | 16
+Bacon, Gouda & Egg Sandwich | 1 | 360 | 19 | 34 | 17
+Sausage, Cheddar & Egg Sandwich | 1 | 480 | 18 | 34 | 29
+Double-Smoked Bacon, Cheddar & Egg | 1 | 500 | 22 | 40 | 28
+Turkey Bacon, Cheddar & Egg White | 1 | 230 | 17 | 28 | 5
+Spinach, Feta & Egg White Wrap | 1 | 290 | 20 | 34 | 8
+Impossible Breakfast Sandwich | 1 | 420 | 22 | 36 | 22
+Egg Bites, Bacon & Gruyère | 2 bites | 300 | 19 | 9 | 20
+Egg Bites, Egg White & Roasted Red Pepper | 2 bites | 170 | 12 | 11 | 8
+Rolled & Steel-Cut Oatmeal | 1 | 160 | 5 | 28 | 2.5
+Butter Croissant | 1 | 260 | 5 | 30 | 14
+Chocolate Croissant | 1 | 300 | 5 | 33 | 16
+Blueberry Muffin | 1 | 360 | 5 | 52 | 15
+Banana Nut Bread | 1 slice | 420 | 6 | 52 | 22
+Iced Lemon Loaf | 1 slice | 490 | 5 | 70 | 21
+Cake Pop, birthday | 1 | 160 | 1 | 23 | 7
+Chocolate Chip Cookie | 1 | 360 | 4 | 48 | 17
+Plain Bagel | 1 | 280 | 11 | 56 | 1.5
+Protein Box, Eggs & Cheddar | 1 box | 460 | 23 | 40 | 24
+Chicken & Bacon Panini | 1 | 520 | 34 | 46 | 22
+
+@ Dunkin'
+Glazed Donut | 1 | 260 | 3 | 31 | 14
+Boston Kreme Donut | 1 | 300 | 3 | 37 | 15
+Chocolate Frosted Donut | 1 | 270 | 3 | 33 | 15
+Jelly Donut | 1 | 270 | 3 | 37 | 13
+Old Fashioned Donut | 1 | 290 | 3 | 28 | 19
+Munchkins, glazed | 5 pieces | 280 | 3 | 33 | 16
+Bacon, Egg & Cheese on Croissant | 1 | 520 | 20 | 39 | 31
+Sausage, Egg & Cheese on English Muffin | 1 | 510 | 21 | 33 | 33
+Wake-Up Wrap, bacon egg & cheese | 1 | 210 | 9 | 14 | 13
+Hash Browns | 6 pieces | 130 | 1 | 15 | 7
+Snackin' Bacon | 8 pieces | 190 | 8 | 13 | 12
+Avocado Toast | 1 | 240 | 6 | 35 | 9
+Everything Bagel with cream cheese | 1 | 450 | 13 | 61 | 16
+Iced Coffee with cream & sugar | medium | 180 | 2 | 30 | 6
+Iced Latte, whole milk | medium | 170 | 9 | 14 | 9
+Caramel Swirl Iced Coffee with cream | medium | 260 | 3 | 46 | 6
+Hot Coffee, black | medium | 5 | 0 | 0 | 0
+Frozen Chocolate | medium | 650 | 9 | 119 | 16
+Coolatta, strawberry | medium | 300 | 0 | 75 | 0
+Refresher, strawberry dragonfruit | medium | 130 | 0 | 32 | 0
+
+@ Tim Hortons
+Original Blend coffee, double double | medium | 230 | 3 | 28 | 12
+Iced Capp | medium | 360 | 4 | 41 | 20
+Timbits, old fashioned glazed | 5 pieces | 300 | 3 | 41 | 14
+Honey Dip Donut | 1 | 210 | 4 | 32 | 7
+Farmer's Breakfast Wrap, sausage | 1 | 590 | 20 | 40 | 37
+Bacon Breakfast Sandwich on English muffin | 1 | 340 | 18 | 29 | 16
+Chili | 1 bowl | 300 | 19 | 30 | 11
+
+@ Dutch Bros
+Golden Eagle Breve | medium | 520 | 10 | 54 | 29
+Caramelizer | medium | 410 | 13 | 52 | 16
+Rebel Energy Drink, strawberry | medium | 260 | 0 | 64 | 0
+Annihilator Breve | medium | 560 | 11 | 52 | 34
+Cold Brew, black | medium | 10 | 0 | 2 | 0
+
+@ Krispy Kreme
+Original Glazed Doughnut | 1 | 190 | 2 | 22 | 11
+Chocolate Iced Glazed | 1 | 240 | 3 | 33 | 11
+Glazed Kreme Filled | 1 | 340 | 4 | 39 | 19
+Chocolate Iced Kreme Filled | 1 | 350 | 4 | 39 | 20
+Original Glazed Dozen | 12 doughnuts | 2280 | 24 | 264 | 132
+
+@ Domino's
+Hand Tossed Cheese Pizza | 1 slice (large) | 290 | 12 | 37 | 10
+Hand Tossed Pepperoni Pizza | 1 slice (large) | 320 | 13 | 37 | 13
+Thin Crust Cheese Pizza | 1 slice (large) | 220 | 9 | 18 | 13
+Thin Crust Pepperoni | 1 slice (large) | 260 | 10 | 18 | 16
+Brooklyn Style Pepperoni | 1 slice (large) | 330 | 13 | 33 | 16
+Pan Pizza, cheese | 1 slice (medium) | 280 | 11 | 30 | 13
+ExtravaganZZa Feast | 1 slice (large) | 380 | 17 | 38 | 18
+MeatZZa | 1 slice (large) | 380 | 17 | 37 | 19
+Pacific Veggie | 1 slice (large) | 290 | 12 | 37 | 11
+Wings, plain | 8 wings | 720 | 64 | 2 | 50
+Boneless Chicken | 8 pieces | 400 | 24 | 32 | 19
+Parmesan Bread Bites | 8 pieces | 400 | 9 | 47 | 19
+Cinnamon Bread Twists | 8 twists | 1040 | 16 | 136 | 48
+Stuffed Cheesy Bread | 2 pieces | 290 | 10 | 30 | 14
+Chicken Alfredo Pasta | 1 dish | 1200 | 54 | 128 | 54
+Italian Sausage Marinara Pasta | 1 dish | 1100 | 46 | 132 | 42
+Lava Crunch Cake | 1 | 350 | 4 | 46 | 17
+
+@ Pizza Hut
+Hand Tossed Cheese Pizza | 1 slice (large) | 280 | 12 | 34 | 10
+Hand Tossed Pepperoni | 1 slice (large) | 300 | 12 | 33 | 13
+Original Pan Pepperoni | 1 slice (large) | 360 | 14 | 35 | 18
+Original Pan Cheese | 1 slice (large) | 340 | 14 | 35 | 16
+Thin 'N Crispy Pepperoni | 1 slice (large) | 260 | 11 | 27 | 12
+Stuffed Crust Pepperoni | 1 slice (large) | 360 | 16 | 36 | 17
+Meat Lover's Pan | 1 slice (large) | 470 | 20 | 36 | 27
+Supreme Pan | 1 slice (large) | 400 | 16 | 37 | 21
+Personal Pan Pepperoni | 1 pizza | 640 | 26 | 65 | 30
+Breadsticks | 1 stick | 140 | 4 | 18 | 5
+Bone-In Wings, buffalo | 4 wings | 340 | 26 | 2 | 25
+Boneless Wings, honey BBQ | 8 pieces | 700 | 30 | 72 | 32
+Cinnabon Mini Rolls | 2 rolls | 220 | 3 | 33 | 8
+Tuscani Chicken Alfredo | 1 pan | 1300 | 56 | 116 | 66
+
+@ Papa John's
+Original Crust Cheese | 1 slice (large) | 290 | 12 | 37 | 10
+Original Crust Pepperoni | 1 slice (large) | 330 | 13 | 37 | 14
+Thin Crust Pepperoni | 1 slice (large) | 270 | 10 | 22 | 16
+The Works | 1 slice (large) | 370 | 15 | 39 | 17
+Garlic Knots | 4 knots | 320 | 9 | 45 | 12
+Breadsticks | 1 stick | 140 | 4 | 26 | 2.5
+Garlic Dipping Sauce | 1 cup | 150 | 0 | 0 | 17
+Papadia, Italian | 1 | 1000 | 43 | 86 | 54
+
+@ Little Caesars
+Classic Pepperoni Pizza | 1 slice (large) | 280 | 13 | 32 | 11
+Classic Cheese Pizza | 1 slice (large) | 250 | 11 | 32 | 9
+ExtraMostBestest Pepperoni | 1 slice | 320 | 15 | 32 | 15
+Deep!Deep! Dish Pepperoni | 1 slice | 390 | 18 | 36 | 19
+Crazy Bread | 1 stick | 100 | 3 | 15 | 3
+Italian Cheese Bread | 1 piece | 130 | 6 | 13 | 6
+Caesar Wings, oven roasted | 8 wings | 600 | 56 | 0 | 40
+
+@ Marco's Pizza
+Cheese Pizza | 1 slice (large) | 280 | 12 | 32 | 11
+Pepperoni Magnifico | 1 slice (large) | 340 | 15 | 32 | 16
+Cheezybread | 2 pieces | 300 | 12 | 30 | 14
+
+@ Olive Garden
+Chicken Alfredo | 1 dinner | 1570 | 77 | 98 | 97
+Fettuccine Alfredo | 1 dinner | 1310 | 37 | 96 | 89
+Chicken Parmigiana | 1 dinner | 1060 | 79 | 88 | 44
+Tour of Italy | 1 dinner | 1550 | 87 | 99 | 89
+Lasagna Classico | 1 dinner | 940 | 54 | 54 | 54
+Spaghetti with Meat Sauce | 1 dinner | 700 | 34 | 92 | 22
+Spaghetti with Meatballs | 1 dinner | 1110 | 54 | 99 | 56
+Five Cheese Ziti al Forno | 1 dinner | 1190 | 47 | 119 | 57
+Shrimp Scampi | 1 dinner | 510 | 32 | 50 | 20
+Herb-Grilled Salmon | 1 dinner | 460 | 45 | 8 | 28
+Chicken Marsala | 1 dinner | 770 | 54 | 39 | 44
+Breadstick | 1 breadstick | 140 | 4 | 25 | 3
+House Salad with dressing | 1 serving | 150 | 3 | 15 | 8
+Zuppa Toscana | 1 bowl | 220 | 7 | 15 | 15
+Chicken & Gnocchi Soup | 1 bowl | 230 | 11 | 26 | 9
+Pasta e Fagioli | 1 bowl | 150 | 8 | 17 | 5
+Lasagna Fritta | 1 order | 1030 | 31 | 69 | 69
+Tiramisu | 1 slice | 470 | 7 | 42 | 30
+Black Tie Mousse Cake | 1 slice | 760 | 8 | 74 | 50
+
+@ Chili's
+Oldtimer with Cheese | 1 burger with fries | 1310 | 60 | 105 | 72
+Big Mouth Bites | 1 order with fries | 1660 | 66 | 130 | 99
+Original Chicken Crispers | 1 order with fries & corn | 1350 | 51 | 125 | 72
+Honey-Chipotle Crispers & Waffles | 1 order | 2000 | 64 | 230 | 94
+Chicken Fajitas | 1 order with tortillas | 1050 | 75 | 95 | 39
+Steak Fajitas | 1 order with tortillas | 1120 | 72 | 95 | 46
+Classic Sirloin 6 oz | 1 steak only | 260 | 41 | 0 | 10
+Ancho Salmon | 1 entree | 620 | 49 | 26 | 34
+Margarita Grilled Chicken | 1 entree | 650 | 57 | 64 | 17
+Baby Back Ribs, full rack | 1 entree | 1800 | 100 | 60 | 128
+Chicken Bacon Ranch Quesadillas | 1 order | 1700 | 98 | 87 | 107
+Southwestern Eggrolls | 1 appetizer | 900 | 38 | 79 | 49
+Triple Dipper | 1 appetizer | 2000 | 70 | 170 | 117
+Chips & Salsa | 1 order | 750 | 10 | 98 | 35
+Skillet Queso with chips | 1 order | 1600 | 46 | 132 | 101
+Molten Chocolate Cake | 1 | 1100 | 13 | 155 | 51
+Presidente Margarita | 1 drink | 370 | 0 | 37 | 0
+
+@ Applebee's
+Classic Bacon Cheeseburger | 1 with fries | 1310 | 59 | 99 | 77
+Chicken Tenders Platter | 1 order | 1180 | 54 | 96 | 64
+Fiesta Lime Chicken | 1 entree | 1210 | 60 | 88 | 69
+Bourbon Street Chicken & Shrimp | 1 entree | 970 | 63 | 46 | 59
+Bourbon Street Steak | 1 entree | 770 | 58 | 28 | 47
+Riblets Plate | 1 entree | 1030 | 52 | 82 | 55
+Three-Cheese Chicken Penne | 1 entree | 1270 | 74 | 101 | 64
+Oriental Chicken Salad | 1 full | 1420 | 39 | 110 | 94
+Grilled Chicken Caesar Salad | 1 full | 800 | 50 | 22 | 59
+Boneless Wings | 1 appetizer | 1000 | 58 | 70 | 54
+Mozzarella Sticks | 1 appetizer | 970 | 47 | 81 | 49
+Spinach & Artichoke Dip | 1 appetizer | 1060 | 31 | 98 | 61
+Double Crunch Shrimp | 1 entree | 880 | 26 | 87 | 47
+
+@ Texas Roadhouse
+6 oz Sirloin | steak only | 250 | 46 | 0 | 6
+8 oz Sirloin | steak only | 320 | 61 | 0 | 8
+12 oz Ribeye | steak only | 990 | 74 | 0 | 77
+16 oz Ribeye | steak only | 1300 | 98 | 0 | 102
+6 oz Dallas Filet | steak only | 260 | 47 | 0 | 8
+12 oz New York Strip | steak only | 740 | 80 | 0 | 46
+Ft. Worth Ribeye 12 oz | steak only | 990 | 74 | 0 | 77
+Grilled BBQ Chicken | 1 entree | 380 | 63 | 13 | 7
+Country Fried Chicken | 1 entree with gravy | 1150 | 54 | 85 | 66
+Fall-Off-The-Bone Ribs, full | 1 entree | 1500 | 105 | 31 | 105
+Grilled Salmon | 8 oz | 440 | 47 | 5 | 26
+Rolls with cinnamon butter | 1 roll + butter | 230 | 5 | 30 | 11
+Cactus Blossom | 1 appetizer | 2210 | 26 | 186 | 154
+Loaded Baked Potato | 1 side | 470 | 13 | 70 | 16
+Seasoned Rice | 1 side | 250 | 5 | 47 | 5
+Steak Fries | 1 side | 360 | 5 | 51 | 15
+Green Beans | 1 side | 100 | 2 | 8 | 7
+House Salad with ranch | 1 side | 320 | 6 | 9 | 28
+
+@ Outback Steakhouse
+Bloomin' Onion | 1 appetizer | 1950 | 23 | 123 | 155
+Victoria's Filet 6 oz | steak only | 250 | 40 | 1 | 9
+Center-Cut Sirloin 6 oz | steak only | 250 | 41 | 1 | 9
+Ribeye 13 oz | steak only | 1040 | 75 | 1 | 82
+Alice Springs Chicken | 1 entree | 860 | 79 | 13 | 54
+Grilled Chicken on the Barbie | 1 entree | 450 | 70 | 12 | 13
+Toowoomba Steak | 1 entree | 910 | 61 | 13 | 69
+Bushman Bread | 1 slice | 100 | 3 | 18 | 1.5
+Aussie Fries | 1 side | 400 | 5 | 51 | 20
+
+@ Red Robin
+Gourmet Cheeseburger | 1 burger | 980 | 46 | 50 | 64
+Royal Red Robin Burger | 1 burger | 1210 | 64 | 53 | 82
+Whiskey River BBQ Burger | 1 burger | 1130 | 50 | 81 | 64
+Banzai Burger | 1 burger | 1010 | 47 | 74 | 56
+Bottomless Steak Fries | 1 serving | 360 | 5 | 47 | 17
+Clucks & Fries | 1 order | 1110 | 44 | 102 | 58
+
+@ IHOP
+Original Buttermilk Pancakes | full stack (5) | 760 | 24 | 108 | 28
+Original Buttermilk Pancakes | short stack (3) | 450 | 14 | 63 | 17
+Chocolate Chip Pancakes | full stack | 960 | 25 | 136 | 37
+Belgian Waffle | 1 waffle | 590 | 11 | 69 | 30
+Original French Toast | 1 order | 720 | 25 | 98 | 26
+Breakfast Sampler | 1 order | 1210 | 48 | 81 | 79
+2 x 2 x 2 | 1 order | 1100 | 37 | 64 | 77
+Big Steak Omelette | 1 | 1100 | 74 | 23 | 81
+Hash Browns | 1 side | 220 | 2 | 25 | 12
+Bacon | 4 strips | 140 | 10 | 0 | 11
+
+@ Denny's
+Grand Slam | 1 order | 860 | 37 | 71 | 49
+Lumberjack Slam | 1 order | 1080 | 54 | 103 | 50
+Moons Over My Hammy | 1 sandwich | 830 | 46 | 54 | 46
+Fit Slam | 1 order | 390 | 25 | 46 | 12
+Buttermilk Pancakes | 3 pancakes | 600 | 15 | 110 | 9
+Bacon Avocado Cheeseburger | 1 with fries | 1460 | 61 | 104 | 89
+
+@ Waffle House
+Classic Waffle | 1 waffle | 410 | 8 | 55 | 18
+All-Star Special | 1 order | 1150 | 45 | 100 | 63
+Hashbrowns, scattered | regular | 190 | 2 | 23 | 10
+Hashbrowns, smothered & covered | regular | 290 | 7 | 26 | 17
+Texas Bacon Patty Melt | 1 | 1080 | 54 | 44 | 79
+2 Eggs, scrambled | 1 order | 180 | 12 | 1 | 14
+
+@ Cracker Barrel
+Old Timer's Breakfast | 1 order | 1100 | 41 | 103 | 59
+Momma's Pancake Breakfast | 1 order | 1190 | 40 | 124 | 59
+Chicken n' Dumplins | 1 entree | 380 | 22 | 32 | 15
+Meatloaf | 1 entree | 520 | 32 | 22 | 33
+Country Fried Steak | 1 entree with gravy | 790 | 33 | 50 | 50
+Hashbrown Casserole | 1 side | 190 | 5 | 13 | 13
+Mac n' Cheese | 1 side | 250 | 11 | 17 | 15
+Buttermilk Biscuit | 1 | 160 | 3 | 23 | 6
+
+@ The Cheesecake Factory
+Original Cheesecake | 1 slice | 830 | 13 | 64 | 58
+Fresh Strawberry Cheesecake | 1 slice | 1000 | 14 | 87 | 64
+Chocolate Chip Cookie-Dough Cheesecake | 1 slice | 1360 | 17 | 133 | 83
+Chicken Madeira | 1 entree | 1290 | 85 | 53 | 81
+Fettuccini Alfredo with chicken | 1 entree | 2190 | 85 | 112 | 155
+Louisiana Chicken Pasta | 1 entree | 2210 | 87 | 159 | 133
+Factory Burrito Grande | 1 entree | 1960 | 81 | 168 | 106
+SkinnyLicious Grilled Chicken | 1 entree | 560 | 59 | 39 | 18
+Brown Bread | 1 slice with butter | 220 | 5 | 33 | 8
+Avocado Eggrolls | 1 appetizer | 1300 | 22 | 104 | 91
+
+@ Buffalo Wild Wings
+Traditional Wings, plain | 6 wings | 430 | 52 | 0 | 24
+Traditional Wings, plain | 10 wings | 720 | 87 | 0 | 40
+Boneless Wings, plain | 6 pieces | 390 | 22 | 30 | 20
+Boneless Wings, plain | 10 pieces | 650 | 37 | 50 | 33
+Medium sauce | 1 serving | 60 | 0 | 2 | 6
+Honey BBQ sauce | 1 serving | 160 | 0 | 40 | 0
+Lemon Pepper dry rub | 1 serving | 30 | 0 | 2 | 2.5
+French Fries | regular | 420 | 5 | 50 | 22
+Cheese Curds | 1 appetizer | 1000 | 40 | 64 | 65
+All-American Cheeseburger | 1 with fries | 1250 | 54 | 87 | 76
+
+@ Wingstop
+Classic Wings, plain | 6 wings | 540 | 48 | 0 | 36
+Classic Wings, lemon pepper | 6 wings | 690 | 48 | 0 | 54
+Boneless Wings, plain | 6 pieces | 520 | 32 | 36 | 28
+Chicken Tenders, plain | 3 tenders | 360 | 33 | 15 | 18
+Seasoned Fries | regular | 470 | 7 | 63 | 22
+Cajun Fried Corn | 1 side | 240 | 4 | 26 | 15
+Ranch dip | 1 cup | 310 | 1 | 2 | 33
+Blue Cheese dip | 1 cup | 290 | 2 | 2 | 31
+Veggie Sticks | 1 side | 20 | 1 | 4 | 0
+
+@ Raising Cane's
+The Box Combo | 4 fingers, fries, slaw, toast, sauce | 1270 | 50 | 113 | 70
+The 3 Finger Combo | 1 combo | 1080 | 37 | 102 | 57
+Caniac Combo | 6 fingers, fries, slaw, 2 sauces, toast | 1900 | 75 | 160 | 109
+Chicken Finger | 1 finger | 130 | 13 | 5 | 6
+Crinkle-Cut Fries | regular | 390 | 6 | 44 | 21
+Cane's Sauce | 1 cup | 190 | 0 | 4 | 19
+Texas Toast | 1 slice | 150 | 4 | 19 | 7
+Coleslaw | 1 side | 100 | 1 | 10 | 7
+Cane's Sandwich | 1 sandwich | 700 | 37 | 58 | 35
+
+@ Zaxby's
+Chicken Fingerz Plate | 5 fingers with fries, toast, sauce | 1450 | 63 | 112 | 83
+Chicken Fingerz | 4 fingers | 580 | 45 | 28 | 30
+Kickin' Chicken Sandwich | 1 | 760 | 33 | 52 | 47
+Zax Sauce | 1 cup | 190 | 0 | 5 | 19
+Crinkle Fries | regular | 380 | 5 | 45 | 21
+
+@ Bojangles
+Cajun Filet Biscuit | 1 | 470 | 21 | 41 | 24
+Bo-Berry Biscuit | 1 | 380 | 4 | 48 | 18
+Chicken Supremes | 4 pieces | 560 | 38 | 30 | 32
+Cajun Fried Chicken Breast | 1 piece | 470 | 40 | 15 | 27
+Bo-Rounds | regular | 350 | 4 | 36 | 21
+Dirty Rice | regular | 160 | 4 | 24 | 5
+Sweet Tea | large | 330 | 0 | 84 | 0
+
+@ Church's Texas Chicken
+Original Chicken Breast | 1 piece | 320 | 25 | 9 | 19
+Spicy Chicken Thigh | 1 piece | 470 | 22 | 13 | 37
+Honey-Butter Biscuit | 1 | 230 | 3 | 24 | 14
+Jalapeño Cheese Bombers | 4 pieces | 240 | 7 | 25 | 12
+
+@ Panda Express
+Orange Chicken | 1 entree (5.7 oz) | 490 | 25 | 51 | 23
+Beijing Beef | 1 entree | 470 | 13 | 46 | 26
+Broccoli Beef | 1 entree | 150 | 9 | 13 | 7
+Kung Pao Chicken | 1 entree | 290 | 16 | 15 | 19
+Grilled Teriyaki Chicken | 1 entree | 275 | 33 | 14 | 10
+Honey Walnut Shrimp | 1 entree | 360 | 13 | 35 | 23
+String Bean Chicken Breast | 1 entree | 210 | 12 | 13 | 12
+Black Pepper Angus Steak | 1 entree | 180 | 19 | 10 | 7
+Mushroom Chicken | 1 entree | 220 | 13 | 10 | 14
+Honey Sesame Chicken Breast | 1 entree | 340 | 16 | 35 | 15
+Sweetfire Chicken Breast | 1 entree | 380 | 15 | 47 | 15
+Chow Mein | 1 side | 510 | 13 | 80 | 20
+Fried Rice | 1 side | 520 | 11 | 85 | 16
+White Steamed Rice | 1 side | 380 | 7 | 87 | 0
+Super Greens | 1 side | 90 | 6 | 10 | 3
+Chicken Egg Roll | 1 roll | 200 | 6 | 20 | 10
+Cream Cheese Rangoon | 3 pieces | 190 | 5 | 24 | 8
+Veggie Spring Roll | 2 rolls | 190 | 4 | 22 | 8
+Panda Plate (orange chicken, broccoli beef, chow mein) | 1 plate | 1150 | 47 | 144 | 50
+Panda Bowl (orange chicken, fried rice) | 1 bowl | 1010 | 36 | 136 | 39
+
+@ P.F. Chang's
+Chang's Spicy Chicken | 1 entree | 1100 | 70 | 90 | 50
+Mongolian Beef | 1 entree | 760 | 54 | 44 | 41
+Orange Chicken | 1 entree | 1000 | 54 | 104 | 40
+Kung Pao Chicken | 1 entree | 1010 | 68 | 47 | 63
+Chicken Lettuce Wraps | 1 appetizer | 590 | 31 | 63 | 25
+Dynamite Shrimp | 1 appetizer | 670 | 22 | 37 | 49
+Pork Dumplings, pan-fried | 6 pieces | 420 | 21 | 34 | 22
+Chicken Fried Rice | 1 entree | 1140 | 49 | 157 | 33
+Lo Mein, chicken | 1 entree | 1070 | 52 | 120 | 42
+Great Wall of Chocolate | 1 slice | 1700 | 18 | 220 | 85
+
+@ Panera Bread
+Broccoli Cheddar Soup | bowl | 360 | 14 | 26 | 22
+Broccoli Cheddar Soup in Bread Bowl | 1 | 900 | 37 | 140 | 24
+Chicken Noodle Soup | bowl | 140 | 12 | 16 | 3
+Creamy Tomato Soup | bowl | 360 | 6 | 32 | 23
+Baked Potato Soup | bowl | 360 | 9 | 31 | 22
+Frontega Chicken Panini | whole | 820 | 47 | 72 | 37
+Chipotle Chicken Avo Melt | whole | 900 | 51 | 75 | 44
+Bacon Turkey Bravo | whole | 790 | 49 | 87 | 26
+Toasted Steak & White Cheddar | whole | 730 | 51 | 66 | 28
+Mediterranean Veggie Sandwich | whole | 530 | 20 | 79 | 15
+Tuna Salad Sandwich | whole | 600 | 32 | 69 | 24
+Green Goddess Cobb Salad with chicken | whole | 530 | 41 | 24 | 31
+Caesar Salad with chicken | whole | 470 | 41 | 15 | 27
+Fuji Apple Salad with chicken | whole | 570 | 34 | 31 | 34
+Mac & Cheese | large | 960 | 37 | 81 | 55
+Plain Bagel | 1 | 290 | 10 | 58 | 1.5
+Cinnamon Crunch Bagel | 1 | 430 | 9 | 82 | 7
+Avocado, Egg White & Spinach Sandwich | 1 | 410 | 23 | 47 | 15
+Chocolate Chipper Cookie | 1 | 390 | 4 | 50 | 21
+Kitchen Sink Cookie | 1 | 800 | 10 | 104 | 38
+Charged Lemonade | large | 390 | 0 | 99 | 0
+
+@ Jersey Mike's
+#13 The Original Italian | regular (8 in) | 680 | 31 | 57 | 37
+#13 The Original Italian | giant | 1370 | 62 | 115 | 75
+#7 Turkey and Provolone | regular | 480 | 31 | 53 | 15
+#9 Club Supreme | regular | 640 | 41 | 55 | 28
+#17 Mike's Famous Philly | regular | 590 | 43 | 59 | 20
+#43 Chipotle Cheese Steak | regular | 850 | 40 | 58 | 51
+#8 Club Sub | regular | 570 | 34 | 54 | 23
+Big Kahuna Cheese Steak | regular | 810 | 50 | 61 | 41
+Tuna | regular | 830 | 31 | 54 | 54
+Sub in a Tub (#7) | regular | 290 | 25 | 10 | 16
+
+@ Jimmy John's
+#1 Pepe | 8 inch | 570 | 26 | 51 | 28
+#4 Turkey Tom | 8 inch | 480 | 23 | 50 | 21
+#5 Vito | 8 inch | 630 | 25 | 49 | 35
+#9 Italian Night Club | 8 inch | 860 | 36 | 52 | 56
+#12 Beach Club | 8 inch | 690 | 29 | 53 | 39
+Unwich (#4 Turkey Tom) | 1 lettuce wrap | 230 | 17 | 7 | 15
+Jimmy Chips | 1 bag | 270 | 3 | 25 | 16
+
+@ Firehouse Subs
+Hook & Ladder | medium | 790 | 41 | 72 | 38
+Smokehouse Beef & Cheddar Brisket | medium | 810 | 46 | 69 | 39
+Italian | medium | 850 | 39 | 70 | 47
+Meatball | medium | 1000 | 50 | 83 | 53
+
+@ Potbelly
+A Wreck | original | 580 | 34 | 59 | 22
+Turkey Breast | original | 450 | 27 | 58 | 11
+Italian | original | 780 | 33 | 58 | 46
+Chocolate Brownie Cookie | 1 | 420 | 5 | 59 | 18
+
+@ Qdoba
+Chicken Burrito (rice, beans, queso, salsa) | 1 burrito | 1030 | 52 | 117 | 37
+Chicken Bowl (rice, beans, salsa, cheese) | 1 bowl | 640 | 44 | 64 | 22
+Steak Bowl (rice, beans, salsa, cheese) | 1 bowl | 650 | 42 | 64 | 24
+3-Cheese Queso | 1 side | 140 | 7 | 3 | 11
+Chips & Queso | 1 order | 640 | 12 | 63 | 37
+
+@ Moe's Southwest Grill
+Homewrecker, chicken | 1 burrito | 960 | 50 | 104 | 37
+Joey Bag of Donuts, chicken | 1 burrito | 800 | 45 | 98 | 25
+Moe's Queso | 1 side | 160 | 6 | 4 | 13
+Chips | 1 side | 230 | 3 | 31 | 11
+
+@ Del Taco
+The Del Taco | 1 taco | 160 | 8 | 10 | 9
+Epic Beyond Cali Burrito | 1 | 940 | 26 | 100 | 49
+Del Combo Burrito | 1 | 500 | 24 | 52 | 22
+Crinkle Cut Fries | small | 160 | 2 | 20 | 8
+Chicken Quesadilla | 1 | 480 | 26 | 35 | 26
+
+@ El Pollo Loco
+Chicken Breast | 1 piece | 210 | 35 | 0 | 8
+Chicken Leg | 1 piece | 90 | 11 | 0 | 5
+Chicken Thigh | 1 piece | 220 | 21 | 0 | 15
+Chicken Wing | 1 piece | 90 | 9 | 0 | 6
+Original Pollo Bowl | 1 bowl | 550 | 37 | 89 | 6
+Double Chicken Bowl | 1 bowl | 590 | 47 | 66 | 16
+Chicken Avocado Burrito | 1 | 870 | 41 | 85 | 41
+Mexican Rice | regular | 170 | 4 | 32 | 2.5
+Pinto Beans | regular | 180 | 10 | 30 | 2
+
+@ Cava
+Greens + Grains Bowl, chicken (hummus, feta, tahini) | 1 bowl | 780 | 46 | 46 | 46
+Chicken + Rice Bowl | 1 bowl | 820 | 50 | 80 | 34
+Grilled Chicken | 1 serving | 250 | 31 | 3 | 12
+Spicy Lamb Meatballs | 1 serving | 300 | 19 | 4 | 23
+Saffron Basmati Rice | 1 serving | 290 | 5 | 50 | 7
+Hummus | 1 serving | 70 | 2 | 4 | 5
+Crazy Feta | 1 serving | 70 | 3 | 1 | 6
+Pita Chips | 1 side | 310 | 5 | 42 | 14
+Greek Vinaigrette | 1 serving | 100 | 0 | 1 | 11
+
+@ Sweetgreen
+Harvest Bowl | 1 bowl | 685 | 34 | 59 | 36
+Kale Caesar | 1 salad | 430 | 31 | 15 | 29
+Chicken Pesto Parm | 1 bowl | 530 | 39 | 39 | 25
+Guacamole Greens | 1 salad | 550 | 30 | 36 | 33
+Super Green Goddess | 1 salad | 470 | 15 | 50 | 25
+Fish Taco Bowl | 1 bowl | 640 | 30 | 52 | 35
+
+@ Noodles & Company
+Wisconsin Mac & Cheese | regular | 980 | 34 | 120 | 39
+Japanese Pan Noodles | regular | 610 | 14 | 108 | 13
+Spicy Korean Beef Noodles | regular | 840 | 39 | 118 | 22
+Pesto Cavatappi | regular | 760 | 23 | 115 | 25
+Penne Rosa | regular | 720 | 22 | 104 | 24
+Pad Thai, chicken | regular | 900 | 45 | 114 | 31
+Buttered Noodles | regular | 760 | 23 | 116 | 22
+
+@ Smoothie King
+The Activator Strawberry Banana | 20 oz | 370 | 31 | 51 | 5
+Gladiator Chocolate | 20 oz | 230 | 45 | 6 | 3
+Angel Food | 20 oz | 320 | 10 | 69 | 1
+Hulk Strawberry | 20 oz | 890 | 35 | 132 | 26
+Lean1 Chocolate | 20 oz | 300 | 20 | 37 | 9
+Caribbean Way | 20 oz | 350 | 2 | 86 | 0
+
+@ Jamba
+Strawberry Wild | medium | 310 | 6 | 68 | 1
+Mango-a-go-go | medium | 350 | 2 | 86 | 1
+PB Banana Protein | medium | 520 | 26 | 72 | 15
+Acai Primo Bowl | 1 bowl | 520 | 8 | 106 | 11
+
+@ Costco Food Court
+Hot Dog | 1 with bun | 570 | 24 | 46 | 32
+Cheese Pizza | 1 slice | 710 | 37 | 85 | 26
+Pepperoni Pizza | 1 slice | 680 | 37 | 72 | 28
+Chicken Bake | 1 | 840 | 52 | 81 | 33
+Churro | 1 | 360 | 4 | 43 | 21
+Twist Ice Cream Cone | 1 cone | 370 | 9 | 60 | 10
+Very Berry Sundae | 1 | 520 | 9 | 82 | 17
+Rotisserie Chicken (Costco) | ¼ chicken | 400 | 45 | 1 | 24
+
+@ Auntie Anne's
+Original Pretzel | 1 pretzel | 340 | 8 | 65 | 5
+Cinnamon Sugar Pretzel | 1 pretzel | 470 | 8 | 84 | 12
+Pretzel Dogs | 1 | 390 | 12 | 40 | 20
+Mini Pretzel Dogs | 1 order | 520 | 15 | 50 | 28
+Cheese Sauce | 1 cup | 100 | 1 | 4 | 9
+
+@ Cinnabon
+Classic Roll | 1 roll | 880 | 13 | 127 | 37
+MiniBon | 1 roll | 350 | 6 | 51 | 14
+BonBites | 4 pieces | 360 | 5 | 48 | 17
+Caramel PecanBon | 1 roll | 1080 | 14 | 147 | 51
+
+@ Crumbl
+Milk Chocolate Chip Cookie | ¼ cookie | 180 | 2 | 23 | 9
+Milk Chocolate Chip Cookie | whole cookie | 720 | 8 | 92 | 36
+Pink Sugar Cookie | whole cookie | 680 | 6 | 104 | 26
+
+@ Baskin-Robbins
+Ice Cream, 1 scoop | 2.5 oz scoop | 260 | 4 | 28 | 15
+Ice Cream, 2 scoops in cup | 2 scoops | 520 | 8 | 56 | 30
+Waffle cone | 1 cone | 160 | 3 | 28 | 4
+Shake, chocolate | medium | 940 | 17 | 124 | 42
+
+@ White Castle
+The Original Slider | 1 slider | 140 | 7 | 13 | 6
+Cheese Slider | 1 slider | 170 | 8 | 14 | 9
+Double Cheese Slider | 1 slider | 310 | 16 | 15 | 20
+Chicken Rings | 6 pieces | 290 | 13 | 18 | 18
+Crinkle Fries | medium | 370 | 4 | 46 | 19
+
+@ Steak 'n Shake
+Double 'n Cheese Steakburger | 1 | 600 | 30 | 39 | 36
+Triple 'n Cheese Steakburger | 1 | 780 | 42 | 40 | 51
+Thin 'n Crispy Fries | regular | 310 | 3 | 37 | 17
+Chocolate Milkshake | regular | 650 | 13 | 92 | 26
+
+@ Carl's Jr. / Hardee's
+Famous Star with Cheese | 1 | 680 | 28 | 55 | 39
+Western Bacon Cheeseburger | 1 | 750 | 31 | 75 | 35
+Super Star with Cheese | 1 | 940 | 46 | 55 | 59
+1/3 lb Thickburger | 1 | 820 | 33 | 52 | 52
+Hand-Breaded Chicken Tenders | 3 pieces | 260 | 26 | 14 | 11
+Made from Scratch Biscuit, sausage | 1 | 520 | 13 | 36 | 36
+Natural-Cut Fries | medium | 430 | 5 | 54 | 21
+
+@ Long John Silver's
+Battered Fish | 1 piece | 190 | 12 | 12 | 11
+Battered Chicken | 1 piece | 140 | 9 | 8 | 8
+Shrimp | 8 pieces | 280 | 10 | 22 | 17
+Hushpuppy | 1 | 60 | 1 | 9 | 2.5
+Fries | regular | 230 | 3 | 31 | 11
+
+@ Wawa
+Turkey Shorti Hoagie | 1 | 390 | 25 | 53 | 8
+Italian Classic Shorti Hoagie | 1 | 580 | 26 | 54 | 29
+Sizzli, bacon egg & cheese on bagel | 1 | 470 | 22 | 53 | 18
+Mac & Cheese | regular | 470 | 18 | 41 | 26
+
+@ Sheetz
+Burger Shmuffin | 1 | 560 | 26 | 31 | 37
+Boom Boom Chicken Wrap | 1 | 690 | 28 | 55 | 40
+Mozzarella Sticks | 6 pieces | 450 | 21 | 37 | 24
+
+@ 7-Eleven
+Big Bite Hot Dog | 1 with bun | 450 | 16 | 33 | 28
+Pepperoni Pizza | 1 slice | 360 | 15 | 38 | 16
+Big Gulp Coca-Cola | 30 oz | 360 | 0 | 100 | 0
+Slurpee, Coca-Cola | 22 oz | 170 | 0 | 45 | 0
+Taquito, chicken | 1 | 230 | 9 | 24 | 11
+
+@ Habit Burger
+Charburger with Cheese | 1 | 610 | 27 | 41 | 37
+Double Charburger with Cheese | 1 | 820 | 44 | 42 | 54
+Santa Barbara Style Char | 1 | 950 | 44 | 50 | 63
+Sweet Potato Fries | 1 side | 400 | 3 | 49 | 21
+
+@ Freddy's
+Original Double Steakburger California Style | 1 | 750 | 39 | 39 | 49
+Single Steakburger with cheese | 1 | 430 | 20 | 30 | 25
+Shoestring Fries | regular | 410 | 5 | 51 | 21
+Concrete, vanilla with Oreo | medium | 990 | 15 | 116 | 51
+
+@ Portillo's
+Italian Beef, dipped | 1 sandwich | 630 | 35 | 58 | 28
+Chicago-Style Hot Dog | 1 | 330 | 12 | 34 | 16
+Chocolate Cake | 1 slice | 730 | 6 | 94 | 39
+Chocolate Cake Shake | 1 | 1250 | 17 | 155 | 64
+
+@ Jason's Deli
+Club Royale | 1 | 840 | 48 | 56 | 47
+Turkey Wrap | 1 | 550 | 38 | 46 | 24
+Salad bar plate | 1 plate | 350 | 10 | 30 | 20
+
+@ McAlister's Deli
+Club | 1 | 720 | 50 | 54 | 32
+Chicken Tortilla Soup | bowl | 300 | 14 | 30 | 14
+Sweet Tea | 32 oz | 260 | 0 | 64 | 0
+Spud Max | 1 | 1250 | 54 | 105 | 68
+
+@ Red Lobster
+Cheddar Bay Biscuit | 1 | 160 | 3 | 16 | 10
+Ultimate Feast | 1 entree | 1150 | 85 | 62 | 64
+Garlic Shrimp Scampi | 1 entree | 420 | 30 | 3 | 33
+Wood-Grilled Salmon | 1 entree | 550 | 54 | 2 | 36
+Fish and Chips | 1 entree | 1250 | 50 | 123 | 63
+Shrimp Linguini Alfredo | 1 entree | 1080 | 55 | 81 | 58
+
+@ BJ's Restaurant
+Pizookie, chocolate chunk | 1 | 1170 | 12 | 150 | 56
+Deep Dish Pepperoni Pizza | 1 slice (large) | 400 | 16 | 34 | 22
+Enlightened Cherry Chipotle Chicken | 1 entree | 590 | 50 | 64 | 13
+
+@ TGI Fridays
+Whiskey-Glazed Chicken | 1 entree | 1000 | 60 | 85 | 45
+Loaded Potato Skins | 1 appetizer | 1300 | 52 | 74 | 87
+Fridays Signature Whiskey-Glazed Burger | 1 with fries | 1700 | 66 | 150 | 92
+
+@ Captain D's
+Batter Dipped Fish | 1 piece | 180 | 10 | 11 | 11
+Fish and Fries Meal | 2 pieces with fries | 750 | 25 | 70 | 40
+Hushpuppies | 2 pieces | 140 | 2 | 19 | 6
